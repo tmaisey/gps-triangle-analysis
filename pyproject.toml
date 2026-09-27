@@ -8,3 +8,13 @@ dependencies = [
     "numpy>=1.26",
     "requests>=2.34.2",
 ]
+
+[dependency-groups]
+dev = [
+    "beautifulsoup4>=4.15.0",
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
