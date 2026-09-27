@@ -97,11 +97,22 @@
     {
       "id": "RPT-002",
       "category": "report",
-      "description": "Dropdown navigation: Overview (default) + per-round entries; selecting an item reflows the whole page",
+      "description": "Four-page app in one file with a top nav bar: title text left ('Bill's GPS Triangle Analysis 2026', no emoji/logo), right-aligned always-visible links Home/Analysis/Recommendations/Innovations that collapse to a burger menu on mobile; JS toggles the visible page. The Analysis page carries the Overview/Rounds dropdown (Overview default + 17 rounds)",
       "roadmap": "v1.0",
       "steps": [
-        "Build selector and section-toggle JS",
-        "Test: 18 options (Overview + 17 rounds); Overview visible on load; selecting a round shows only that section"
+        "Build top-bar nav, page-routing JS, mobile burger, and the Analysis Overview/Rounds dropdown",
+        "Test: 4 nav links present and right-aligned; Home shown on load; each link shows only its page; burger appears at mobile width; Analysis dropdown has 18 options (Overview + 17 rounds)"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-009",
+      "category": "content",
+      "description": "Home page: very concise project summary plus the three sections listed as linked headings (Performance Analysis, Recommendations, Innovations); no deep content",
+      "roadmap": "v1.0",
+      "steps": [
+        "Author a short summary and three linked section headings that route to the pages",
+        "Test: Home holds a summary paragraph and exactly three section links that navigate to Analysis/Recommendations/Innovations"
       ],
       "passes": false
     },
@@ -130,22 +141,22 @@
     {
       "id": "RPT-005",
       "category": "content",
-      "description": "Recommendations layer: drills, further analysis, resources, and rules-legal live signals per insight",
+      "description": "Recommendations shown inline in Analysis next to their motivating evidence AND consolidated on the Recommendations page organised into implementation themes; one canonical set surfaced in both places via shared anchors, each linking back to its Analysis evidence and out to relevant Innovations",
       "roadmap": "v1.0",
       "steps": [
-        "Attach recommendations to insights",
-        "Test: every top-level weakness has at least one drill and one further-analysis suggestion"
+        "Author recommendations with stable anchor ids; render inline in Analysis and grouped by theme on the Recommendations page",
+        "Test: every top-level weakness has at least one drill and one further-analysis suggestion; each recommendation appears inline in Analysis and on the themed Recommendations page under the same anchor; back-links to Analysis evidence resolve"
       ],
       "passes": false
     },
     {
       "id": "RPT-006",
       "category": "content",
-      "description": "Art-of-the-possible coaching-technology section, clearly separated and rules-grounded (navigator telemetry/AR, audio vario, live AI cueing, data flywheel)",
+      "description": "Innovations page (art-of-the-possible coaching technology): standalone and rules-grounded (navigator telemetry/AR, audio vario, live AI cueing, data flywheel), with each point anchored so Analysis and Recommendations can link to it in context",
       "roadmap": "v1.1",
       "steps": [
-        "Author forward-looking tiers with legality framing from Sport-class regs (no data into model control; navigator AR at CD discretion; pilot HUD training-only)",
-        "Test: section visually/tonally separated from findings; legality claims cite the rules basis"
+        "Author forward-looking tiers with legality framing from Sport-class regs (no data into model control; navigator AR at CD discretion; pilot HUD training-only); give each point an anchor id",
+        "Test: Innovations is its own page, tonally separated from findings; legality claims cite the rules basis; anchor links from Analysis/Recommendations resolve to the right point"
       ],
       "passes": false
     },
@@ -174,11 +185,11 @@
     {
       "id": "DSN-001",
       "category": "design",
-      "description": "Design system: white background, Deloitte-inspired palette with no Deloitte branding, elegant typeface, no AI-tell styling (no accent bars/stripes, gradients, emoji headers), all figures captioned",
+      "description": "Design system: white background, Deloitte-inspired palette with no Deloitte branding, elegant typeface, no AI-tell styling (no accent bars/stripes, gradients), no emojis anywhere, all figures captioned",
       "roadmap": "v1.0",
       "steps": [
         "Define palette tokens and typography; render charts on the shared palette",
-        "Test: background white; no 'deloitte' string/logo; no left/top accent-bar pattern; every <figure> has a <figcaption>"
+        "Test: background white; no 'deloitte' string/logo; no left/top accent-bar pattern; no emoji characters anywhere in the output; every <figure> has a <figcaption>"
       ],
       "passes": false
     },

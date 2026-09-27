@@ -65,7 +65,8 @@ Established from the data pulls (subject to the weather and phase passes finalis
 **Design**
 - White background. **Deloitte-inspired palette** (green primary, cool greys, a teal/blue secondary) for an elegant, restrained look — **no Deloitte branding or logos**.
 - Elegant typeface (serif display for headings, clean sans for body; graceful system fallback so it reads well offline).
-- **No AI-tell styling:** no coloured accent bars/stripes on the top or left of boxes, no gradient hero blocks, no emoji section headers.
+- **No AI-tell styling:** no coloured accent bars/stripes on the top or left of boxes, no gradient hero blocks.
+- **No emojis anywhere** — in the report, headings, nav, or any project output.
 - **Every figure captioned.**
 - Insights written **Point → Evidence → Explain**.
 - **Grounding (mandatory):** every claim is backed by a plot/visualisation on the page **and/or** a link to the source data online (the rcmodelspot event/flight pages; and where relevant the weather source and the Sport-class regs). No unsupported assertions.
@@ -73,15 +74,20 @@ Established from the data pulls (subject to the weather and phase passes finalis
 - Avoid flagged lexical tics ("honest/genuinely/sit with/real", "that's not X it's Y", etc.).
 
 **Navigation / UX**
-- A single dropdown that reflows the whole page: **Overview** (default/home), then **Round 1 · <date-time>** … **Round 17 · <date-time>**. Selecting an item swaps the visible section; JavaScript only toggles visibility.
-- **Per-page structure (Overview and every round):** each page opens with a short **summary** — a few sentences then ~5 bullets of key points and recommendations. Each summary bullet is an **anchor link** to the relevant section below on that page; each **section header links back to the top** of the page.
-- **Collapsible sections:** the sections on each page collapse/expand so the reader can jump up and down without long scrolling, with **"Expand all" / "Collapse all"** controls at the top of the section group. Sensible default open/closed state (summary always visible).
+- **Four top-level pages in one self-contained file:** **Home**, **Analysis** (Performance Analysis), **Recommendations**, **Innovations** (the art-of-the-possible / coaching-tech content). JavaScript toggles which page is visible; no reload.
+- **Top bar:** left shows the title text **"Bill's GPS Triangle Analysis 2026"** (plain text — no emoji, no logo). Right-aligned, always-visible links: **Home · Analysis · Recommendations · Innovations**. On mobile the links collapse to a burger menu.
+- **Home:** very concise — a short project summary and the three sections listed as linked headings (Performance Analysis, Recommendations, Innovations). No deep content.
+- **Analysis page:** contains the **Overview / Rounds dropdown** — **Overview** (default) then **Round 1 · <date-time>** … **Round 17 · <date-time>**; selecting an item swaps the visible view. The dropdown behaves exactly as previously specified (per-view summary, anchor links, collapsible sections, expand/collapse-all) — just scoped to this page.
+- **Per-view structure (Analysis Overview and each round; Recommendations/Innovations where dense):** opens with a short **summary** — a few sentences then ~5 bullets of key points/recommendations; each bullet is an **anchor link** to its section; each **section header links back to the top**.
+- **Collapsible sections** on dense pages, with **"Expand all" / "Collapse all"** controls; the summary stays visible. Home stays minimal (no collapsing).
 
-**Content**
-- **Overview (home):** headline result; strengths/weaknesses verdict (PEE); **where he gains vs loses by phase** (start / straight / turn / climb) with the ranked biggest levers; conditions dependence; week-long progression (skill vs conditions); consistency (floor vs ceiling); prioritised recommendations.
-- **Per-round views:** energy/altitude trace (Bill vs leader), ground-track overlay (the triangle + both lines + thermalling), cumulative-laps-vs-leader, the biggest-loss segment, per-round metrics strip (incl. weather), and a per-round recommendation.
-- **Recommendations layer** (attached to insights): drills, further analysis, resources, and legal live-signals (audio vario tuning, speech telemetry callouts, a navigator on the ground station).
-- **"Art of the possible" section** (clearly separated, forward-looking): coaching-tech roadmap — post-flight AI coach, navigator AR HUD, live AI cueing, data flywheel — with the rules-legality framing (navigator telemetry/AR plausibly legal at Contest-Director discretion; nothing may feed model control per §2.7; pilot-worn HUD safest as training-only; audio vario/speech telemetry explicitly permitted).
+**Content by page**
+- **Home:** one short project summary paragraph + the three linked section headings. Minimal.
+- **Analysis — Overview (default view):** headline result; strengths/weaknesses verdict (PEE); where he gains vs loses **by phase** (cruise / climb / start / turn) with the ranked levers; conditions dependence; week-long progression (skill vs conditions); consistency (floor vs ceiling). Recommendations appear **inline** next to the evidence that motivates them, with contextual links to the **Innovations** page where relevant.
+- **Analysis — Per-round views:** energy/altitude trace (Bill vs leader), ground-track overlay (the triangle + both lines + thermalling), cumulative-laps-vs-leader, the biggest-loss segment, per-round metrics strip (incl. weather), and the round's **inline recommendation(s)** tied to that round's evidence.
+- **Recommendations page:** every recommendation gathered in one place, **organised into implementation themes** so they can be seen and planned together — drills, further analysis, resources, and rules-legal live signals (audio vario tuning, speech telemetry callouts, a navigator on the ground station). These are the **same** recommendations shown inline in Analysis (one canonical set, surfaced in both places via shared anchors); each **links back** to its supporting evidence on Analysis and out to relevant **Innovations**.
+- **Innovations page:** the forward-looking coaching-tech roadmap — post-flight AI coach, navigator AR HUD, live AI cueing, data flywheel — with the rules-legality framing (navigator telemetry/AR plausibly legal at Contest-Director discretion; nothing may feed model control per §2.7; pilot-worn HUD safest as training-only; audio vario/speech telemetry explicitly permitted). Standalone, but **linkable from Analysis and Recommendations** so each point stays in context.
+- **Cross-linking:** Analysis ↔ Recommendations ↔ Innovations are cross-referenced via shared anchors, so the reader moves between evidence, action, and future ideas in context.
 
 ## 9. Methodology & fairness
 
