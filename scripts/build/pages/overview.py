@@ -1,13 +1,15 @@
 """Analysis - Overview view (Stage 2 content).
 
 The Overview is the default view of the Analysis page. It opens with a short
-verdict summary and anchor-linked bullets, then walks the coaching argument in
-five collapsible Point-Evidence-Explain sections, each figure drawn from live
-``ctx`` data and captioned, each claim backed by an on-page chart and/or a
-source link, and each lever cross-linked to its recommendation.
+verdict summary and anchor-linked bullets, then leads with an all-rounds
+performance summary and walks the coaching argument in six collapsible
+Point-Evidence-Explain sections, each figure drawn from live ``ctx`` data and
+captioned, each claim backed by an on-page chart and/or a source link, and each
+lever cross-linked to its recommendation.
 
 Anchor / id scheme (section ids; summary bullets link to these):
     ov-top          summary block / back-to-top target
+    ov-summary      performance summary - all-rounds grouped bars + conditions
     ov-headline     headline result + gap decomposition
     ov-levers       phase levers ranked (cruise/climb/entry/turns)
     ov-conditions   conditions dependence
@@ -31,6 +33,7 @@ _WEATHER_URL = "https://open-meteo.com/"
 _SPEED_ROUNDS = {4, 10, 16}
 
 _SECTIONS = [
+    ("ov-summary", "Performance summary - every round at a glance"),
     ("ov-headline", "Headline result"),
     ("ov-levers", "Where the ground is lost - phase levers"),
     ("ov-conditions", "Conditions dependence"),
@@ -39,6 +42,7 @@ _SECTIONS = [
 ]
 
 _SUMMARY_BULLETS = [
+    ("ov-summary", "All 17 rounds at a glance: Bill vs round winner vs event winner, against the day's lift"),
     ("ov-headline", "22nd of 38 (12,562 pts); the gap is almost all distance-task"),
     ("ov-levers", "Biggest lever: cruise speed between thermals"),
     ("ov-conditions", "Relatively stronger when thermals are strong"),
@@ -72,6 +76,204 @@ def _point(text: str) -> str:
 def _explain(text: str) -> str:
     """Render the Explain line of a Point-Evidence-Explain block."""
     return f'<p class="pee-explain"><strong>What to do.</strong> {text}</p>'
+
+
+_ROUNDS = list(range(1, 18))
+
+
+def _event_winner_results() -> list[dict]:
+    """Return event winner Florian Griese's per-round result rows, round-aligned.
+
+    The event winner is the standings entry with the highest total score
+    (15,449 - Florian Griese, matching the headline). ``results.json`` lists
+    each pilot's rounds in round order, so index ``r-1`` is round ``r``. Rounds
+    the winner scored zero (a bombout) carry no ``laps``/``speed`` keys.
+
+    Returns:
+        list[dict]: 17 result dicts (one per round), padded if any are missing.
+    """
+    winner = max(load_standings(), key=lambda s: s.get("totalScore", 0))
+    res = list(winner.get("results", []))
+    return res + [{}] * (len(_ROUNDS) - len(res))
+
+
+def _metric_by_round(ctx: dict) -> dict:
+    """Index the per-round metrics by ``(round, role)`` for round-aligned lookup.
+
+    Args:
+        ctx: shared build context; ``ctx['metrics']`` is one row per pilot per
+            round with ``role`` in {'BILL', 'leader'}.
+
+    Returns:
+        dict: ``{(round:int, role:str): row}``.
+    """
+    return {(int(m["round"]), m["role"]): m for m in ctx["metrics"]}
+
+
+def _perf_summary(ctx: dict) -> str:
+    """Performance summary: all-rounds grouped bars + conditions/rank strips.
+
+    Opens the Overview with an at-a-glance read of every round - Bill (green)
+    against his same-air round winner (blue) and against event winner Florian
+    Griese (grey) - across score, laps, cruise speed and the start gate, with
+    the day's lift and Bill's within-group finishing position aligned beneath.
+    """
+    m = _metric_by_round(ctx)
+    win = _event_winner_results()
+
+    def bill(field):
+        return [m.get((r, "BILL"), {}).get(field) for r in _ROUNDS]
+
+    def leader(field):
+        return [m.get((r, "leader"), {}).get(field) for r in _ROUNDS]
+
+    def winner(field, scale=1.0):
+        out = []
+        for r in _ROUNDS:
+            v = win[r - 1].get(field)
+            out.append(v * scale if isinstance(v, (int, float)) else None)
+        return out
+
+    def drop_speed(vals):
+        return [None if r in _SPEED_ROUNDS else v for r, v in zip(_ROUNDS, vals)]
+
+    # Score - normalised to 1000 for every pilot, so all three series compare
+    # directly across all 17 rounds.
+    score = charts.grouped_bar_rounds(
+        _ROUNDS,
+        [("Round winner", leader("score"), "leader"),
+         ("Event winner", winner("score"), "field"),
+         ("Bill", bill("score"), "bill")],
+        title="Round score by round (normalised to 1000)",
+        ylabel="Score",
+    )
+    score_cap = (
+        "Every round's normalised score (1000 = the round winner in that group). "
+        "Blue is Bill's same-air round winner, grey the event winner Florian "
+        "Griese in his own group, green Bill. Bill trails the round-winning pace "
+        "in most distance rounds; Griese is not always top of his group either."
+    )
+
+    # Laps and cruise speed are the distance-task currency; the three speed
+    # sprints (R4/R10/R16) are a single fast lap on a different scale, so they
+    # are omitted here and read per-round instead.
+    laps = charts.grouped_bar_rounds(
+        _ROUNDS,
+        [("Round winner", drop_speed(leader("laps")), "leader"),
+         ("Event winner", drop_speed(winner("laps")), "field"),
+         ("Bill", drop_speed(bill("laps")), "bill")],
+        title="Laps completed by distance round",
+        ylabel="Laps",
+    )
+    laps_cap = (
+        "Laps in the 14 distance rounds (speed sprints omitted - one lap each). "
+        "Laps decide the distance score; Bill's bars sit below the round winner "
+        "almost everywhere, and the gap widens on weak-lift days (see the strip "
+        "below). The winner's blank at Round 9 is his own bombout."
+    )
+
+    speed = charts.grouped_bar_rounds(
+        _ROUNDS,
+        [("Round winner", drop_speed(leader("avg_speed_kmh")), "leader"),
+         ("Event winner", drop_speed(winner("speed", 3.6)), "field"),
+         ("Bill", drop_speed(bill("avg_speed_kmh")), "bill")],
+        title="Average task speed by distance round",
+        ylabel="km/h",
+    )
+    speed_cap = (
+        "Average task speed over the distance rounds (km/h; speed sprints "
+        "omitted). Pace drives laps, and Bill's cruise speed runs consistently "
+        "below the round winner's - the dominant lever the sections below unpack."
+    )
+
+    # Entry speed / altitude: only Bill and the same-air round winner were
+    # track-analysed, so the event winner has no start-gate telemetry and its
+    # series is absent here.
+    entry_spd = charts.grouped_bar_rounds(
+        _ROUNDS,
+        [("Round winner", leader("entry_speed_kmh"), "leader"),
+         ("Bill", bill("entry_speed_kmh"), "bill")],
+        title="Start-gate entry speed by round",
+        ylabel="km/h",
+    )
+    entry_spd_cap = (
+        "Speed crossing the start gate each round (120 km/h cap). Bill routinely "
+        "enters slower than the round winner, leaving free opening-lap energy on "
+        "the table. The event winner is omitted - only Bill and each round's "
+        "same-air winner were track-analysed for entry telemetry."
+    )
+
+    entry_alt = charts.grouped_bar_rounds(
+        _ROUNDS,
+        [("Round winner", leader("entry_alt_m"), "leader"),
+         ("Bill", bill("entry_alt_m"), "bill")],
+        title="Start-gate entry altitude by round",
+        ylabel="metres",
+    )
+    entry_alt_cap = (
+        "Height at the start gate each round (400 m cap). Bill and the round "
+        "winner both start near the ceiling; entry altitude is not a lever. Event "
+        "winner omitted for the same telemetry reason as entry speed."
+    )
+
+    # Conditions and Bill's within-group standing, aligned column-for-column.
+    solar = charts.conditions_strip(
+        [w.get("shortwave_radiation") for w in ctx["weather"]],
+        labels=_ROUNDS,
+        title="Solar radiation by round (thermal-strength proxy)",
+    )
+    solar_cap = (
+        "Solar radiation per round, normalised across the week (pastel yellow = "
+        "weakest lift, deep red = strongest) - the usable thermal-strength proxy. "
+        "Read the laps chart against this: Bill's gap to the round winner grows "
+        "as the strip pales."
+    )
+    ranks = charts.rank_strip(
+        [m.get((r, "BILL"), {}).get("rank") for r in _ROUNDS],
+        group_sizes=[m.get((r, "BILL"), {}).get("group_size") for r in _ROUNDS],
+        labels=_ROUNDS,
+        title="Bill's within-group finishing rank by round",
+    )
+    ranks_cap = (
+        "Bill's finishing position within his own group each round (1 = group "
+        "winner; darker green = higher). His best relative rounds line up with "
+        "the strongest lift above."
+    )
+
+    point = _point(
+        "Across all 17 rounds Bill (green) sits below his same-air "
+        "<strong>round winner</strong> (blue) on score, laps and cruise speed, "
+        "while matching everyone at the start gate. The gap tracks the day's "
+        "lift, and event winner <strong>Florian Griese</strong> (grey) marks the "
+        "benchmark - though from his own group, not Bill's air."
+    )
+    explain = _explain(
+        "Use this as the map for the rest of the overview: the "
+        f"{_xref('recommendations', 'rec-cruise', 'cruise-pace')} and "
+        f"{_xref('recommendations', 'rec-climb', 'weak-lift')} levers below are "
+        "what closes the laps gap, and the entry-gate charts confirm the start is "
+        "already competitive. Round winner is Bill's same-air group leader (fair, "
+        "same-conditions); the event winner flew a different group, so his "
+        "absolute laps and speed reflect his own air. Per-round scores and laps: "
+        f"{_link(_EVENT_URL, 'event results (rcmodelspot)')}; conditions from "
+        f"{_link(_WEATHER_URL, 'Open-Meteo ERA5')}."
+    )
+    return (
+        point
+        + C.figure(score, score_cap, fig_id="ov-fig-sum-score",
+                   source=(_EVENT_URL, "event results (rcmodelspot)"))
+        + C.figure(laps, laps_cap, fig_id="ov-fig-sum-laps",
+                   source=(_EVENT_URL, "event results (rcmodelspot)"))
+        + C.figure(speed, speed_cap, fig_id="ov-fig-sum-speed",
+                   source=(_EVENT_URL, "event results (rcmodelspot)"))
+        + C.figure(entry_spd, entry_spd_cap, fig_id="ov-fig-sum-entryspd")
+        + C.figure(entry_alt, entry_alt_cap, fig_id="ov-fig-sum-entryalt")
+        + C.figure(solar, solar_cap, fig_id="ov-fig-sum-solar",
+                   source=(_WEATHER_URL, "Open-Meteo ERA5 (weather)"))
+        + C.figure(ranks, ranks_cap, fig_id="ov-fig-sum-rank",
+                   source=(_EVENT_URL, "event results (rcmodelspot)"))
+        + explain
+    )
 
 
 # --- Section builders -------------------------------------------------------
@@ -406,6 +608,7 @@ def _consistency(ctx: dict) -> str:
 
 
 _BUILDERS = {
+    "ov-summary": _perf_summary,
     "ov-headline": _headline,
     "ov-levers": _levers,
     "ov-conditions": _conditions,

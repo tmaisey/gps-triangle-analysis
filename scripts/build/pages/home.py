@@ -52,7 +52,8 @@ def render(ctx: dict) -> str:
         str: the Home page inner HTML (routing wrapper added by assemble).
     """
     intro = (
-        "<p>This is a coaching analysis of Bill Maisey's performance at the "
+        "<p>This is a coaching analysis of Bill Maisey's (Anglesey MAC) "
+        "performance at the "
         f'<a href="{C.esc(_EVENT_URL)}" target="_blank" rel="noopener">World '
         "Masters, Sport class, Oschatz 2026</a> - 38 pilots over 17 rounds, "
         "where Bill finished 22nd. It is built entirely from the public "
@@ -71,7 +72,7 @@ def render(ctx: dict) -> str:
             "</li>"
         )
     return (
-        "<h1>Bill's GPS Triangle Analysis 2026</h1>"
+        "<h1>GPS Triangle World Masters, Oschatz 2026</h1>"
         f"{intro}"
         f'<ul class="home-links">{"".join(items)}</ul>'
     )

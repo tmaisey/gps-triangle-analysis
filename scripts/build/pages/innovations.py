@@ -2,8 +2,8 @@
 
 The forward-looking coaching-technology roadmap (RPT-006), standalone and
 rules-grounded. Each tier gets a stable anchor id so Analysis and
-Recommendations can link to it in context, and each states its legality gate
-(competition vs training) against the Sport-class rules.
+Recommendations can link to it in context, and each states its legality
+consideration (competition vs training) against the Sport-class rules.
 
 Rules framing (Sport-class regs): passive telemetry display and relay are
 permitted and a navigator may relay them; nothing may feed data into control of
@@ -40,6 +40,10 @@ _SUMMARY_BULLETS = [
 ]
 
 _RULES_URL = "https://gps-triangle.net/gps-triangle/regulations-documents/"
+_REGS_PDF = (
+    "https://gps-triangle.net/wp-content/uploads/2022/03/"
+    "regulations_sport_en_V1.6_Release01.pdf"
+)
 _EVENT_URL = (
     "https://www.rcmodelspot.com/Ranking/"
     "f772fc7c-c4c5-406d-9c21-f4e76044ddb7"
@@ -65,11 +69,6 @@ def _ext(url: str, text: str) -> str:
     )
 
 
-def _gate(text: str) -> str:
-    """Return the plainly-stated legality gate line for a tier."""
-    return f'<p class="reco-label">Legality gate</p><p>{text}</p>'
-
-
 def _postflight() -> str:
     return (
         "<p><strong>A post-flight AI coach is the most tractable step, and this "
@@ -81,7 +80,7 @@ def _postflight() -> str:
         "top of that it can drive a ghost replay of Bill against the same-air "
         "leader and flag recurring decision points, such as the glides where "
         "he consistently gives back cruise time or the climbs he leaves early.</p>"
-        + _gate(
+        + C.legality_consideration(
             "No competition constraint: this is offline analysis of flights "
             "already flown, so it sits entirely in the training and debrief "
             "space. Track upload and comparison already exist through "
@@ -101,7 +100,7 @@ def _navigator() -> str:
         "needs display-class glasses (for example Ray-Ban Display) or AR "
         "glasses such as "
         f"{_ext(_XREAL, 'Xreal')} or {_ext(_ROKID, 'Rokid')}.</p>"
-        + _gate(
+        + C.legality_consideration(
             "The regulations do not name AR or wearables. A navigator-worn HUD "
             "that only re-presents permitted passive telemetry - feeding "
             "nothing into control of the model - is plausibly legal at Contest-"
@@ -120,11 +119,12 @@ def _live() -> str:
         "moment the flight lands. It is the natural extension of the audio "
         "vario and speech callouts that are "
         f"{_xref('recommendations', 'rec-signals', 'already worth setting up today')}.</p>"
-        + _gate(
+        + C.legality_consideration(
             "Spoken telemetry and an audio vario are explicitly permitted, and "
             "a navigator may relay them, so the audio path is legal in "
             "competition provided the cue is passive relay and nothing feeds "
-            "into control of the model (regs section 2.7). The post-session "
+            "into control of the model ("
+            f"{_ext(_REGS_PDF, 'regs section 2.7')}). The post-session "
             "debrief is unconstrained training use."
         )
     )
@@ -141,7 +141,7 @@ def _flywheel() -> str:
         "next read better - the "
         f"{_xref('innovations', 'inn-postflight', 'post-flight coach')} is the "
         "first turn of this wheel.</p>"
-        + _gate(
+        + C.legality_consideration(
             "Purely offline and historical: no in-flight component, so no "
             "competition constraint. It depends only on the open track data "
             "already published per event."
@@ -172,8 +172,10 @@ def render(ctx: dict) -> str:
         f'Sport-class rules (<a href="{C.esc(_RULES_URL)}" target="_blank" '
         'rel="noopener">regulations</a>): passive telemetry display and relay '
         "are permitted and a navigator may relay them, but nothing may feed "
-        "data into control of the model (section 2.7). Where a tier touches "
-        "competition rather than training, the legality gate is stated plainly."
+        "data into control of the model ("
+        f"{_ext(_REGS_PDF, 'section 2.7')}). Where a tier touches "
+        "competition rather than training, the legality consideration is "
+        "stated plainly."
     )
     summary = C.summary(intro, _SUMMARY_BULLETS, top_id="inn-top")
     sections = [

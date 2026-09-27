@@ -36,6 +36,9 @@ _SUMMARY_BULLETS = [
     ("rec-signals", "Audio vario and speech telemetry callouts, today"),
 ]
 
+# Regulations index (general rules mentions link here).
+_RULES_URL = "https://gps-triangle.net/gps-triangle/regulations-documents/"
+
 # Resource links, used only where a source adds something useful.
 _SM_GPS = "https://www.sm-modellbau.de/GPS-Logger-3"
 _OLC = "https://www.onlinecontest.org"
@@ -163,7 +166,8 @@ def _signals() -> str:
         "A pilot may field one navigator whose role includes relaying "
         "telemetry, and both an audio vario and spoken telemetry callouts are "
         "explicitly permitted. None of these feed data into control of the "
-        "model, so they stay inside the Sport-class rules "
+        "model, so they stay inside the "
+        f"{_ext(_RULES_URL, 'Sport-class rules')} "
         f"({_xref('innovations', 'inn-live', 'the same permitted channel the live-cueing tier builds on')}).</p>"
     )
     aids = _block("Set up now", [
