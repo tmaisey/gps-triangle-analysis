@@ -21,9 +21,12 @@ The deliverable is **one self-contained HTML file** produced by a deterministic 
 - **Stage 2 — Content (parallel agents):** Overview; per-round views (all 17); recommendations layer + the "art of the possible" tech section. Each builds against the foundation's interfaces.
 - **Stage 3 — Consolidation (single agent):** integrate the modules, run the generator, drive the test suite to green, and align consistency across the whole file (typography, spacing, captions, Point-Evidence-Explain structure, lexical-tic sweep, self-containment).
 
+**Phased delivery.** The four-page product (Home/Analysis/Recommendations/Innovations) is built and reviewed first and accepted by the user. Only then is the **Methodology** page built (from `docs/METHODOLOGY_LOG.md`) and reviewed on its own. The repo **README.md** (DOC-001) is written **last**, after both are accepted.
+
 ## Build-review workflow (mandatory — at the end of the build phase)
 Once the build reaches green, and **before it is considered done**, subagents review it in parallel:
 - **One output-quality reviewer** — reviews the built output for **syntax and output quality** (HTML/CSS/JS correctness, rendering, accessibility, self-containment, adherence to the design constraints) and recommends fixes.
+- **One visual/UI reviewer** — drives **Playwright (CLI)** to render the file and screenshot every page at desktop and mobile widths, checking layout, charts visible, nav/burger, collapsibles, cross-page links, and no horizontal overflow, so visual correctness is verified before the user looks. Findings (and key screenshots) go in its `reviews/` report.
 - **Spec reviewers** — review **every** `SPEC.json` item. Not one agent per item: **batch** the items across a sensible number of agents (e.g. 12 specs → 4 agents × 3 specs each). Each verifies its assigned specs against the build and their tests.
 - **Each reviewer writes a report** in `reviews/` named **`yymmddThhmm-<review-domain>.md`**, and returns a **concise** summary of recommended fixes to the orchestrator.
 - **The orchestrator consolidates** the recommendations and **proposes the improvements to the user for approval BEFORE** any fixing begins.
