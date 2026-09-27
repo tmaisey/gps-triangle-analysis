@@ -1,0 +1,186 @@
+{
+  "project": "GPS Triangle — Bill Maisey performance analysis & coaching report",
+  "note": "Master feature + testing backlog. TDD applies to the build: for each feature, write a failing test (red), implement to green, then flip passes=true and commit test+impl+spec together. Data/analysis features are validated by reconciliation tests (computed values match the authoritative rcmodelspot results and API distance fields). Scaffold captured 2026-09-27 ahead of build; refine before building.",
+  "features": [
+    {
+      "id": "DATA-001",
+      "category": "data",
+      "description": "Fetch competition standings and heat/group tree for the Oschatz 2026 event from the rcmodelspot JSON API",
+      "roadmap": "v1.0",
+      "steps": [
+        "GET /CompetitionGpsTriangle/Results/{guid} and cache raw JSON",
+        "Parse standings (38 pilots) and heats -> groups -> per-flight results",
+        "Test: Bill's 17 flights are present and his total (12562) and rank (22) reconcile to the standings"
+      ],
+      "passes": false
+    },
+    {
+      "id": "DATA-002",
+      "category": "data",
+      "description": "Fetch per-group ~1Hz GPS replay tracks and select Bill plus the same-air group leader per round",
+      "roadmap": "v1.0",
+      "steps": [
+        "For each of Bill's 17 groups, GET /CompetitionGpsTriangle/ReplayGroup/{groupId}",
+        "Identify the scoring flight (handle multi-start artefacts) and the top-scoring same-group leader",
+        "Test: Bill and leader present in all 17 groups; parsed laps/speed reconcile to the results tree"
+      ],
+      "passes": false
+    },
+    {
+      "id": "DATA-003",
+      "category": "data",
+      "description": "Enrich each flight with weather from the Open-Meteo ERA5 archive at the Oschatz coordinates",
+      "roadmap": "v1.0",
+      "steps": [
+        "GET ERA5 hourly (wind, temp, cloud, radiation, cape) for 3-8 Aug 2026, Europe/Berlin",
+        "Map each flight's group start time to the nearest hour",
+        "Test: every flight has a weather row within the event window; wind cross-checks track drift order-of-magnitude"
+      ],
+      "passes": false
+    },
+    {
+      "id": "ANL-001",
+      "category": "analysis",
+      "description": "Per-round metric bundle (laps, avg speed, entry altitude/speed, energy, thermalling, pacing, line efficiency) for Bill vs same-air leader",
+      "roadmap": "v1.0",
+      "steps": [
+        "Compute metrics from tracks; convert units (groundSpeed km/h, vario, haversine distances)",
+        "Test: computed laps and avg speed equal the authoritative results for every flight; distances within ~3% of API distance fields"
+      ],
+      "passes": false
+    },
+    {
+      "id": "ANL-002",
+      "category": "analysis",
+      "description": "Flight-phase decomposition (start / straight / turn / climb) with per-lap time-deficit attribution vs leader",
+      "roadmap": "v1.0",
+      "steps": [
+        "Segment tracks by bearing-rate and vario; separate turnpoint turns from thermal circles by duration/continuity",
+        "Attribute per-lap deficit across phases; rank phases by cost to Bill",
+        "Test: phase times per flight sum to the motor-off flight duration (within tolerance); speedrun rounds excluded"
+      ],
+      "passes": false
+    },
+    {
+      "id": "ANL-003",
+      "category": "analysis",
+      "description": "Condition-dependence analysis: Bill's within-group (conditions-controlled) score vs wind and thermal-strength proxies, and time-of-day",
+      "roadmap": "v1.0",
+      "steps": [
+        "Join weather to per-flight scores; compute associations with n caveat",
+        "Test: correlations computed over the 14 distance rounds; reported as suggestive, not significant"
+      ],
+      "passes": false
+    },
+    {
+      "id": "ANL-004",
+      "category": "analysis",
+      "description": "Week-long progression separating skill (within-group normalised score) from conditions (raw laps)",
+      "roadmap": "v1.0",
+      "steps": [
+        "Order rounds by day/time; trend normalised score and raw laps",
+        "Test: rounds ordered chronologically; both series present for all distance rounds"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-001",
+      "category": "report",
+      "description": "Single self-contained HTML file, emailable and openable offline, with all data and charts embedded",
+      "roadmap": "v1.0",
+      "steps": [
+        "Generate report/bill_oschatz_2026.html with inline SVG charts and embedded per-round data",
+        "Test: no remote script/image/style dependencies required to render; file opens standalone; size reasonable"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-002",
+      "category": "report",
+      "description": "Dropdown navigation: Overview (default) + per-round entries; selecting an item reflows the whole page",
+      "roadmap": "v1.0",
+      "steps": [
+        "Build selector and section-toggle JS",
+        "Test: 18 options (Overview + 17 rounds); Overview visible on load; selecting a round shows only that section"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-003",
+      "category": "content",
+      "description": "Overview content: result, strengths/weaknesses verdict, phase levers ranked, conditions, progression, consistency, prioritised recommendations",
+      "roadmap": "v1.0",
+      "steps": [
+        "Author sections in Point-Evidence-Explain form",
+        "Test: each Overview insight has an evidence figure/number and an explain/recommendation; no flagged lexical tics present"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-004",
+      "category": "content",
+      "description": "Per-round views: energy/altitude trace, ground-track overlay, cumulative laps vs leader, biggest-loss segment, metrics strip (incl. weather), recommendation",
+      "roadmap": "v1.0",
+      "steps": [
+        "Render each round from the embeddable dataset",
+        "Test: all 17 rounds render their charts and a captioned figure each; speedruns labelled distinctly"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-005",
+      "category": "content",
+      "description": "Recommendations layer: drills, further analysis, resources, and rules-legal live signals per insight",
+      "roadmap": "v1.0",
+      "steps": [
+        "Attach recommendations to insights",
+        "Test: every top-level weakness has at least one drill and one further-analysis suggestion"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-006",
+      "category": "content",
+      "description": "Art-of-the-possible coaching-technology section, clearly separated and rules-grounded (navigator telemetry/AR, audio vario, live AI cueing, data flywheel)",
+      "roadmap": "v1.1",
+      "steps": [
+        "Author forward-looking tiers with legality framing from Sport-class regs (no data into model control; navigator AR at CD discretion; pilot HUD training-only)",
+        "Test: section visually/tonally separated from findings; legality claims cite the rules basis"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-007",
+      "category": "report",
+      "description": "In-page summary + collapsible sections on every page (Overview and each round): opening summary (few sentences + ~5 bullets of key points/recommendations) with bullets anchor-linking to sections; section headers link back to top; sections collapsible with Expand all / Collapse all controls",
+      "roadmap": "v1.0",
+      "steps": [
+        "Add per-page summary block, anchor links, back-to-top links, collapse/expand JS and controls",
+        "Test: each page has a summary with ~5 bullets that anchor to on-page section ids; each section header links to top; Expand all/Collapse all toggle every section; summary stays visible"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-008",
+      "category": "content",
+      "description": "Every claim is grounded: backed by an on-page plot/visualisation and/or a link to the source data online (rcmodelspot event/flight pages; weather source; Sport-class regs). Recommended tech/drills link to a relevant online resource only where genuinely useful — no forced links",
+      "roadmap": "v1.0",
+      "steps": [
+        "Attach a figure reference and/or source-data link to each claim; add resource links to recommendations where relevant",
+        "Test: no claim lacks either an on-page figure or a source link; every external link resolves and is topically relevant; recommendations without a useful source carry no link"
+      ],
+      "passes": false
+    },
+    {
+      "id": "DSN-001",
+      "category": "design",
+      "description": "Design system: white background, Deloitte-inspired palette with no Deloitte branding, elegant typeface, no AI-tell styling (no accent bars/stripes, gradients, emoji headers), all figures captioned",
+      "roadmap": "v1.0",
+      "steps": [
+        "Define palette tokens and typography; render charts on the shared palette",
+        "Test: background white; no 'deloitte' string/logo; no left/top accent-bar pattern; every <figure> has a <figcaption>"
+      ],
+      "passes": false
+    }
+  ]
+}

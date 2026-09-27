@@ -1,0 +1,3344 @@
+[
+ {
+  "round": 1,
+  "group_id": 5698,
+  "leader_name": "Ralph Losemann",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 7,
+   "laps_flown_track": 7,
+   "aloft_time_s": 1712.0,
+   "lap1_time_s": 255.0,
+   "start": {
+    "start_peak_kmh": 96.0,
+    "start_dur_s": 22.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 54.8,
+    "cruise_glide_ratio": 10.6
+   },
+   "n_turns": 21,
+   "mean_turn_scrub_kmh": 1.32,
+   "mean_turn_extra_m": 41.96,
+   "mean_turn_entry_kmh": 57.42,
+   "n_climbs": 8,
+   "mean_climb_gain_m": 32.62,
+   "mean_climb_rate_ms": 0.43,
+   "best_climb_rate_ms": 1.87,
+   "median_climb_radius_m": 34.99,
+   "total_climb_time_s": 658.0,
+   "extra_dist_per_lap_m": 125.9,
+   "clean_laps": 4,
+   "clean_lap_time_s": 156.75,
+   "clean_cruise_t_s": 130.0,
+   "clean_turn_t_s": 26.75,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 255.0,
+     "cruise_t": 146.0,
+     "turn_t": 17.0,
+     "climb_t": 92.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 213.0,
+     "cruise_t": 178.0,
+     "turn_t": 35.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 287.0,
+     "cruise_t": 104.0,
+     "turn_t": 18.0,
+     "climb_t": 165.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 153.0,
+     "cruise_t": 126.0,
+     "turn_t": 27.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 543.0,
+     "cruise_t": 109.0,
+     "turn_t": 33.0,
+     "climb_t": 401.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 116.0,
+     "cruise_t": 94.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 145.0,
+     "cruise_t": 122.0,
+     "turn_t": 23.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Ralph",
+   "laps": 10,
+   "laps_flown_track": 11,
+   "aloft_time_s": 2074.0,
+   "lap1_time_s": 176.0,
+   "start": {
+    "start_peak_kmh": 77.0,
+    "start_dur_s": 25.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 57.5,
+    "cruise_glide_ratio": 10.0
+   },
+   "n_turns": 33,
+   "mean_turn_scrub_kmh": -2.89,
+   "mean_turn_extra_m": 28.94,
+   "mean_turn_entry_kmh": 60.72,
+   "n_climbs": 7,
+   "mean_climb_gain_m": 45.14,
+   "mean_climb_rate_ms": 0.44,
+   "best_climb_rate_ms": 1.56,
+   "median_climb_radius_m": 33.63,
+   "total_climb_time_s": 541.0,
+   "extra_dist_per_lap_m": 86.8,
+   "clean_laps": 7,
+   "clean_lap_time_s": 129.0,
+   "clean_cruise_t_s": 106.86,
+   "clean_turn_t_s": 22.14,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 176.0,
+     "cruise_t": 146.0,
+     "turn_t": 30.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 235.0,
+     "cruise_t": 216.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 147.0,
+     "cruise_t": 116.0,
+     "turn_t": 31.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 391.0,
+     "cruise_t": 134.0,
+     "turn_t": 15.0,
+     "climb_t": 242.0,
+     "clean": false
+    },
+    {
+     "lap": 5,
+     "lap_t": 109.0,
+     "cruise_t": 86.0,
+     "turn_t": 23.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 321.0,
+     "cruise_t": 100.0,
+     "turn_t": 19.0,
+     "climb_t": 202.0,
+     "clean": false
+    },
+    {
+     "lap": 7,
+     "lap_t": 109.0,
+     "cruise_t": 89.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 283.0,
+     "cruise_t": 166.0,
+     "turn_t": 20.0,
+     "climb_t": 97.0,
+     "clean": false
+    },
+    {
+     "lap": 9,
+     "lap_t": 121.0,
+     "cruise_t": 97.0,
+     "turn_t": 24.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 95.0,
+     "cruise_t": 73.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 87.0,
+     "cruise_t": 71.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 2,
+  "group_id": 5702,
+  "leader_name": "Andrej Vrecer",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 18,
+   "laps_flown_track": 18,
+   "aloft_time_s": 1792.0,
+   "lap1_time_s": 290.0,
+   "start": {
+    "start_peak_kmh": 90.0,
+    "start_dur_s": 21.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 85.8,
+    "cruise_glide_ratio": 9.1
+   },
+   "n_turns": 54,
+   "mean_turn_scrub_kmh": -8.89,
+   "mean_turn_extra_m": 43.67,
+   "mean_turn_entry_kmh": 92.56,
+   "n_climbs": 5,
+   "mean_climb_gain_m": 40,
+   "mean_climb_rate_ms": 0.99,
+   "best_climb_rate_ms": 2.63,
+   "median_climb_radius_m": 40.78,
+   "total_climb_time_s": 202.0,
+   "extra_dist_per_lap_m": 131.0,
+   "clean_laps": 13,
+   "clean_lap_time_s": 73.85,
+   "clean_cruise_t_s": 53.54,
+   "clean_turn_t_s": 20.31,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 290.0,
+     "cruise_t": 103.0,
+     "turn_t": 23.0,
+     "climb_t": 164.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 143.0,
+     "cruise_t": 101.0,
+     "turn_t": 25.0,
+     "climb_t": 17.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 131.0,
+     "cruise_t": 107.0,
+     "turn_t": 24.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 133.0,
+     "cruise_t": 108.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 5,
+     "lap_t": 135.0,
+     "cruise_t": 79.0,
+     "turn_t": 35.0,
+     "climb_t": 21.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 109.0,
+     "cruise_t": 73.0,
+     "turn_t": 36.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 93.0,
+     "cruise_t": 72.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 72.0,
+     "cruise_t": 51.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 9,
+     "lap_t": 74.0,
+     "cruise_t": 51.0,
+     "turn_t": 23.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 68.0,
+     "cruise_t": 49.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 73.0,
+     "cruise_t": 58.0,
+     "turn_t": 15.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 12,
+     "lap_t": 70.0,
+     "cruise_t": 51.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 13,
+     "lap_t": 64.0,
+     "cruise_t": 47.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 14,
+     "lap_t": 70.0,
+     "cruise_t": 53.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 15,
+     "lap_t": 66.0,
+     "cruise_t": 49.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 16,
+     "lap_t": 69.0,
+     "cruise_t": 53.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 17,
+     "lap_t": 73.0,
+     "cruise_t": 45.0,
+     "turn_t": 28.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 18,
+     "lap_t": 59.0,
+     "cruise_t": 44.0,
+     "turn_t": 15.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Andrej",
+   "laps": 22,
+   "laps_flown_track": 22,
+   "aloft_time_s": 1751.0,
+   "lap1_time_s": 221.0,
+   "start": {
+    "start_peak_kmh": 132.0,
+    "start_dur_s": 23.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 92.8,
+    "cruise_glide_ratio": 10.1
+   },
+   "n_turns": 66,
+   "mean_turn_scrub_kmh": -10.47,
+   "mean_turn_extra_m": 45.97,
+   "mean_turn_entry_kmh": 95.76,
+   "n_climbs": 1,
+   "mean_climb_gain_m": 135,
+   "mean_climb_rate_ms": 1.52,
+   "best_climb_rate_ms": 2.36,
+   "median_climb_radius_m": 22.1,
+   "total_climb_time_s": 90.0,
+   "extra_dist_per_lap_m": 137.9,
+   "clean_laps": 20,
+   "clean_lap_time_s": 70.85,
+   "clean_cruise_t_s": 50.6,
+   "clean_turn_t_s": 20.25,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 221.0,
+     "cruise_t": 101.0,
+     "turn_t": 30.0,
+     "climb_t": 90.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 113.0,
+     "cruise_t": 88.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 102.0,
+     "cruise_t": 80.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 99.0,
+     "cruise_t": 74.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 81.0,
+     "cruise_t": 60.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 82.0,
+     "cruise_t": 54.0,
+     "turn_t": 28.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 84.0,
+     "cruise_t": 62.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 77.0,
+     "cruise_t": 49.0,
+     "turn_t": 28.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 9,
+     "lap_t": 79.0,
+     "cruise_t": 55.0,
+     "turn_t": 24.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 71.0,
+     "cruise_t": 49.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 63.0,
+     "cruise_t": 46.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 12,
+     "lap_t": 63.0,
+     "cruise_t": 46.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 13,
+     "lap_t": 61.0,
+     "cruise_t": 46.0,
+     "turn_t": 15.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 14,
+     "lap_t": 63.0,
+     "cruise_t": 45.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 15,
+     "lap_t": 63.0,
+     "cruise_t": 42.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 16,
+     "lap_t": 63.0,
+     "cruise_t": 43.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 17,
+     "lap_t": 57.0,
+     "cruise_t": 39.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 18,
+     "lap_t": 60.0,
+     "cruise_t": 44.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 19,
+     "lap_t": 58.0,
+     "cruise_t": 38.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 20,
+     "lap_t": 71.0,
+     "cruise_t": 53.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 21,
+     "lap_t": 63.0,
+     "cruise_t": 46.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 22,
+     "lap_t": 57.0,
+     "cruise_t": 41.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 3,
+  "group_id": 5703,
+  "leader_name": "Damien Ythier",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 6,
+   "laps_flown_track": 6,
+   "aloft_time_s": 1571.0,
+   "lap1_time_s": 365.0,
+   "start": {
+    "start_peak_kmh": 72.0,
+    "start_dur_s": 23.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 59.0,
+    "cruise_glide_ratio": 8.6
+   },
+   "n_turns": 19,
+   "mean_turn_scrub_kmh": 5.97,
+   "mean_turn_extra_m": 29.73,
+   "mean_turn_entry_kmh": 63.26,
+   "n_climbs": 11,
+   "mean_climb_gain_m": 51.55,
+   "mean_climb_rate_ms": 0.74,
+   "best_climb_rate_ms": 3.05,
+   "median_climb_radius_m": 39.05,
+   "total_climb_time_s": 680.0,
+   "extra_dist_per_lap_m": 94.1,
+   "clean_laps": 0,
+   "clean_lap_time_s": null,
+   "clean_cruise_t_s": null,
+   "clean_turn_t_s": null,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 365.0,
+     "cruise_t": 193.0,
+     "turn_t": 14.0,
+     "climb_t": 158.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 327.0,
+     "cruise_t": 108.0,
+     "turn_t": 18.0,
+     "climb_t": 201.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 199.0,
+     "cruise_t": 103.0,
+     "turn_t": 31.0,
+     "climb_t": 65.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 195.0,
+     "cruise_t": 108.0,
+     "turn_t": 26.0,
+     "climb_t": 61.0,
+     "clean": false
+    },
+    {
+     "lap": 5,
+     "lap_t": 220.0,
+     "cruise_t": 104.0,
+     "turn_t": 19.0,
+     "climb_t": 97.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 265.0,
+     "cruise_t": 135.0,
+     "turn_t": 32.0,
+     "climb_t": 98.0,
+     "clean": false
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Damien",
+   "laps": 9,
+   "laps_flown_track": 9,
+   "aloft_time_s": 1719.0,
+   "lap1_time_s": 145.0,
+   "start": {
+    "start_peak_kmh": 106.0,
+    "start_dur_s": 23.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 76.0,
+    "cruise_glide_ratio": 9.1
+   },
+   "n_turns": 28,
+   "mean_turn_scrub_kmh": -3.61,
+   "mean_turn_extra_m": 38.05,
+   "mean_turn_entry_kmh": 77.19,
+   "n_climbs": 11,
+   "mean_climb_gain_m": 80.45,
+   "mean_climb_rate_ms": 1.2,
+   "best_climb_rate_ms": 3.72,
+   "median_climb_radius_m": 31.5,
+   "total_climb_time_s": 706.0,
+   "extra_dist_per_lap_m": 118.4,
+   "clean_laps": 2,
+   "clean_lap_time_s": 143.0,
+   "clean_cruise_t_s": 127.0,
+   "clean_turn_t_s": 16.0,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 145.0,
+     "cruise_t": 72.0,
+     "turn_t": 24.0,
+     "climb_t": 49.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 157.0,
+     "cruise_t": 61.0,
+     "turn_t": 24.0,
+     "climb_t": 72.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 114.0,
+     "cruise_t": 102.0,
+     "turn_t": 12.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 172.0,
+     "cruise_t": 152.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 358.0,
+     "cruise_t": 116.0,
+     "turn_t": 24.0,
+     "climb_t": 218.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 281.0,
+     "cruise_t": 137.0,
+     "turn_t": 13.0,
+     "climb_t": 131.0,
+     "clean": false
+    },
+    {
+     "lap": 7,
+     "lap_t": 231.0,
+     "cruise_t": 69.0,
+     "turn_t": 17.0,
+     "climb_t": 145.0,
+     "clean": false
+    },
+    {
+     "lap": 8,
+     "lap_t": 143.0,
+     "cruise_t": 73.0,
+     "turn_t": 18.0,
+     "climb_t": 52.0,
+     "clean": false
+    },
+    {
+     "lap": 9,
+     "lap_t": 118.0,
+     "cruise_t": 52.0,
+     "turn_t": 27.0,
+     "climb_t": 39.0,
+     "clean": false
+    }
+   ]
+  }
+ },
+ {
+  "round": 5,
+  "group_id": 5714,
+  "leader_name": "Ralph Losemann",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 9,
+   "laps_flown_track": 10,
+   "aloft_time_s": 1902.0,
+   "lap1_time_s": 121.0,
+   "start": {
+    "start_peak_kmh": 104.0,
+    "start_dur_s": 22.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 58.1,
+    "cruise_glide_ratio": 8.8
+   },
+   "n_turns": 30,
+   "mean_turn_scrub_kmh": 0.57,
+   "mean_turn_extra_m": 44.8,
+   "mean_turn_entry_kmh": 60.7,
+   "n_climbs": 8,
+   "mean_climb_gain_m": 37.25,
+   "mean_climb_rate_ms": 0.64,
+   "best_climb_rate_ms": 2.38,
+   "median_climb_radius_m": 35.2,
+   "total_climb_time_s": 427.0,
+   "extra_dist_per_lap_m": 134.4,
+   "clean_laps": 4,
+   "clean_lap_time_s": 113.5,
+   "clean_cruise_t_s": 92.75,
+   "clean_turn_t_s": 20.75,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 121.0,
+     "cruise_t": 101.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 305.0,
+     "cruise_t": 205.0,
+     "turn_t": 24.0,
+     "climb_t": 76.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 127.0,
+     "cruise_t": 107.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 206.0,
+     "cruise_t": 143.0,
+     "turn_t": 16.0,
+     "climb_t": 47.0,
+     "clean": false
+    },
+    {
+     "lap": 5,
+     "lap_t": 188.0,
+     "cruise_t": 143.0,
+     "turn_t": 24.0,
+     "climb_t": 21.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 129.0,
+     "cruise_t": 110.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 410.0,
+     "cruise_t": 121.0,
+     "turn_t": 32.0,
+     "climb_t": 257.0,
+     "clean": false
+    },
+    {
+     "lap": 8,
+     "lap_t": 218.0,
+     "cruise_t": 171.0,
+     "turn_t": 21.0,
+     "climb_t": 26.0,
+     "clean": false
+    },
+    {
+     "lap": 9,
+     "lap_t": 104.0,
+     "cruise_t": 78.0,
+     "turn_t": 26.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 94.0,
+     "cruise_t": 76.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Ralph",
+   "laps": 12,
+   "laps_flown_track": 12,
+   "aloft_time_s": 1793.0,
+   "lap1_time_s": 114.0,
+   "start": {
+    "start_peak_kmh": 99.0,
+    "start_dur_s": 24.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 68.8,
+    "cruise_glide_ratio": 9.6
+   },
+   "n_turns": 36,
+   "mean_turn_scrub_kmh": -1.2,
+   "mean_turn_extra_m": 34.47,
+   "mean_turn_entry_kmh": 74.39,
+   "n_climbs": 13,
+   "mean_climb_gain_m": 44.62,
+   "mean_climb_rate_ms": 1.05,
+   "best_climb_rate_ms": 2.79,
+   "median_climb_radius_m": 33.71,
+   "total_climb_time_s": 499.0,
+   "extra_dist_per_lap_m": 103.4,
+   "clean_laps": 5,
+   "clean_lap_time_s": 78.6,
+   "clean_cruise_t_s": 61.8,
+   "clean_turn_t_s": 16.8,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 114.0,
+     "cruise_t": 94.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 169.0,
+     "cruise_t": 73.0,
+     "turn_t": 24.0,
+     "climb_t": 72.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 158.0,
+     "cruise_t": 112.0,
+     "turn_t": 17.0,
+     "climb_t": 29.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 187.0,
+     "cruise_t": 109.0,
+     "turn_t": 19.0,
+     "climb_t": 59.0,
+     "clean": false
+    },
+    {
+     "lap": 5,
+     "lap_t": 247.0,
+     "cruise_t": 91.0,
+     "turn_t": 33.0,
+     "climb_t": 123.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 229.0,
+     "cruise_t": 144.0,
+     "turn_t": 21.0,
+     "climb_t": 64.0,
+     "clean": false
+    },
+    {
+     "lap": 7,
+     "lap_t": 99.0,
+     "cruise_t": 78.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 296.0,
+     "cruise_t": 128.0,
+     "turn_t": 16.0,
+     "climb_t": 152.0,
+     "clean": false
+    },
+    {
+     "lap": 9,
+     "lap_t": 83.0,
+     "cruise_t": 69.0,
+     "turn_t": 14.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 71.0,
+     "cruise_t": 55.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 68.0,
+     "cruise_t": 51.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 12,
+     "lap_t": 72.0,
+     "cruise_t": 56.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 6,
+  "group_id": 5719,
+  "leader_name": "Oliver Ladach",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 10,
+   "laps_flown_track": 10,
+   "aloft_time_s": 1435.0,
+   "lap1_time_s": 280.0,
+   "start": {
+    "start_peak_kmh": 104.0,
+    "start_dur_s": 68.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 60.2,
+    "cruise_glide_ratio": 9.6
+   },
+   "n_turns": 32,
+   "mean_turn_scrub_kmh": 3.6,
+   "mean_turn_extra_m": 29.24,
+   "mean_turn_entry_kmh": 62.93,
+   "n_climbs": 7,
+   "mean_climb_gain_m": 16,
+   "mean_climb_rate_ms": 0.68,
+   "best_climb_rate_ms": 2.29,
+   "median_climb_radius_m": 40.76,
+   "total_climb_time_s": 184.0,
+   "extra_dist_per_lap_m": 93.6,
+   "clean_laps": 7,
+   "clean_lap_time_s": 115.71,
+   "clean_cruise_t_s": 93.43,
+   "clean_turn_t_s": 22.29,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 280.0,
+     "cruise_t": 195.0,
+     "turn_t": 12.0,
+     "climb_t": 73.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 103.0,
+     "cruise_t": 83.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 121.0,
+     "cruise_t": 81.0,
+     "turn_t": 24.0,
+     "climb_t": 16.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 124.0,
+     "cruise_t": 106.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 105.0,
+     "cruise_t": 89.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 224.0,
+     "cruise_t": 110.0,
+     "turn_t": 19.0,
+     "climb_t": 95.0,
+     "clean": false
+    },
+    {
+     "lap": 7,
+     "lap_t": 108.0,
+     "cruise_t": 81.0,
+     "turn_t": 27.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 132.0,
+     "cruise_t": 108.0,
+     "turn_t": 24.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 9,
+     "lap_t": 120.0,
+     "cruise_t": 95.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 118.0,
+     "cruise_t": 92.0,
+     "turn_t": 26.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Oliver",
+   "laps": 16,
+   "laps_flown_track": 16,
+   "aloft_time_s": 1697.0,
+   "lap1_time_s": 380.0,
+   "start": {
+    "start_peak_kmh": 120.0,
+    "start_dur_s": 22.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 74.8,
+    "cruise_glide_ratio": 11.8
+   },
+   "n_turns": 48,
+   "mean_turn_scrub_kmh": -4.26,
+   "mean_turn_extra_m": 23.51,
+   "mean_turn_entry_kmh": 75.01,
+   "n_climbs": 4,
+   "mean_climb_gain_m": 58.25,
+   "mean_climb_rate_ms": 0.78,
+   "best_climb_rate_ms": 2.12,
+   "median_climb_radius_m": 44.55,
+   "total_climb_time_s": 201.0,
+   "extra_dist_per_lap_m": 70.5,
+   "clean_laps": 15,
+   "clean_lap_time_s": 87.8,
+   "clean_cruise_t_s": 69.8,
+   "clean_turn_t_s": 18.0,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 380.0,
+     "cruise_t": 161.0,
+     "turn_t": 18.0,
+     "climb_t": 201.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 93.0,
+     "cruise_t": 75.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 92.0,
+     "cruise_t": 72.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 91.0,
+     "cruise_t": 73.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 82.0,
+     "cruise_t": 63.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 90.0,
+     "cruise_t": 74.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 93.0,
+     "cruise_t": 75.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 81.0,
+     "cruise_t": 62.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 9,
+     "lap_t": 89.0,
+     "cruise_t": 71.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 105.0,
+     "cruise_t": 87.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 103.0,
+     "cruise_t": 84.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 12,
+     "lap_t": 81.0,
+     "cruise_t": 66.0,
+     "turn_t": 15.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 13,
+     "lap_t": 79.0,
+     "cruise_t": 63.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 14,
+     "lap_t": 74.0,
+     "cruise_t": 58.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 15,
+     "lap_t": 79.0,
+     "cruise_t": 57.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 16,
+     "lap_t": 85.0,
+     "cruise_t": 67.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 7,
+  "group_id": 5721,
+  "leader_name": "Randolph Br\u00f6mer",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 5,
+   "laps_flown_track": 7,
+   "aloft_time_s": 1079.0,
+   "lap1_time_s": 129.0,
+   "start": {
+    "start_peak_kmh": 97.0,
+    "start_dur_s": 16.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 52.0,
+    "cruise_glide_ratio": 11.0
+   },
+   "n_turns": 22,
+   "mean_turn_scrub_kmh": 0.24,
+   "mean_turn_extra_m": 23.2,
+   "mean_turn_entry_kmh": 53.99,
+   "n_climbs": 0,
+   "mean_climb_gain_m": null,
+   "mean_climb_rate_ms": null,
+   "best_climb_rate_ms": null,
+   "median_climb_radius_m": null,
+   "total_climb_time_s": 0,
+   "extra_dist_per_lap_m": 72.9,
+   "clean_laps": 5,
+   "clean_lap_time_s": 131.2,
+   "clean_cruise_t_s": 109.4,
+   "clean_turn_t_s": 21.8,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 129.0,
+     "cruise_t": 110.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 139.0,
+     "cruise_t": 116.0,
+     "turn_t": 23.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 294.0,
+     "cruise_t": 262.0,
+     "turn_t": 32.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 127.0,
+     "cruise_t": 106.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 133.0,
+     "cruise_t": 117.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 132.0,
+     "cruise_t": 108.0,
+     "turn_t": 24.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 125.0,
+     "cruise_t": 100.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Randolph",
+   "laps": 5,
+   "laps_flown_track": 5,
+   "aloft_time_s": 633.0,
+   "lap1_time_s": 121.0,
+   "start": {
+    "start_peak_kmh": 106.0,
+    "start_dur_s": 17.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 51.0,
+    "cruise_glide_ratio": 11.4
+   },
+   "n_turns": 16,
+   "mean_turn_scrub_kmh": -2.69,
+   "mean_turn_extra_m": 23.35,
+   "mean_turn_entry_kmh": 52.64,
+   "n_climbs": 0,
+   "mean_climb_gain_m": null,
+   "mean_climb_rate_ms": null,
+   "best_climb_rate_ms": null,
+   "median_climb_radius_m": null,
+   "total_climb_time_s": 0,
+   "extra_dist_per_lap_m": 74.7,
+   "clean_laps": 4,
+   "clean_lap_time_s": 128.0,
+   "clean_cruise_t_s": 106.0,
+   "clean_turn_t_s": 22.0,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 121.0,
+     "cruise_t": 102.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 125.0,
+     "cruise_t": 104.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 125.0,
+     "cruise_t": 102.0,
+     "turn_t": 23.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 125.0,
+     "cruise_t": 99.0,
+     "turn_t": 26.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 137.0,
+     "cruise_t": 119.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 8,
+  "group_id": 5724,
+  "leader_name": "Florian Griese",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 9,
+   "laps_flown_track": 9,
+   "aloft_time_s": 1740.0,
+   "lap1_time_s": 245.0,
+   "start": {
+    "start_peak_kmh": 84.0,
+    "start_dur_s": 31.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 60.0,
+    "cruise_glide_ratio": 9.2
+   },
+   "n_turns": 27,
+   "mean_turn_scrub_kmh": -1.58,
+   "mean_turn_extra_m": 33.0,
+   "mean_turn_entry_kmh": 65.8,
+   "n_climbs": 11,
+   "mean_climb_gain_m": 37,
+   "mean_climb_rate_ms": 0.72,
+   "best_climb_rate_ms": 2.29,
+   "median_climb_radius_m": 36.86,
+   "total_climb_time_s": 519.0,
+   "extra_dist_per_lap_m": 99.0,
+   "clean_laps": 4,
+   "clean_lap_time_s": 94.25,
+   "clean_cruise_t_s": 76.25,
+   "clean_turn_t_s": 18.0,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 245.0,
+     "cruise_t": 137.0,
+     "turn_t": 13.0,
+     "climb_t": 95.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 379.0,
+     "cruise_t": 186.0,
+     "turn_t": 21.0,
+     "climb_t": 172.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 259.0,
+     "cruise_t": 165.0,
+     "turn_t": 17.0,
+     "climb_t": 77.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 236.0,
+     "cruise_t": 97.0,
+     "turn_t": 24.0,
+     "climb_t": 115.0,
+     "clean": false
+    },
+    {
+     "lap": 5,
+     "lap_t": 127.0,
+     "cruise_t": 111.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 244.0,
+     "cruise_t": 150.0,
+     "turn_t": 34.0,
+     "climb_t": 60.0,
+     "clean": false
+    },
+    {
+     "lap": 7,
+     "lap_t": 113.0,
+     "cruise_t": 93.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 67.0,
+     "cruise_t": 50.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 9,
+     "lap_t": 70.0,
+     "cruise_t": 51.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Florian",
+   "laps": 12,
+   "laps_flown_track": 12,
+   "aloft_time_s": 1787.0,
+   "lap1_time_s": 124.0,
+   "start": {
+    "start_peak_kmh": 118.0,
+    "start_dur_s": 19.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 61.6,
+    "cruise_glide_ratio": 13.6
+   },
+   "n_turns": 36,
+   "mean_turn_scrub_kmh": -0.57,
+   "mean_turn_extra_m": 36.39,
+   "mean_turn_entry_kmh": 64.2,
+   "n_climbs": 6,
+   "mean_climb_gain_m": 64.67,
+   "mean_climb_rate_ms": 0.6,
+   "best_climb_rate_ms": 2.12,
+   "median_climb_radius_m": 30.82,
+   "total_climb_time_s": 518.0,
+   "extra_dist_per_lap_m": 109.2,
+   "clean_laps": 6,
+   "clean_lap_time_s": 94.67,
+   "clean_cruise_t_s": 73.5,
+   "clean_turn_t_s": 21.17,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 124.0,
+     "cruise_t": 99.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 325.0,
+     "cruise_t": 122.0,
+     "turn_t": 19.0,
+     "climb_t": 184.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 240.0,
+     "cruise_t": 86.0,
+     "turn_t": 28.0,
+     "climb_t": 126.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 136.0,
+     "cruise_t": 75.0,
+     "turn_t": 25.0,
+     "climb_t": 36.0,
+     "clean": false
+    },
+    {
+     "lap": 5,
+     "lap_t": 138.0,
+     "cruise_t": 83.0,
+     "turn_t": 22.0,
+     "climb_t": 33.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 256.0,
+     "cruise_t": 85.0,
+     "turn_t": 32.0,
+     "climb_t": 139.0,
+     "clean": false
+    },
+    {
+     "lap": 7,
+     "lap_t": 121.0,
+     "cruise_t": 99.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 113.0,
+     "cruise_t": 88.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 9,
+     "lap_t": 108.0,
+     "cruise_t": 81.0,
+     "turn_t": 27.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 90.0,
+     "cruise_t": 68.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 71.0,
+     "cruise_t": 55.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 12,
+     "lap_t": 65.0,
+     "cruise_t": 50.0,
+     "turn_t": 15.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 9,
+  "group_id": 5731,
+  "leader_name": "Andrej Vrecer",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 3,
+   "laps_flown_track": 5,
+   "aloft_time_s": 964.0,
+   "lap1_time_s": 118.0,
+   "start": {
+    "start_peak_kmh": 112.0,
+    "start_dur_s": 15.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 58.7,
+    "cruise_glide_ratio": 9.7
+   },
+   "n_turns": 15,
+   "mean_turn_scrub_kmh": -1.47,
+   "mean_turn_extra_m": 34.59,
+   "mean_turn_entry_kmh": 55.54,
+   "n_climbs": 2,
+   "mean_climb_gain_m": 17,
+   "mean_climb_rate_ms": 0.58,
+   "best_climb_rate_ms": 1.14,
+   "median_climb_radius_m": 40.05,
+   "total_climb_time_s": 71.0,
+   "extra_dist_per_lap_m": 103.8,
+   "clean_laps": 3,
+   "clean_lap_time_s": 182.0,
+   "clean_cruise_t_s": 160.0,
+   "clean_turn_t_s": 22.0,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 118.0,
+     "cruise_t": 96.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 194.0,
+     "cruise_t": 174.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 210.0,
+     "cruise_t": 188.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 300.0,
+     "cruise_t": 204.0,
+     "turn_t": 25.0,
+     "climb_t": 71.0,
+     "clean": false
+    },
+    {
+     "lap": 5,
+     "lap_t": 142.0,
+     "cruise_t": 118.0,
+     "turn_t": 24.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Andrej",
+   "laps": 7,
+   "laps_flown_track": 9,
+   "aloft_time_s": 2280.0,
+   "lap1_time_s": 125.0,
+   "start": {
+    "start_peak_kmh": 151.0,
+    "start_dur_s": 18.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 54.8,
+    "cruise_glide_ratio": 12.5
+   },
+   "n_turns": 30,
+   "mean_turn_scrub_kmh": -1.18,
+   "mean_turn_extra_m": 32.08,
+   "mean_turn_entry_kmh": 53.7,
+   "n_climbs": 10,
+   "mean_climb_gain_m": 32.6,
+   "mean_climb_rate_ms": 0.83,
+   "best_climb_rate_ms": 13.09,
+   "median_climb_radius_m": 31.86,
+   "total_climb_time_s": 1013.0,
+   "extra_dist_per_lap_m": 106.9,
+   "clean_laps": 2,
+   "clean_lap_time_s": 119.0,
+   "clean_cruise_t_s": 97.5,
+   "clean_turn_t_s": 21.5,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 125.0,
+     "cruise_t": 106.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 137.0,
+     "cruise_t": 114.0,
+     "turn_t": 23.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 368.0,
+     "cruise_t": 277.0,
+     "turn_t": 52.0,
+     "climb_t": 39.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 332.0,
+     "cruise_t": 106.0,
+     "turn_t": 22.0,
+     "climb_t": 204.0,
+     "clean": false
+    },
+    {
+     "lap": 5,
+     "lap_t": 206.0,
+     "cruise_t": 92.0,
+     "turn_t": 20.0,
+     "climb_t": 94.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 390.0,
+     "cruise_t": 73.0,
+     "turn_t": 24.0,
+     "climb_t": 293.0,
+     "clean": false
+    },
+    {
+     "lap": 7,
+     "lap_t": 371.0,
+     "cruise_t": 86.0,
+     "turn_t": 22.0,
+     "climb_t": 263.0,
+     "clean": false
+    },
+    {
+     "lap": 8,
+     "lap_t": 250.0,
+     "cruise_t": 88.0,
+     "turn_t": 42.0,
+     "climb_t": 120.0,
+     "clean": false
+    },
+    {
+     "lap": 9,
+     "lap_t": 101.0,
+     "cruise_t": 81.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 11,
+  "group_id": 5763,
+  "leader_name": "DANIEL AEBERLI",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 12,
+   "laps_flown_track": 12,
+   "aloft_time_s": 1671.0,
+   "lap1_time_s": 206.0,
+   "start": {
+    "start_peak_kmh": 92.0,
+    "start_dur_s": 134.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 65.6,
+    "cruise_glide_ratio": 8.9
+   },
+   "n_turns": 36,
+   "mean_turn_scrub_kmh": 0.53,
+   "mean_turn_extra_m": 35.86,
+   "mean_turn_entry_kmh": 67.81,
+   "n_climbs": 4,
+   "mean_climb_gain_m": 46.75,
+   "mean_climb_rate_ms": 1.57,
+   "best_climb_rate_ms": 3.34,
+   "median_climb_radius_m": 39.2,
+   "total_climb_time_s": 144.0,
+   "extra_dist_per_lap_m": 107.6,
+   "clean_laps": 9,
+   "clean_lap_time_s": 116.78,
+   "clean_cruise_t_s": 94.11,
+   "clean_turn_t_s": 22.67,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 206.0,
+     "cruise_t": 190.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 100.0,
+     "cruise_t": 76.0,
+     "turn_t": 24.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 85.0,
+     "cruise_t": 54.0,
+     "turn_t": 31.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 123.0,
+     "cruise_t": 92.0,
+     "turn_t": 31.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 288.0,
+     "cruise_t": 130.0,
+     "turn_t": 32.0,
+     "climb_t": 126.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 126.0,
+     "cruise_t": 79.0,
+     "turn_t": 29.0,
+     "climb_t": 18.0,
+     "clean": false
+    },
+    {
+     "lap": 7,
+     "lap_t": 92.0,
+     "cruise_t": 72.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 104.0,
+     "cruise_t": 86.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 9,
+     "lap_t": 114.0,
+     "cruise_t": 98.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 116.0,
+     "cruise_t": 94.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 173.0,
+     "cruise_t": 148.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 12,
+     "lap_t": 144.0,
+     "cruise_t": 127.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "DANIEL",
+   "laps": 15,
+   "laps_flown_track": 15,
+   "aloft_time_s": 1778.0,
+   "lap1_time_s": 132.0,
+   "start": {
+    "start_peak_kmh": 91.0,
+    "start_dur_s": 15.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 69.2,
+    "cruise_glide_ratio": 10.8
+   },
+   "n_turns": 45,
+   "mean_turn_scrub_kmh": -2.92,
+   "mean_turn_extra_m": 32.82,
+   "mean_turn_entry_kmh": 71.42,
+   "n_climbs": 6,
+   "mean_climb_gain_m": 70.5,
+   "mean_climb_rate_ms": 1.62,
+   "best_climb_rate_ms": 4.57,
+   "median_climb_radius_m": 33.43,
+   "total_climb_time_s": 266.0,
+   "extra_dist_per_lap_m": 98.5,
+   "clean_laps": 10,
+   "clean_lap_time_s": 93.1,
+   "clean_cruise_t_s": 72.8,
+   "clean_turn_t_s": 20.3,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 132.0,
+     "cruise_t": 69.0,
+     "turn_t": 29.0,
+     "climb_t": 34.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 71.0,
+     "cruise_t": 54.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 66.0,
+     "cruise_t": 46.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 70.0,
+     "cruise_t": 52.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 93.0,
+     "cruise_t": 72.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 117.0,
+     "cruise_t": 98.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 238.0,
+     "cruise_t": 128.0,
+     "turn_t": 14.0,
+     "climb_t": 96.0,
+     "clean": false
+    },
+    {
+     "lap": 8,
+     "lap_t": 193.0,
+     "cruise_t": 64.0,
+     "turn_t": 35.0,
+     "climb_t": 94.0,
+     "clean": false
+    },
+    {
+     "lap": 9,
+     "lap_t": 103.0,
+     "cruise_t": 74.0,
+     "turn_t": 29.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 124.0,
+     "cruise_t": 77.0,
+     "turn_t": 21.0,
+     "climb_t": 26.0,
+     "clean": false
+    },
+    {
+     "lap": 11,
+     "lap_t": 160.0,
+     "cruise_t": 120.0,
+     "turn_t": 24.0,
+     "climb_t": 16.0,
+     "clean": false
+    },
+    {
+     "lap": 12,
+     "lap_t": 142.0,
+     "cruise_t": 119.0,
+     "turn_t": 23.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 13,
+     "lap_t": 107.0,
+     "cruise_t": 87.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 14,
+     "lap_t": 83.0,
+     "cruise_t": 65.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 15,
+     "lap_t": 79.0,
+     "cruise_t": 61.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 12,
+  "group_id": 5769,
+  "leader_name": "Jens Geider",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 2,
+   "laps_flown_track": 2,
+   "aloft_time_s": 745.0,
+   "lap1_time_s": 309.0,
+   "start": {
+    "start_peak_kmh": 90.0,
+    "start_dur_s": 53.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 51.6,
+    "cruise_glide_ratio": 9.3
+   },
+   "n_turns": 6,
+   "mean_turn_scrub_kmh": 3.22,
+   "mean_turn_extra_m": 49.65,
+   "mean_turn_entry_kmh": 55.5,
+   "n_climbs": 4,
+   "mean_climb_gain_m": 16,
+   "mean_climb_rate_ms": 0.38,
+   "best_climb_rate_ms": 1.75,
+   "median_climb_radius_m": 40.42,
+   "total_climb_time_s": 194.0,
+   "extra_dist_per_lap_m": 148.9,
+   "clean_laps": 0,
+   "clean_lap_time_s": null,
+   "clean_cruise_t_s": null,
+   "clean_turn_t_s": null,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 309.0,
+     "cruise_t": 215.0,
+     "turn_t": 23.0,
+     "climb_t": 71.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 436.0,
+     "cruise_t": 281.0,
+     "turn_t": 32.0,
+     "climb_t": 123.0,
+     "clean": false
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Jens",
+   "laps": 8,
+   "laps_flown_track": 8,
+   "aloft_time_s": 1661.0,
+   "lap1_time_s": 278.0,
+   "start": {
+    "start_peak_kmh": 83.0,
+    "start_dur_s": 17.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 53.8,
+    "cruise_glide_ratio": 8.8
+   },
+   "n_turns": 24,
+   "mean_turn_scrub_kmh": -1.85,
+   "mean_turn_extra_m": 35.45,
+   "mean_turn_entry_kmh": 56.64,
+   "n_climbs": 8,
+   "mean_climb_gain_m": 45,
+   "mean_climb_rate_ms": 0.59,
+   "best_climb_rate_ms": 2.54,
+   "median_climb_radius_m": 41.41,
+   "total_climb_time_s": 455.0,
+   "extra_dist_per_lap_m": 106.4,
+   "clean_laps": 4,
+   "clean_lap_time_s": 109.0,
+   "clean_cruise_t_s": 88.25,
+   "clean_turn_t_s": 20.75,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 278.0,
+     "cruise_t": 224.0,
+     "turn_t": 25.0,
+     "climb_t": 29.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 335.0,
+     "cruise_t": 205.0,
+     "turn_t": 16.0,
+     "climb_t": 114.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 429.0,
+     "cruise_t": 97.0,
+     "turn_t": 36.0,
+     "climb_t": 296.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 183.0,
+     "cruise_t": 132.0,
+     "turn_t": 35.0,
+     "climb_t": 16.0,
+     "clean": false
+    },
+    {
+     "lap": 5,
+     "lap_t": 128.0,
+     "cruise_t": 110.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 109.0,
+     "cruise_t": 83.0,
+     "turn_t": 26.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 105.0,
+     "cruise_t": 84.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 94.0,
+     "cruise_t": 76.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 13,
+  "group_id": 5776,
+  "leader_name": "Philip Kolb",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 10,
+   "laps_flown_track": 10,
+   "aloft_time_s": 1405.0,
+   "lap1_time_s": 264.0,
+   "start": {
+    "start_peak_kmh": 79.0,
+    "start_dur_s": 160.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 65.0,
+    "cruise_glide_ratio": 7.9
+   },
+   "n_turns": 30,
+   "mean_turn_scrub_kmh": -2.06,
+   "mean_turn_extra_m": 31.26,
+   "mean_turn_entry_kmh": 64.54,
+   "n_climbs": 3,
+   "mean_climb_gain_m": 80.67,
+   "mean_climb_rate_ms": 1.39,
+   "best_climb_rate_ms": 2.73,
+   "median_climb_radius_m": 36.9,
+   "total_climb_time_s": 150.0,
+   "extra_dist_per_lap_m": 93.8,
+   "clean_laps": 6,
+   "clean_lap_time_s": 114.67,
+   "clean_cruise_t_s": 90.17,
+   "clean_turn_t_s": 24.5,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 264.0,
+     "cruise_t": 245.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 88.0,
+     "cruise_t": 62.0,
+     "turn_t": 26.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 101.0,
+     "cruise_t": 68.0,
+     "turn_t": 17.0,
+     "climb_t": 16.0,
+     "clean": false
+    },
+    {
+     "lap": 4,
+     "lap_t": 126.0,
+     "cruise_t": 92.0,
+     "turn_t": 34.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 221.0,
+     "cruise_t": 89.0,
+     "turn_t": 15.0,
+     "climb_t": 117.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 107.0,
+     "cruise_t": 85.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 108.0,
+     "cruise_t": 82.0,
+     "turn_t": 26.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 113.0,
+     "cruise_t": 91.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 9,
+     "lap_t": 131.0,
+     "cruise_t": 88.0,
+     "turn_t": 26.0,
+     "climb_t": 17.0,
+     "clean": false
+    },
+    {
+     "lap": 10,
+     "lap_t": 146.0,
+     "cruise_t": 129.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Philip",
+   "laps": 15,
+   "laps_flown_track": 15,
+   "aloft_time_s": 1695.0,
+   "lap1_time_s": 176.0,
+   "start": {
+    "start_peak_kmh": 109.0,
+    "start_dur_s": 21.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 68.9,
+    "cruise_glide_ratio": 9.6
+   },
+   "n_turns": 45,
+   "mean_turn_scrub_kmh": 0.38,
+   "mean_turn_extra_m": 32.49,
+   "mean_turn_entry_kmh": 73.2,
+   "n_climbs": 5,
+   "mean_climb_gain_m": 63.6,
+   "mean_climb_rate_ms": 1.66,
+   "best_climb_rate_ms": 3.14,
+   "median_climb_radius_m": 27.28,
+   "total_climb_time_s": 202.0,
+   "extra_dist_per_lap_m": 97.5,
+   "clean_laps": 12,
+   "clean_lap_time_s": 97.0,
+   "clean_cruise_t_s": 75.83,
+   "clean_turn_t_s": 21.17,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 176.0,
+     "cruise_t": 103.0,
+     "turn_t": 22.0,
+     "climb_t": 51.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 107.0,
+     "cruise_t": 88.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 104.0,
+     "cruise_t": 76.0,
+     "turn_t": 28.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 82.0,
+     "cruise_t": 64.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 86.0,
+     "cruise_t": 68.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 105.0,
+     "cruise_t": 86.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 99.0,
+     "cruise_t": 78.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 190.0,
+     "cruise_t": 72.0,
+     "turn_t": 28.0,
+     "climb_t": 90.0,
+     "clean": false
+    },
+    {
+     "lap": 9,
+     "lap_t": 86.0,
+     "cruise_t": 67.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 84.0,
+     "cruise_t": 67.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 85.0,
+     "cruise_t": 60.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 12,
+     "lap_t": 102.0,
+     "cruise_t": 81.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 13,
+     "lap_t": 165.0,
+     "cruise_t": 84.0,
+     "turn_t": 20.0,
+     "climb_t": 61.0,
+     "clean": false
+    },
+    {
+     "lap": 14,
+     "lap_t": 90.0,
+     "cruise_t": 68.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 15,
+     "lap_t": 134.0,
+     "cruise_t": 107.0,
+     "turn_t": 27.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 14,
+  "group_id": 5777,
+  "leader_name": "Benjamin D\u00e4hn",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 12,
+   "laps_flown_track": 12,
+   "aloft_time_s": 1707.0,
+   "lap1_time_s": 386.0,
+   "start": {
+    "start_peak_kmh": 124.0,
+    "start_dur_s": 20.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 72.2,
+    "cruise_glide_ratio": 8.9
+   },
+   "n_turns": 39,
+   "mean_turn_scrub_kmh": 3.42,
+   "mean_turn_extra_m": 41.04,
+   "mean_turn_entry_kmh": 77.95,
+   "n_climbs": 9,
+   "mean_climb_gain_m": 59,
+   "mean_climb_rate_ms": 1.54,
+   "best_climb_rate_ms": 3.92,
+   "median_climb_radius_m": 48.93,
+   "total_climb_time_s": 355.0,
+   "extra_dist_per_lap_m": 133.4,
+   "clean_laps": 10,
+   "clean_lap_time_s": 96.8,
+   "clean_cruise_t_s": 74.1,
+   "clean_turn_t_s": 22.7,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 386.0,
+     "cruise_t": 153.0,
+     "turn_t": 26.0,
+     "climb_t": 207.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 121.0,
+     "cruise_t": 96.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 106.0,
+     "cruise_t": 75.0,
+     "turn_t": 31.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 106.0,
+     "cruise_t": 77.0,
+     "turn_t": 29.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 100.0,
+     "cruise_t": 77.0,
+     "turn_t": 23.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 91.0,
+     "cruise_t": 69.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 100.0,
+     "cruise_t": 74.0,
+     "turn_t": 26.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 353.0,
+     "cruise_t": 179.0,
+     "turn_t": 26.0,
+     "climb_t": 148.0,
+     "clean": false
+    },
+    {
+     "lap": 9,
+     "lap_t": 101.0,
+     "cruise_t": 82.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 88.0,
+     "cruise_t": 72.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 84.0,
+     "cruise_t": 67.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 12,
+     "lap_t": 71.0,
+     "cruise_t": 52.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Benjamin",
+   "laps": 16,
+   "laps_flown_track": 16,
+   "aloft_time_s": 1780.0,
+   "lap1_time_s": 218.0,
+   "start": {
+    "start_peak_kmh": 126.0,
+    "start_dur_s": 20.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 79.1,
+    "cruise_glide_ratio": 10.3
+   },
+   "n_turns": 48,
+   "mean_turn_scrub_kmh": -3.1,
+   "mean_turn_extra_m": 32.67,
+   "mean_turn_entry_kmh": 81.2,
+   "n_climbs": 6,
+   "mean_climb_gain_m": 91.67,
+   "mean_climb_rate_ms": 1.38,
+   "best_climb_rate_ms": 3.74,
+   "median_climb_radius_m": 31.2,
+   "total_climb_time_s": 348.0,
+   "extra_dist_per_lap_m": 98.0,
+   "clean_laps": 13,
+   "clean_lap_time_s": 83.31,
+   "clean_cruise_t_s": 66.85,
+   "clean_turn_t_s": 16.46,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 218.0,
+     "cruise_t": 96.0,
+     "turn_t": 16.0,
+     "climb_t": 106.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 137.0,
+     "cruise_t": 76.0,
+     "turn_t": 26.0,
+     "climb_t": 35.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 79.0,
+     "cruise_t": 65.0,
+     "turn_t": 14.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 80.0,
+     "cruise_t": 66.0,
+     "turn_t": 14.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 78.0,
+     "cruise_t": 63.0,
+     "turn_t": 15.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 87.0,
+     "cruise_t": 72.0,
+     "turn_t": 15.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 93.0,
+     "cruise_t": 72.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 87.0,
+     "cruise_t": 74.0,
+     "turn_t": 13.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 9,
+     "lap_t": 114.0,
+     "cruise_t": 88.0,
+     "turn_t": 26.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 10,
+     "lap_t": 342.0,
+     "cruise_t": 107.0,
+     "turn_t": 28.0,
+     "climb_t": 207.0,
+     "clean": false
+    },
+    {
+     "lap": 11,
+     "lap_t": 79.0,
+     "cruise_t": 62.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 12,
+     "lap_t": 76.0,
+     "cruise_t": 59.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 13,
+     "lap_t": 78.0,
+     "cruise_t": 63.0,
+     "turn_t": 15.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 14,
+     "lap_t": 84.0,
+     "cruise_t": 68.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 15,
+     "lap_t": 75.0,
+     "cruise_t": 58.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 16,
+     "lap_t": 73.0,
+     "cruise_t": 59.0,
+     "turn_t": 14.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  }
+ },
+ {
+  "round": 15,
+  "group_id": 5782,
+  "leader_name": "Philip Kolb",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 6,
+   "laps_flown_track": 6,
+   "aloft_time_s": 1210.0,
+   "lap1_time_s": 301.0,
+   "start": {
+    "start_peak_kmh": 83.0,
+    "start_dur_s": 124.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 58.1,
+    "cruise_glide_ratio": 9.7
+   },
+   "n_turns": 18,
+   "mean_turn_scrub_kmh": -1.07,
+   "mean_turn_extra_m": 45.11,
+   "mean_turn_entry_kmh": 58.39,
+   "n_climbs": 4,
+   "mean_climb_gain_m": 54,
+   "mean_climb_rate_ms": 0.9,
+   "best_climb_rate_ms": 3.08,
+   "median_climb_radius_m": 38.4,
+   "total_climb_time_s": 201.0,
+   "extra_dist_per_lap_m": 135.3,
+   "clean_laps": 4,
+   "clean_lap_time_s": 145.0,
+   "clean_cruise_t_s": 122.0,
+   "clean_turn_t_s": 23.0,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 301.0,
+     "cruise_t": 215.0,
+     "turn_t": 22.0,
+     "climb_t": 64.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 329.0,
+     "cruise_t": 166.0,
+     "turn_t": 26.0,
+     "climb_t": 137.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 112.0,
+     "cruise_t": 86.0,
+     "turn_t": 26.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 192.0,
+     "cruise_t": 169.0,
+     "turn_t": 23.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 127.0,
+     "cruise_t": 108.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 149.0,
+     "cruise_t": 125.0,
+     "turn_t": 24.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Philip",
+   "laps": 7,
+   "laps_flown_track": 7,
+   "aloft_time_s": 1435.0,
+   "lap1_time_s": 352.0,
+   "start": {
+    "start_peak_kmh": 105.0,
+    "start_dur_s": 18.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 61.9,
+    "cruise_glide_ratio": 9.2
+   },
+   "n_turns": 21,
+   "mean_turn_scrub_kmh": 5.81,
+   "mean_turn_extra_m": 15.58,
+   "mean_turn_entry_kmh": 65.09,
+   "n_climbs": 7,
+   "mean_climb_gain_m": 57.14,
+   "mean_climb_rate_ms": 0.7,
+   "best_climb_rate_ms": 2.87,
+   "median_climb_radius_m": 34.23,
+   "total_climb_time_s": 575.0,
+   "extra_dist_per_lap_m": 46.7,
+   "clean_laps": 3,
+   "clean_lap_time_s": 110.67,
+   "clean_cruise_t_s": 89.0,
+   "clean_turn_t_s": 21.67,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 352.0,
+     "cruise_t": 164.0,
+     "turn_t": 25.0,
+     "climb_t": 163.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 300.0,
+     "cruise_t": 70.0,
+     "turn_t": 14.0,
+     "climb_t": 216.0,
+     "clean": false
+    },
+    {
+     "lap": 3,
+     "lap_t": 101.0,
+     "cruise_t": 82.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 101.0,
+     "cruise_t": 81.0,
+     "turn_t": 20.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 200.0,
+     "cruise_t": 123.0,
+     "turn_t": 14.0,
+     "climb_t": 63.0,
+     "clean": false
+    },
+    {
+     "lap": 6,
+     "lap_t": 130.0,
+     "cruise_t": 104.0,
+     "turn_t": 26.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 251.0,
+     "cruise_t": 99.0,
+     "turn_t": 19.0,
+     "climb_t": 133.0,
+     "clean": false
+    }
+   ]
+  }
+ },
+ {
+  "round": 17,
+  "group_id": 5815,
+  "leader_name": "Jens Geider",
+  "bill": {
+   "pilot": "Bill",
+   "laps": 13,
+   "laps_flown_track": 13,
+   "aloft_time_s": 1773.0,
+   "lap1_time_s": 167.0,
+   "start": {
+    "start_peak_kmh": 88.0,
+    "start_dur_s": 59.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 64.8,
+    "cruise_glide_ratio": 9.6
+   },
+   "n_turns": 39,
+   "mean_turn_scrub_kmh": 5.15,
+   "mean_turn_extra_m": 30.24,
+   "mean_turn_entry_kmh": 72.39,
+   "n_climbs": 5,
+   "mean_climb_gain_m": 40.8,
+   "mean_climb_rate_ms": 0.98,
+   "best_climb_rate_ms": 2.67,
+   "median_climb_radius_m": 40.14,
+   "total_climb_time_s": 233.0,
+   "extra_dist_per_lap_m": 90.7,
+   "clean_laps": 10,
+   "clean_lap_time_s": 109.4,
+   "clean_cruise_t_s": 89.1,
+   "clean_turn_t_s": 20.2,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 167.0,
+     "cruise_t": 127.0,
+     "turn_t": 19.0,
+     "climb_t": 21.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 128.0,
+     "cruise_t": 92.0,
+     "turn_t": 36.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 94.0,
+     "cruise_t": 69.0,
+     "turn_t": 25.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 87.0,
+     "cruise_t": 69.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 97.0,
+     "cruise_t": 79.0,
+     "turn_t": 18.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 125.0,
+     "cruise_t": 103.0,
+     "turn_t": 22.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 104.0,
+     "cruise_t": 89.0,
+     "turn_t": 15.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 8,
+     "lap_t": 113.0,
+     "cruise_t": 96.0,
+     "turn_t": 16.0,
+     "climb_t": 1.0,
+     "clean": true
+    },
+    {
+     "lap": 9,
+     "lap_t": 244.0,
+     "cruise_t": 119.0,
+     "turn_t": 20.0,
+     "climb_t": 105.0,
+     "clean": false
+    },
+    {
+     "lap": 10,
+     "lap_t": 128.0,
+     "cruise_t": 116.0,
+     "turn_t": 12.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 268.0,
+     "cruise_t": 139.0,
+     "turn_t": 23.0,
+     "climb_t": 106.0,
+     "clean": false
+    },
+    {
+     "lap": 12,
+     "lap_t": 119.0,
+     "cruise_t": 98.0,
+     "turn_t": 21.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 13,
+     "lap_t": 99.0,
+     "cruise_t": 80.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    }
+   ]
+  },
+  "leader": {
+   "pilot": "Jens",
+   "laps": 13,
+   "laps_flown_track": 13,
+   "aloft_time_s": 1766.0,
+   "lap1_time_s": 249.0,
+   "start": {
+    "start_peak_kmh": 118.0,
+    "start_dur_s": 185.0
+   },
+   "cruise": {
+    "mean_cruise_kmh": 73.4,
+    "cruise_glide_ratio": 7.5
+   },
+   "n_turns": 39,
+   "mean_turn_scrub_kmh": 3.42,
+   "mean_turn_extra_m": 31.28,
+   "mean_turn_entry_kmh": 85.77,
+   "n_climbs": 7,
+   "mean_climb_gain_m": 31.57,
+   "mean_climb_rate_ms": 1.06,
+   "best_climb_rate_ms": 2.72,
+   "median_climb_radius_m": 36.39,
+   "total_climb_time_s": 217.0,
+   "extra_dist_per_lap_m": 93.8,
+   "clean_laps": 8,
+   "clean_lap_time_s": 94.25,
+   "clean_cruise_t_s": 76.25,
+   "clean_turn_t_s": 18.0,
+   "_laps": [
+    {
+     "lap": 1,
+     "lap_t": 249.0,
+     "cruise_t": 233.0,
+     "turn_t": 16.0,
+     "climb_t": 0.0,
+     "clean": false
+    },
+    {
+     "lap": 2,
+     "lap_t": 72.0,
+     "cruise_t": 57.0,
+     "turn_t": 15.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 3,
+     "lap_t": 69.0,
+     "cruise_t": 52.0,
+     "turn_t": 17.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 4,
+     "lap_t": 89.0,
+     "cruise_t": 70.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 5,
+     "lap_t": 105.0,
+     "cruise_t": 92.0,
+     "turn_t": 13.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 6,
+     "lap_t": 105.0,
+     "cruise_t": 91.0,
+     "turn_t": 14.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 7,
+     "lap_t": 171.0,
+     "cruise_t": 103.0,
+     "turn_t": 13.0,
+     "climb_t": 55.0,
+     "clean": false
+    },
+    {
+     "lap": 8,
+     "lap_t": 149.0,
+     "cruise_t": 113.0,
+     "turn_t": 19.0,
+     "climb_t": 17.0,
+     "clean": false
+    },
+    {
+     "lap": 9,
+     "lap_t": 249.0,
+     "cruise_t": 160.0,
+     "turn_t": 17.0,
+     "climb_t": 72.0,
+     "clean": false
+    },
+    {
+     "lap": 10,
+     "lap_t": 99.0,
+     "cruise_t": 80.0,
+     "turn_t": 19.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 11,
+     "lap_t": 95.0,
+     "cruise_t": 72.0,
+     "turn_t": 23.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 12,
+     "lap_t": 120.0,
+     "cruise_t": 96.0,
+     "turn_t": 24.0,
+     "climb_t": 0.0,
+     "clean": true
+    },
+    {
+     "lap": 13,
+     "lap_t": 194.0,
+     "cruise_t": 102.0,
+     "turn_t": 19.0,
+     "climb_t": 73.0,
+     "clean": false
+    }
+   ]
+  }
+ }
+]

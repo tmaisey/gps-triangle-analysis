@@ -1,0 +1,124 @@
+# GPS Triangle — Bill Maisey performance analysis & coaching report
+
+Product requirements and plan. Captures intent ahead of the build so the deliverable and its scope are agreed before construction.
+
+*Status: pre-build. Data gathering complete or in-flight; report not yet built. Last updated 2026-09-27.*
+
+## 1. Vision
+
+Turn the public timing/telemetry data from an RC GPS Triangle competition into a clear, evidence-led **coaching report** for pilot **Bill Maisey (William Maisey)** — showing where he is strong, where he loses ground to the best pilots, and what to train to improve. The report must stand alone as a single file that can be emailed and opened by anyone.
+
+## 2. Subject & data source
+
+- **Pilot:** Bill Maisey, club Anglesey MAC (GB). `userGuid 2e6eb0fb-d61f-410c-a08e-313b1dd87977`.
+- **Anchor event:** *World Masters, Sport class, Oschatz (Germany), 3–8 Aug 2026.* 38 competitors, 17 rounds. Bill finished **22nd/38** (12,562 pts); winner Florian Griese (15,449).
+- **Data platform:** `rcmodelspot.com` — an open, anonymous JSON REST API (`/api`). Exposes per-flight scores, the heat/group tree, competitor identities, and **full ~1 Hz GPS tracks for every pilot** (lat/lon/alt/vario/groundspeed/bearing), plus per-flight lap/triangle events. This makes trajectory-level analysis possible, not just standings.
+- **Weather:** Open-Meteo ERA5 archive (free, no key) at the Oschatz task coordinates, hourly, mapped to each flight's start time.
+
+## 3. Sport model (grounds the analysis)
+
+Sport class: a ~30-minute task. The motor is used **only** to climb to a capped start altitude (max entry altitude 400 m, max entry speed 120 km/h); after crossing the start line the motor is off and the flight is a pure glide. Pilots convert an altitude/energy budget into as many 350 m-leg triangle laps as possible, using thermals to stay aloft. **Laps completed drive the score; average speed is the tie-break; a clean landing scores landing points.** Three of the 17 rounds (heats 4, 10, 16) are a separate **one-lap speed sprint**, scored differently, and are analysed separately.
+
+**Fairness principle:** scores are normalised to 1000 *within each heat-group* (~9–10 pilots flying the same time slot / same air). The like-for-like comparison is therefore **Bill vs the top scorer in his own group each round**, not vs the overall winner across different air. The report uses the same-air leader as the benchmark and states this.
+
+## 4. Goals
+
+1. Give Bill a prioritised, actionable view of what to train, backed by evidence from his own flights.
+2. Separate genuine skill from conditions and luck (within-group normalised score vs raw laps).
+3. Show progression across the six days (practice effect) distinct from conditions.
+4. Explore the "art of the possible" for future coaching technology, grounded in the competition rules.
+
+**Non-goals:** live/in-flight tooling; a general-purpose analytics product; ranking prediction; comparison against pilots in different air as if equivalent.
+
+## 5. Users & audience
+
+Primary: Bill (pilot) and whoever coaches/spots for him. Secondary: club/family. Tone is analytical and respectful; the report should be readable by a non-analyst.
+
+## 6. Scope
+
+**In scope:** the Oschatz 2026 event — full depth. Standings, per-round scores, per-round GPS trajectories (Bill vs same-air leader), flight-phase decomposition (start / straight / turn / climb), weather correlation, week-long progression, and a forward-looking coaching-technology section.
+
+**Out of scope (with reason):**
+- **Multi-event / season trend.** Intended, but **not feasible**: the rcmodelspot API has no search/list endpoint, the season league feeds do not contain Bill (championships are not league rounds), and UK Free Glide League events are not discoverable through it. Only the Oschatz event is retrievable. *Re-openable if Bill supplies URLs/GUIDs of his other events — the same pipeline would ingest them.*
+- Speed-sprint deep trajectory analysis beyond noting the top-end gap.
+
+## 7. Findings that inform the report (evidence basis)
+
+Established from the data pulls (subject to the weather and phase passes finalising):
+
+1. **Biggest lever — cruise speed between thermals.** Bill's clean-lap cruise is ~8% slower than his same-air leader (61.9 vs 67.4 km/h; glide ratio 9.3 vs 10.3). This is ~90% of his 22 s/lap clean-lap deficit *and* the dominant driver of his lower lap count (a pace counterfactual attributes ≈ +2.7 of the ~3-lap gap to speed). Laps decide the score; cruise pace is the underlying cause.
+2. **Climb quality — second lever (qualitative, not time).** Bill spends *less* total time circling than the leader (287 vs 402 s), so he is not over-thermalling; but he banks ~35% less height per thermal (40.7 vs 63.1 m) with wider, slower circles (39.4 vs 33.2 m radius; 0.89/2.55 vs 1.03/3.64 m/s mean/best). Weak climbs make him land early on poor-lift days (e.g. R9 = 3 laps, R12 = 2) — the lap-count shortfall.
+3. **Under-used entry speed — cheap third lever.** He crosses the start gate at 70.8 vs 94.5 km/h, leaving ~49 km/h of the 120 km/h cap unused (twice the leader's unused margin). Free opening-lap energy; entry altitude is already at the cap.
+4. **Turns and lines — near a strength.** Turnpoint technique costs only ~2 s/lap (~10% of the deficit); lines are slightly wider (+15 m/lap) but this is the smallest lever.
+5. **Landings are a strength** — clean 600 on all 14 distance rounds; no illegal flights, no zone penalties all week. He matched the leader lap-for-lap in R7 and R17 (scores 998/999) — the ceiling is there.
+6. **Secondary, separable weakness:** the one-lap speed task (~110 vs ~150 km/h, ~24% slower).
+7. Gap to the winner decomposes to ≈79% distance task, ≈21% speed sprint, ≈0% landings/penalties.
+8. **Conditions:** wind shows no association with his relative standing; **thermal strength is the differentiator** — his within-group score and lap count rise with solar radiation (ρ≈+0.61 / +0.52), and his lowest relative results cluster on weak/late-day lift. Read: relatively worse when lift is scarce, competitive when it is strong. Suggestive only (n≈14). Reinforces the climb-quality lever (#2) for weak-lift days.
+9. **Phase cost ranking (biggest lever first):** cruise speed → climb quality (height banked) → entry speed → turns. Confirms all four phase hypotheses.
+10. **Progression across the week:** computed at build from per-round normalised score (skill, conditions-controlled) vs raw laps (skill + conditions), ordered by day.
+
+## 8. Deliverable specification — single-file HTML report
+
+**Format & portability**
+- **One self-contained `.html` file** the user can email and open offline. All data and charts embedded (inline SVG generated from the embeddable per-round dataset, ~0.4 MB; no heavy CDN dependency required for display).
+
+**Design**
+- White background. **Deloitte-inspired palette** (green primary, cool greys, a teal/blue secondary) for an elegant, restrained look — **no Deloitte branding or logos**.
+- Elegant typeface (serif display for headings, clean sans for body; graceful system fallback so it reads well offline).
+- **No AI-tell styling:** no coloured accent bars/stripes on the top or left of boxes, no gradient hero blocks, no emoji section headers.
+- **Every figure captioned.**
+- Insights written **Point → Evidence → Explain**.
+- **Grounding (mandatory):** every claim is backed by a plot/visualisation on the page **and/or** a link to the source data online (the rcmodelspot event/flight pages; and where relevant the weather source and the Sport-class regs). No unsupported assertions.
+- **Useful links only:** recommended tech and drills link to a relevant online resource **where one genuinely helps** — do not force links onto items that lack a usefully relevant source.
+- Avoid flagged lexical tics ("honest/genuinely/sit with/real", "that's not X it's Y", etc.).
+
+**Navigation / UX**
+- A single dropdown that reflows the whole page: **Overview** (default/home), then **Round 1 · <date-time>** … **Round 17 · <date-time>**. Selecting an item swaps the visible section; JavaScript only toggles visibility.
+- **Per-page structure (Overview and every round):** each page opens with a short **summary** — a few sentences then ~5 bullets of key points and recommendations. Each summary bullet is an **anchor link** to the relevant section below on that page; each **section header links back to the top** of the page.
+- **Collapsible sections:** the sections on each page collapse/expand so the reader can jump up and down without long scrolling, with **"Expand all" / "Collapse all"** controls at the top of the section group. Sensible default open/closed state (summary always visible).
+
+**Content**
+- **Overview (home):** headline result; strengths/weaknesses verdict (PEE); **where he gains vs loses by phase** (start / straight / turn / climb) with the ranked biggest levers; conditions dependence; week-long progression (skill vs conditions); consistency (floor vs ceiling); prioritised recommendations.
+- **Per-round views:** energy/altitude trace (Bill vs leader), ground-track overlay (the triangle + both lines + thermalling), cumulative-laps-vs-leader, the biggest-loss segment, per-round metrics strip (incl. weather), and a per-round recommendation.
+- **Recommendations layer** (attached to insights): drills, further analysis, resources, and legal live-signals (audio vario tuning, speech telemetry callouts, a navigator on the ground station).
+- **"Art of the possible" section** (clearly separated, forward-looking): coaching-tech roadmap — post-flight AI coach, navigator AR HUD, live AI cueing, data flywheel — with the rules-legality framing (navigator telemetry/AR plausibly legal at Contest-Director discretion; nothing may feed model control per §2.7; pilot-worn HUD safest as training-only; audio vario/speech telemetry explicitly permitted).
+
+## 9. Methodology & fairness
+
+- Same-air (within-group) leader as the per-round benchmark; overall winner referenced only where co-grouped.
+- Skill vs conditions separated via within-group normalised score (conditions controlled) against raw laps (conditions + skill).
+- Phase decomposition by bearing-rate + vario segmentation; turn vs thermal separated by duration/continuity.
+- Weather associations reported as *suggestive* given n≈14 triangle rounds, never as significance claims.
+
+## 10. Constraints & limitations
+
+- Single event only (see §6); small n for weather/progression correlations.
+- ERA5 weather is hourly; flights are sub-hourly — conditions are approximate.
+- API exposes start point + direction + leg length, not explicit turnpoint coordinates; the triangle is drawn from the flown tracks or reconstructed from geometry.
+- Turn-radius/line metrics are indicative (segmentation blends some thermalling with turns); low-lap rounds are noisy and down-weighted.
+- Live/competition AR-HUD legality is organiser discretion (regs silent); framed as such.
+
+## 11. Build approach
+
+- **Workflow note (TDD exception):** this is a data-analysis + reporting deliverable, not application code, so classic red/green TDD does not fit. The agreed validation alternative is **data reconciliation** — computed laps/speeds/scores reconcile to the authoritative results, distances validate against the API's own distance fields, and weather maps to the correct flight windows. The build script is deterministic and re-runnable.
+- **Orchestration:** research and heavy data work run in subagents to keep the build context clean; the orchestrator assembles the final HTML from the compact analysis outputs.
+- **Pipeline:** fetch (scores/tracks/weather) → compute per-round metrics + phase decomposition + weather correlation → emit compact embeddable dataset → generate single-file HTML with inline SVG charts.
+
+## 12. Repo map
+
+| Path | What it holds |
+|---|---|
+| `docs/PRD.md` | This document — intent, scope, deliverable spec |
+| `scripts/` | Fetch and analysis scripts (`fetch_data.py`, `fetch_replays.py`, `compute_metrics.py`, weather, phase decomposition) |
+| `data/scores/` | Cached raw JSON: competition results tree, competitors |
+| `data/tracks/` | Cached raw ~1 Hz GPS replay JSON per group (re-fetchable) |
+| `analysis/` | Computed outputs: per-round metrics, field summary, weather, phase summary, trajectory PoC |
+| `analysis/round_data/` | Compact downsampled per-round tracks for embedding (`round_NN.json` + `index.json`) |
+| `analysis/charts/` | PoC chart PNGs |
+| `reviews/` | Build-review reports (`yymmddThhmm-<domain>.md`), written at end of build phase |
+| *(to build)* `report/bill_oschatz_2026.html` | The single-file deliverable |
+
+## 13. Open questions / future
+
+- If Bill provides links/GUIDs to his other rcmodelspot events, extend to multi-event trend analysis (same pipeline).
+- Coaching-technology roadmap (post-flight AI coach → live cueing) is scoped as future work in the report's "art of the possible" section, not built here.

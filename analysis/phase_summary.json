@@ -1,0 +1,1191 @@
+{
+ "meta": {
+  "pilot": "Bill Maisey",
+  "n_triangle_rounds": 14,
+  "excluded_speedruns": [
+   4,
+   10,
+   16
+  ],
+  "entry_speed_cap_kmh": 120.0,
+  "working_time_s": 1800.0,
+  "method": "Corner turns anchored on official SECTOR TPC crossings; thermals detected as sustained circling (>=12 s, >=270 deg, net climb) on the 1 Hz tail; START = flightStart->first corner; CRUISE = remaining motor-off points. Per-lap deficit paired per round on clean laps (no thermal, lap 1 excluded)."
+ },
+ "aggregate_phase_metrics": {
+  "start": {
+   "bill_entry_speed_kmh": 70.83,
+   "leader_entry_speed_kmh": 94.53,
+   "entry_gap_kmh": 23.7,
+   "bill_margin_to_cap_kmh": 49.2,
+   "leader_margin_to_cap_kmh": 25.5,
+   "bill_lap1_time_s": 245.43,
+   "leader_lap1_time_s": 200.79
+  },
+  "straight": {
+   "bill_cruise_kmh": 61.85,
+   "leader_cruise_kmh": 67.4,
+   "cruise_gap_kmh": 5.6,
+   "cruise_gap_pct": 8.2,
+   "bill_glide_ratio": 9.35,
+   "leader_glide_ratio": 10.31
+  },
+  "turns": {
+   "bill_scrub_kmh": 0.64,
+   "leader_scrub_kmh": -1.8,
+   "bill_extra_m_per_corner": 36.67,
+   "leader_extra_m_per_corner": 31.65,
+   "bill_extra_m_per_lap": 111.74,
+   "leader_extra_m_per_lap": 96.34,
+   "extra_dist_gap_m_per_lap": 15.4
+  },
+  "climbs": {
+   "bill_gain_m_per_climb": 40.66,
+   "leader_gain_m_per_climb": 63.09,
+   "bill_mean_rate_ms": 0.89,
+   "leader_mean_rate_ms": 1.03,
+   "bill_best_rate_ms": 2.55,
+   "leader_best_rate_ms": 3.64,
+   "bill_median_radius_m": 39.36,
+   "leader_median_radius_m": 33.24,
+   "bill_total_climb_time_s": 287.0,
+   "leader_total_climb_time_s": 402.21,
+   "bill_n_climbs": 5.79,
+   "leader_n_climbs": 6.5
+  }
+ },
+ "per_lap_time_deficit_decomposition": {
+  "rounds_used": [
+   1,
+   2,
+   5,
+   6,
+   7,
+   8,
+   9,
+   11,
+   13,
+   14,
+   15,
+   17
+  ],
+  "rounds_excluded_no_clean_lap": [
+   3,
+   12
+  ],
+  "mean_lap_deficit_s": 21.98,
+  "straight_deficit_s": 19.82,
+  "turn_deficit_s": 2.12,
+  "straight_share_pct": 90.2,
+  "turn_share_pct": 9.6,
+  "per_round": [
+   {
+    "round": 1,
+    "d_lap": 27.8,
+    "d_cruise": 23.1,
+    "d_turn": 4.6,
+    "bill_clean_laps": 4,
+    "leader_clean_laps": 7,
+    "bill_lap_s": 156.75,
+    "leader_lap_s": 129.0
+   },
+   {
+    "round": 2,
+    "d_lap": 3.0,
+    "d_cruise": 2.9,
+    "d_turn": 0.1,
+    "bill_clean_laps": 13,
+    "leader_clean_laps": 20,
+    "bill_lap_s": 73.85,
+    "leader_lap_s": 70.85
+   },
+   {
+    "round": 5,
+    "d_lap": 34.9,
+    "d_cruise": 31.0,
+    "d_turn": 3.9,
+    "bill_clean_laps": 4,
+    "leader_clean_laps": 5,
+    "bill_lap_s": 113.5,
+    "leader_lap_s": 78.6
+   },
+   {
+    "round": 6,
+    "d_lap": 27.9,
+    "d_cruise": 23.6,
+    "d_turn": 4.3,
+    "bill_clean_laps": 7,
+    "leader_clean_laps": 15,
+    "bill_lap_s": 115.71,
+    "leader_lap_s": 87.8
+   },
+   {
+    "round": 7,
+    "d_lap": 3.2,
+    "d_cruise": 3.4,
+    "d_turn": -0.2,
+    "bill_clean_laps": 5,
+    "leader_clean_laps": 4,
+    "bill_lap_s": 131.2,
+    "leader_lap_s": 128.0
+   },
+   {
+    "round": 8,
+    "d_lap": -0.4,
+    "d_cruise": 2.8,
+    "d_turn": -3.2,
+    "bill_clean_laps": 4,
+    "leader_clean_laps": 6,
+    "bill_lap_s": 94.25,
+    "leader_lap_s": 94.67
+   },
+   {
+    "round": 9,
+    "d_lap": 63.0,
+    "d_cruise": 62.5,
+    "d_turn": 0.5,
+    "bill_clean_laps": 3,
+    "leader_clean_laps": 2,
+    "bill_lap_s": 182.0,
+    "leader_lap_s": 119.0
+   },
+   {
+    "round": 11,
+    "d_lap": 23.7,
+    "d_cruise": 21.3,
+    "d_turn": 2.4,
+    "bill_clean_laps": 9,
+    "leader_clean_laps": 10,
+    "bill_lap_s": 116.78,
+    "leader_lap_s": 93.1
+   },
+   {
+    "round": 13,
+    "d_lap": 17.7,
+    "d_cruise": 14.3,
+    "d_turn": 3.3,
+    "bill_clean_laps": 6,
+    "leader_clean_laps": 12,
+    "bill_lap_s": 114.67,
+    "leader_lap_s": 97.0
+   },
+   {
+    "round": 14,
+    "d_lap": 13.5,
+    "d_cruise": 7.2,
+    "d_turn": 6.2,
+    "bill_clean_laps": 10,
+    "leader_clean_laps": 13,
+    "bill_lap_s": 96.8,
+    "leader_lap_s": 83.31
+   },
+   {
+    "round": 15,
+    "d_lap": 34.3,
+    "d_cruise": 33.0,
+    "d_turn": 1.3,
+    "bill_clean_laps": 4,
+    "leader_clean_laps": 3,
+    "bill_lap_s": 145.0,
+    "leader_lap_s": 110.67
+   },
+   {
+    "round": 17,
+    "d_lap": 15.2,
+    "d_cruise": 12.8,
+    "d_turn": 2.2,
+    "bill_clean_laps": 10,
+    "leader_clean_laps": 8,
+    "bill_lap_s": 109.4,
+    "leader_lap_s": 94.25
+   }
+  ]
+ },
+ "staying_aloft": {
+  "bill_mean_aloft_s": 1479.0,
+  "leader_mean_aloft_s": 1703.5,
+  "bill_rounds_landed_early": [
+   6,
+   9,
+   12,
+   13,
+   15
+  ],
+  "per_round": [
+   {
+    "round": 1,
+    "bill_aloft_s": 1712.0,
+    "leader_aloft_s": 2074.0,
+    "bill_landed_early": false
+   },
+   {
+    "round": 2,
+    "bill_aloft_s": 1792.0,
+    "leader_aloft_s": 1751.0,
+    "bill_landed_early": false
+   },
+   {
+    "round": 3,
+    "bill_aloft_s": 1571.0,
+    "leader_aloft_s": 1719.0,
+    "bill_landed_early": false
+   },
+   {
+    "round": 5,
+    "bill_aloft_s": 1902.0,
+    "leader_aloft_s": 1793.0,
+    "bill_landed_early": false
+   },
+   {
+    "round": 6,
+    "bill_aloft_s": 1435.0,
+    "leader_aloft_s": 1697.0,
+    "bill_landed_early": true
+   },
+   {
+    "round": 7,
+    "bill_aloft_s": 1079.0,
+    "leader_aloft_s": 633.0,
+    "bill_landed_early": false
+   },
+   {
+    "round": 8,
+    "bill_aloft_s": 1740.0,
+    "leader_aloft_s": 1787.0,
+    "bill_landed_early": false
+   },
+   {
+    "round": 9,
+    "bill_aloft_s": 964.0,
+    "leader_aloft_s": 2280.0,
+    "bill_landed_early": true
+   },
+   {
+    "round": 11,
+    "bill_aloft_s": 1671.0,
+    "leader_aloft_s": 1778.0,
+    "bill_landed_early": false
+   },
+   {
+    "round": 12,
+    "bill_aloft_s": 745.0,
+    "leader_aloft_s": 1661.0,
+    "bill_landed_early": true
+   },
+   {
+    "round": 13,
+    "bill_aloft_s": 1405.0,
+    "leader_aloft_s": 1695.0,
+    "bill_landed_early": true
+   },
+   {
+    "round": 14,
+    "bill_aloft_s": 1707.0,
+    "leader_aloft_s": 1780.0,
+    "bill_landed_early": false
+   },
+   {
+    "round": 15,
+    "bill_aloft_s": 1210.0,
+    "leader_aloft_s": 1435.0,
+    "bill_landed_early": true
+   },
+   {
+    "round": 17,
+    "bill_aloft_s": 1773.0,
+    "leader_aloft_s": 1766.0,
+    "bill_landed_early": false
+   }
+  ]
+ },
+ "lap_count_attribution": {
+  "mean_lap_gap": 3,
+  "pace_effect_laps": 2.67,
+  "climbtime_effect_laps": -0.63,
+  "pace_share_pct": 130.9,
+  "climbtime_share_pct": -30.9,
+  "per_round": [
+   {
+    "round": 1,
+    "bill_laps": 7,
+    "leader_laps": 10,
+    "lap_gap": 3,
+    "pace_effect_laps": 1.57,
+    "climbtime_effect_laps": 0.75
+   },
+   {
+    "round": 2,
+    "bill_laps": 18,
+    "leader_laps": 22,
+    "lap_gap": 4,
+    "pace_effect_laps": 0.92,
+    "climbtime_effect_laps": 1.52
+   },
+   {
+    "round": 5,
+    "bill_laps": 9,
+    "leader_laps": 12,
+    "lap_gap": 3,
+    "pace_effect_laps": 5.37,
+    "climbtime_effect_laps": -0.63
+   },
+   {
+    "round": 6,
+    "bill_laps": 10,
+    "leader_laps": 16,
+    "lap_gap": 6,
+    "pace_effect_laps": 4.44,
+    "climbtime_effect_laps": -0.15
+   },
+   {
+    "round": 7,
+    "bill_laps": 5,
+    "leader_laps": 5,
+    "lap_gap": 0,
+    "pace_effect_laps": 0.34,
+    "climbtime_effect_laps": 0.0
+   },
+   {
+    "round": 8,
+    "bill_laps": 9,
+    "leader_laps": 12,
+    "lap_gap": 3,
+    "pace_effect_laps": -0.06,
+    "climbtime_effect_laps": 0.01
+   },
+   {
+    "round": 9,
+    "bill_laps": 3,
+    "leader_laps": 7,
+    "lap_gap": 4,
+    "pace_effect_laps": 5.03,
+    "climbtime_effect_laps": -5.18
+   },
+   {
+    "round": 11,
+    "bill_laps": 12,
+    "leader_laps": 15,
+    "lap_gap": 3,
+    "pace_effect_laps": 3.61,
+    "climbtime_effect_laps": -1.04
+   },
+   {
+    "round": 13,
+    "bill_laps": 10,
+    "leader_laps": 15,
+    "lap_gap": 5,
+    "pace_effect_laps": 2.62,
+    "climbtime_effect_laps": -0.45
+   },
+   {
+    "round": 14,
+    "bill_laps": 12,
+    "leader_laps": 16,
+    "lap_gap": 4,
+    "pace_effect_laps": 2.42,
+    "climbtime_effect_laps": 0.07
+   },
+   {
+    "round": 15,
+    "bill_laps": 6,
+    "leader_laps": 7,
+    "lap_gap": 1,
+    "pace_effect_laps": 3.42,
+    "climbtime_effect_laps": -2.58
+   },
+   {
+    "round": 17,
+    "bill_laps": 13,
+    "leader_laps": 13,
+    "lap_gap": 0,
+    "pace_effect_laps": 2.3,
+    "climbtime_effect_laps": 0.15
+   }
+  ]
+ },
+ "per_round": [
+  {
+   "round": 1,
+   "leader": "Ralph Losemann",
+   "laps": [
+    7,
+    10
+   ],
+   "entry_kmh": [
+    75.1,
+    101.4
+   ],
+   "cruise_kmh": [
+    54.8,
+    57.5
+   ],
+   "clean_lap_s": [
+    156.75,
+    129.0
+   ],
+   "clean_cruise_s": [
+    130.0,
+    106.86
+   ],
+   "clean_turn_s": [
+    26.75,
+    22.14
+   ],
+   "turn_extra_m_lap": [
+    125.9,
+    86.8
+   ],
+   "climb_gain_m": [
+    32.62,
+    45.14
+   ],
+   "climb_rate_ms": [
+    0.43,
+    0.44
+   ],
+   "climb_radius_m": [
+    34.99,
+    33.63
+   ],
+   "n_climbs": [
+    8,
+    7
+   ],
+   "climb_time_s": [
+    658.0,
+    541.0
+   ],
+   "clean_laps_used": [
+    4,
+    7
+   ]
+  },
+  {
+   "round": 2,
+   "leader": "Andrej Vrecer",
+   "laps": [
+    18,
+    22
+   ],
+   "entry_kmh": [
+    61.4,
+    59.4
+   ],
+   "cruise_kmh": [
+    85.8,
+    92.8
+   ],
+   "clean_lap_s": [
+    73.85,
+    70.85
+   ],
+   "clean_cruise_s": [
+    53.54,
+    50.6
+   ],
+   "clean_turn_s": [
+    20.31,
+    20.25
+   ],
+   "turn_extra_m_lap": [
+    131.0,
+    137.9
+   ],
+   "climb_gain_m": [
+    40,
+    135
+   ],
+   "climb_rate_ms": [
+    0.99,
+    1.52
+   ],
+   "climb_radius_m": [
+    40.78,
+    22.1
+   ],
+   "n_climbs": [
+    5,
+    1
+   ],
+   "climb_time_s": [
+    202.0,
+    90.0
+   ],
+   "clean_laps_used": [
+    13,
+    20
+   ]
+  },
+  {
+   "round": 3,
+   "leader": "Damien Ythier",
+   "laps": [
+    6,
+    9
+   ],
+   "entry_kmh": [
+    51.1,
+    105.5
+   ],
+   "cruise_kmh": [
+    59.0,
+    76.0
+   ],
+   "clean_lap_s": [
+    null,
+    143.0
+   ],
+   "clean_cruise_s": [
+    null,
+    127.0
+   ],
+   "clean_turn_s": [
+    null,
+    16.0
+   ],
+   "turn_extra_m_lap": [
+    94.1,
+    118.4
+   ],
+   "climb_gain_m": [
+    51.55,
+    80.45
+   ],
+   "climb_rate_ms": [
+    0.74,
+    1.2
+   ],
+   "climb_radius_m": [
+    39.05,
+    31.5
+   ],
+   "n_climbs": [
+    11,
+    11
+   ],
+   "climb_time_s": [
+    680.0,
+    706.0
+   ],
+   "clean_laps_used": [
+    0,
+    2
+   ]
+  },
+  {
+   "round": 5,
+   "leader": "Ralph Losemann",
+   "laps": [
+    9,
+    12
+   ],
+   "entry_kmh": [
+    58.2,
+    77.3
+   ],
+   "cruise_kmh": [
+    58.1,
+    68.8
+   ],
+   "clean_lap_s": [
+    113.5,
+    78.6
+   ],
+   "clean_cruise_s": [
+    92.75,
+    61.8
+   ],
+   "clean_turn_s": [
+    20.75,
+    16.8
+   ],
+   "turn_extra_m_lap": [
+    134.4,
+    103.4
+   ],
+   "climb_gain_m": [
+    37.25,
+    44.62
+   ],
+   "climb_rate_ms": [
+    0.64,
+    1.05
+   ],
+   "climb_radius_m": [
+    35.2,
+    33.71
+   ],
+   "n_climbs": [
+    8,
+    13
+   ],
+   "climb_time_s": [
+    427.0,
+    499.0
+   ],
+   "clean_laps_used": [
+    4,
+    5
+   ]
+  },
+  {
+   "round": 6,
+   "leader": "Oliver Ladach",
+   "laps": [
+    10,
+    16
+   ],
+   "entry_kmh": [
+    92.1,
+    120.5
+   ],
+   "cruise_kmh": [
+    60.2,
+    74.8
+   ],
+   "clean_lap_s": [
+    115.71,
+    87.8
+   ],
+   "clean_cruise_s": [
+    93.43,
+    69.8
+   ],
+   "clean_turn_s": [
+    22.29,
+    18.0
+   ],
+   "turn_extra_m_lap": [
+    93.6,
+    70.5
+   ],
+   "climb_gain_m": [
+    16,
+    58.25
+   ],
+   "climb_rate_ms": [
+    0.68,
+    0.78
+   ],
+   "climb_radius_m": [
+    40.76,
+    44.55
+   ],
+   "n_climbs": [
+    7,
+    4
+   ],
+   "climb_time_s": [
+    184.0,
+    201.0
+   ],
+   "clean_laps_used": [
+    7,
+    15
+   ]
+  },
+  {
+   "round": 7,
+   "leader": "Randolph Br\u00f6mer",
+   "laps": [
+    5,
+    5
+   ],
+   "entry_kmh": [
+    80.1,
+    108.1
+   ],
+   "cruise_kmh": [
+    52.0,
+    51.0
+   ],
+   "clean_lap_s": [
+    131.2,
+    128.0
+   ],
+   "clean_cruise_s": [
+    109.4,
+    106.0
+   ],
+   "clean_turn_s": [
+    21.8,
+    22.0
+   ],
+   "turn_extra_m_lap": [
+    72.9,
+    74.7
+   ],
+   "climb_gain_m": [
+    null,
+    null
+   ],
+   "climb_rate_ms": [
+    null,
+    null
+   ],
+   "climb_radius_m": [
+    null,
+    null
+   ],
+   "n_climbs": [
+    0,
+    0
+   ],
+   "climb_time_s": [
+    0,
+    0
+   ],
+   "clean_laps_used": [
+    5,
+    4
+   ]
+  },
+  {
+   "round": 8,
+   "leader": "Florian Griese",
+   "laps": [
+    9,
+    12
+   ],
+   "entry_kmh": [
+    81.1,
+    117.1
+   ],
+   "cruise_kmh": [
+    60.0,
+    61.6
+   ],
+   "clean_lap_s": [
+    94.25,
+    94.67
+   ],
+   "clean_cruise_s": [
+    76.25,
+    73.5
+   ],
+   "clean_turn_s": [
+    18.0,
+    21.17
+   ],
+   "turn_extra_m_lap": [
+    99.0,
+    109.2
+   ],
+   "climb_gain_m": [
+    37,
+    64.67
+   ],
+   "climb_rate_ms": [
+    0.72,
+    0.6
+   ],
+   "climb_radius_m": [
+    36.86,
+    30.82
+   ],
+   "n_climbs": [
+    11,
+    6
+   ],
+   "climb_time_s": [
+    519.0,
+    518.0
+   ],
+   "clean_laps_used": [
+    4,
+    6
+   ]
+  },
+  {
+   "round": 9,
+   "leader": "Andrej Vrecer",
+   "laps": [
+    3,
+    7
+   ],
+   "entry_kmh": [
+    76.1,
+    95.1
+   ],
+   "cruise_kmh": [
+    58.7,
+    54.8
+   ],
+   "clean_lap_s": [
+    182.0,
+    119.0
+   ],
+   "clean_cruise_s": [
+    160.0,
+    97.5
+   ],
+   "clean_turn_s": [
+    22.0,
+    21.5
+   ],
+   "turn_extra_m_lap": [
+    103.8,
+    106.9
+   ],
+   "climb_gain_m": [
+    17,
+    32.6
+   ],
+   "climb_rate_ms": [
+    0.58,
+    0.83
+   ],
+   "climb_radius_m": [
+    40.05,
+    31.86
+   ],
+   "n_climbs": [
+    2,
+    10
+   ],
+   "climb_time_s": [
+    71.0,
+    1013.0
+   ],
+   "clean_laps_used": [
+    3,
+    2
+   ]
+  },
+  {
+   "round": 11,
+   "leader": "DANIEL AEBERLI",
+   "laps": [
+    12,
+    15
+   ],
+   "entry_kmh": [
+    67.6,
+    69.6
+   ],
+   "cruise_kmh": [
+    65.6,
+    69.2
+   ],
+   "clean_lap_s": [
+    116.78,
+    93.1
+   ],
+   "clean_cruise_s": [
+    94.11,
+    72.8
+   ],
+   "clean_turn_s": [
+    22.67,
+    20.3
+   ],
+   "turn_extra_m_lap": [
+    107.6,
+    98.5
+   ],
+   "climb_gain_m": [
+    46.75,
+    70.5
+   ],
+   "climb_rate_ms": [
+    1.57,
+    1.62
+   ],
+   "climb_radius_m": [
+    39.2,
+    33.43
+   ],
+   "n_climbs": [
+    4,
+    6
+   ],
+   "climb_time_s": [
+    144.0,
+    266.0
+   ],
+   "clean_laps_used": [
+    9,
+    10
+   ]
+  },
+  {
+   "round": 12,
+   "leader": "Jens Geider",
+   "laps": [
+    2,
+    8
+   ],
+   "entry_kmh": [
+    81.3,
+    73.1
+   ],
+   "cruise_kmh": [
+    51.6,
+    53.8
+   ],
+   "clean_lap_s": [
+    null,
+    109.0
+   ],
+   "clean_cruise_s": [
+    null,
+    88.25
+   ],
+   "clean_turn_s": [
+    null,
+    20.75
+   ],
+   "turn_extra_m_lap": [
+    148.9,
+    106.4
+   ],
+   "climb_gain_m": [
+    16,
+    45
+   ],
+   "climb_rate_ms": [
+    0.38,
+    0.59
+   ],
+   "climb_radius_m": [
+    40.42,
+    41.41
+   ],
+   "n_climbs": [
+    4,
+    8
+   ],
+   "climb_time_s": [
+    194.0,
+    455.0
+   ],
+   "clean_laps_used": [
+    0,
+    4
+   ]
+  },
+  {
+   "round": 13,
+   "leader": "Philip Kolb",
+   "laps": [
+    10,
+    15
+   ],
+   "entry_kmh": [
+    61.1,
+    99.4
+   ],
+   "cruise_kmh": [
+    65.0,
+    68.9
+   ],
+   "clean_lap_s": [
+    114.67,
+    97.0
+   ],
+   "clean_cruise_s": [
+    90.17,
+    75.83
+   ],
+   "clean_turn_s": [
+    24.5,
+    21.17
+   ],
+   "turn_extra_m_lap": [
+    93.8,
+    97.5
+   ],
+   "climb_gain_m": [
+    80.67,
+    63.6
+   ],
+   "climb_rate_ms": [
+    1.39,
+    1.66
+   ],
+   "climb_radius_m": [
+    36.9,
+    27.28
+   ],
+   "n_climbs": [
+    3,
+    5
+   ],
+   "climb_time_s": [
+    150.0,
+    202.0
+   ],
+   "clean_laps_used": [
+    6,
+    12
+   ]
+  },
+  {
+   "round": 14,
+   "leader": "Benjamin D\u00e4hn",
+   "laps": [
+    12,
+    16
+   ],
+   "entry_kmh": [
+    85.2,
+    120.9
+   ],
+   "cruise_kmh": [
+    72.2,
+    79.1
+   ],
+   "clean_lap_s": [
+    96.8,
+    83.31
+   ],
+   "clean_cruise_s": [
+    74.1,
+    66.85
+   ],
+   "clean_turn_s": [
+    22.7,
+    16.46
+   ],
+   "turn_extra_m_lap": [
+    133.4,
+    98.0
+   ],
+   "climb_gain_m": [
+    59,
+    91.67
+   ],
+   "climb_rate_ms": [
+    1.54,
+    1.38
+   ],
+   "climb_radius_m": [
+    48.93,
+    31.2
+   ],
+   "n_climbs": [
+    9,
+    6
+   ],
+   "climb_time_s": [
+    355.0,
+    348.0
+   ],
+   "clean_laps_used": [
+    10,
+    13
+   ]
+  },
+  {
+   "round": 15,
+   "leader": "Philip Kolb",
+   "laps": [
+    6,
+    7
+   ],
+   "entry_kmh": [
+    55.1,
+    104.8
+   ],
+   "cruise_kmh": [
+    58.1,
+    61.9
+   ],
+   "clean_lap_s": [
+    145.0,
+    110.67
+   ],
+   "clean_cruise_s": [
+    122.0,
+    89.0
+   ],
+   "clean_turn_s": [
+    23.0,
+    21.67
+   ],
+   "turn_extra_m_lap": [
+    135.3,
+    46.7
+   ],
+   "climb_gain_m": [
+    54,
+    57.14
+   ],
+   "climb_rate_ms": [
+    0.9,
+    0.7
+   ],
+   "climb_radius_m": [
+    38.4,
+    34.23
+   ],
+   "n_climbs": [
+    4,
+    7
+   ],
+   "climb_time_s": [
+    201.0,
+    575.0
+   ],
+   "clean_laps_used": [
+    4,
+    3
+   ]
+  },
+  {
+   "round": 17,
+   "leader": "Jens Geider",
+   "laps": [
+    13,
+    13
+   ],
+   "entry_kmh": [
+    66.1,
+    71.2
+   ],
+   "cruise_kmh": [
+    64.8,
+    73.4
+   ],
+   "clean_lap_s": [
+    109.4,
+    94.25
+   ],
+   "clean_cruise_s": [
+    89.1,
+    76.25
+   ],
+   "clean_turn_s": [
+    20.2,
+    18.0
+   ],
+   "turn_extra_m_lap": [
+    90.7,
+    93.8
+   ],
+   "climb_gain_m": [
+    40.8,
+    31.57
+   ],
+   "climb_rate_ms": [
+    0.98,
+    1.06
+   ],
+   "climb_radius_m": [
+    40.14,
+    36.39
+   ],
+   "n_climbs": [
+    5,
+    7
+   ],
+   "climb_time_s": [
+    233.0,
+    217.0
+   ],
+   "clean_laps_used": [
+    10,
+    8
+   ]
+  }
+ ]
+}

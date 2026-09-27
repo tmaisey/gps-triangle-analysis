@@ -1,0 +1,10 @@
+[project]
+name = "gps-triangle"
+version = "0.1.0"
+description = "Per-flight GPS-track trajectory analysis for RC GPS Triangle racing (coaching PoC)"
+requires-python = ">=3.10"
+dependencies = [
+    "matplotlib>=3.8",
+    "numpy>=1.26",
+    "requests>=2.34.2",
+]

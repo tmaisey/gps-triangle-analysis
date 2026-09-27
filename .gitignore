@@ -1,0 +1,14 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+
+# Large, re-fetchable raw GPS replay tracks (~64 MB; rounds_manifest.json is kept)
+data/tracks/replay_*.json
+
+# Archived unrelated manual (kept locally, not published)
+AGENTS.mad-skillz.bak.md
