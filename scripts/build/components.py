@@ -25,7 +25,7 @@ NAV_PAGES = [
     ("innovations", "Innovations"),
 ]
 
-TITLE_TEXT = "Bill's GPS Triangle Analysis 2026"
+TITLE_TEXT = "GPS Triangle World Masters, Oschatz 2026"
 
 
 def esc(text: str) -> str:
@@ -138,12 +138,16 @@ def collapsible(section_id: str, heading: str, body: str, *,
     """
     tag = f"h{level}"
     cls = "section collapsed" if collapsed else "section"
+    # Dynamic control label (RPT-014): 'Expand' when collapsed, 'Collapse' when
+    # expanded. The initial text matches the initial state; the app JS keeps it
+    # in sync on every state change.
+    toggle_label = "Expand" if collapsed else "Collapse"
     return (
         f'<div class="{cls}" data-section id="{esc(section_id)}">'
         '<div class="section-head" onclick="toggleSection(this)">'
         f"<{tag}>{esc(heading)}</{tag}>"
         "<span>"
-        '<span class="section-toggle">toggle</span>'
+        f'<span class="section-toggle">{toggle_label}</span>'
         f'<a class="back-to-top" href="#{esc(top_id)}" '
         'onclick="event.stopPropagation()">back to top</a>'
         "</span>"
@@ -223,6 +227,27 @@ def stat_tile(value: str, label: str, sub: str = "") -> str:
         f'<div class="value num">{esc(value)}</div>'
         f'<div class="label">{esc(label)}</div>'
         f"{sub_html}</div>"
+    )
+
+
+def legality_consideration(text: str) -> str:
+    """Return a 'Legality Consideration' inline-bold lead-in at body size.
+
+    Renders the label as bold inline emphasis at body-text size (a highlighted
+    lead-in, NOT a heading element) followed by the consideration text (RPT-015).
+    Replaces the former 'Legality gate' label; use this for every legality note
+    in Innovations and elsewhere.
+
+    Args:
+        text: the consideration prose that follows the bold label (HTML allowed).
+
+    Returns:
+        str: a ``<p>`` fragment with a bold ``Legality Consideration`` lead-in.
+    """
+    return (
+        '<p class="legality"><strong class="legality-label">'
+        "Legality Consideration.</strong> "
+        f"{text}</p>"
     )
 
 

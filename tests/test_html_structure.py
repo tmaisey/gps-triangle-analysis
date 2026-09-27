@@ -52,8 +52,8 @@ def test_exactly_four_topnav_links(soup):
 
 
 def test_title_text_present(soup):
-    """The report title text appears in the nav bar."""
-    assert "Bill's GPS Triangle Analysis 2026" in soup.select_one(
+    """The report title text appears in the nav bar (RPT-017 retitle)."""
+    assert "GPS Triangle World Masters, Oschatz 2026" in soup.select_one(
         ".topnav-title").get_text()
 
 

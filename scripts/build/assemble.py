@@ -111,14 +111,24 @@ def _app_js() -> str:
     if (links) links.classList.toggle('open');
   };
 
+  // Keep a section's control label in sync with its state (RPT-014):
+  // 'Expand' when collapsed, 'Collapse' when expanded.
+  function syncLabel(sec) {
+    if (!sec) return;
+    var t = sec.querySelector('.section-toggle');
+    if (t) t.textContent = sec.classList.contains('collapsed') ? 'Expand' : 'Collapse';
+  }
+
   window.toggleSection = function (headEl) {
     var sec = headEl.closest('.section');
-    if (sec) sec.classList.toggle('collapsed');
+    if (sec) { sec.classList.toggle('collapsed'); syncLabel(sec); }
   };
 
   window.expandSection = function (id) {
     var sec = document.getElementById(id);
-    if (sec && sec.classList.contains('section')) sec.classList.remove('collapsed');
+    if (sec && sec.classList.contains('section')) {
+      sec.classList.remove('collapsed'); syncLabel(sec);
+    }
   };
 
   function currentScope() {
@@ -126,10 +136,14 @@ def _app_js() -> str:
     return view || qa('.page.active')[0] || document;
   }
   window.expandAll = function () {
-    qa('.section', currentScope()).forEach(function (s) { s.classList.remove('collapsed'); });
+    qa('.section', currentScope()).forEach(function (s) {
+      s.classList.remove('collapsed'); syncLabel(s);
+    });
   };
   window.collapseAll = function () {
-    qa('.section', currentScope()).forEach(function (s) { s.classList.add('collapsed'); });
+    qa('.section', currentScope()).forEach(function (s) {
+      s.classList.add('collapsed'); syncLabel(s);
+    });
   };
 
   // Reveal an anchor target: expand its enclosing collapsible (and itself if
@@ -139,7 +153,7 @@ def _app_js() -> str:
     var el = document.getElementById(id);
     if (!el) return;
     var sec = el.closest ? el.closest('.section') : null;
-    if (sec) sec.classList.remove('collapsed');
+    if (sec) { sec.classList.remove('collapsed'); syncLabel(sec); }
     expandSection(id);
     try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     catch (e) { el.scrollIntoView(); }

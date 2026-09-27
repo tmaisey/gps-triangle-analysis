@@ -218,11 +218,11 @@
     {
       "id": "RPT-011",
       "category": "report",
-      "description": "GPS ground-track chart correctness + orientation aids: fix the reference-triangle geometry so it sits correctly over the flown course (right position/scale/rotation), render it bold and LAST so it is on top of the traces; add a North arrow (N + arrowhead) in the top-right; render full-resolution traces (remove downsampling); dark grey/off-black for the orientation marks",
+      "description": "GPS ground-track chart: the FACTUAL course from the .rct, reconciled with the GPS tracks in ONE consistent equirectangular projection (cos(lat) longitude, identical for course and tracks). GEOMETRY (corrected - it is NOT equilateral): the course is a RIGHT-ISOSCELES triangle - the three turnpoints sit at RADIUS = the .rct 'length' (350 m, NOT the leg) from the start, at bearings {axis, axis+180, axis-90}; the apex is at axis-90 (pointing away from the ground/safety zones - a fixed venue side); the base (hypotenuse, 2xradius = 700 m) runs along the axis with the start at its midpoint; the two legs are radius*sqrt2 (~495 m); perimeter ~1690 m matches the regs lap. Draw the triangle bold, ink, LAST on top with turnpoint dots; the start/finish as a dashed perpendicular line at the start; full-resolution traces at low opacity; North arrow top-right; 100 m scale bar bottom-left; legend inside bottom-right (right-aligned row); wind vector in the right margin with the plot grid/frame sized so the wind arrow sits WITHIN the framed image (not outside the grid); legend/scale/North never overlap the wind vector; legend row spacing keeps swatches and labels from overlapping",
       "roadmap": "v1.0",
       "steps": [
-        "Debug turnpoint reconstruction from start point + course axis + leg length (correct geodesic offset and equirectangular projection with cos(lat) scaling); draw triangle last, bold; add North arrow; use full tracks",
-        "Test: reference triangle vertices lie within the flown-track bounding envelope; triangle drawn after traces; North marker present; traces use full resolution"
+        "Per heat parse the .rct T: header (start, axis, radius); turnpoints = start + radius at {axis, axis+180, axis-90}, apex = axis-90; project course and replay identically; render with the orientation aids",
+        "Test (both pilots, thermalling excluded): turn-arc radius from start ~ the .rct length (350 m) within ~15%; flown leg bearings match course-leg bearings within a few degrees; each corner's fitted arc centre within a small margin of the course corner with the pilot apex just OUTSIDE; start-crossing centroid at the course start; projected distance between two .rct coords equals their haversine distance; Bill and leader agree; triangle drawn last; North+scale+legend present and clear of the wind vector"
       ],
       "passes": false
     },
@@ -289,6 +289,50 @@
       "steps": [
         "Update TITLE_TEXT and Home h1; rename report output file; update tests/build refs; rename the repo via gh and update the remote",
         "Test: nav title and Home h1 read 'GPS Triangle World Masters, Oschatz 2026'; Home text names Bill Maisey; output file renamed; no 'Bill's GPS Triangle Analysis 2026' remains"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-018",
+      "category": "report",
+      "description": "The 'Energy Management' chart is a stacked dual-panel sharing one x-axis (relative flight time, both pilots overlaid): altitude on top (~80% height) and ground speed beneath (~20%, compressed y), both pilots on both panels. Single figure title 'Energy Management'; NO per-subplot titles (implied by the y-axis labels). Legend only - drop the line-end labels (they duplicate the legend). Solid blue/green series (colourblind-acceptable for the audience; no dashing required). Light smoothing on the spiky speed panel and clipping the end near the last lap/landing are sensible tidy-ups. This REPLACES the standalone altitude plot on EVERY round (endurance and speed) - the only difference for speed runs was that they previously used absolute time; all rounds now use relative flight-time overlay (T0 = start-line crossing). The x-axis spans the full 30-min working window (each trace still ends at that pilot's last turn-point crossing). Otherwise final and approved: design/prototypes/energy_management_v2.html",
+      "roadmap": "v1.0",
+      "steps": [
+        "Refactor altitude_trace into a two-panel chart sharing one bottom x-axis; add compressed speed panel for both pilots",
+        "Test: energy figure renders both an altitude panel and a speed panel for both pilots on one shared x-axis; panels do not overlap"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-019",
+      "category": "report",
+      "description": "Inline the web fonts (base64 woff2, Latin-subset, only the weights used) so the report is fully self-contained and identical offline, removing the Google-Fonts network dependency, provided the size cost stays modest (~100-200 KB)",
+      "roadmap": "v1.0",
+      "steps": [
+        "Subset Spectral + Source Sans 3 to Latin and the used weights; embed as base64 @font-face; drop the Google-Fonts link",
+        "Test: no remote font <link> remains; fonts embedded as data URIs; total added size within budget; report renders offline with the intended fonts"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-021",
+      "category": "report",
+      "description": "Per-round view opens (under the summary) with a 'Visual overview of performance' dashboard, then the Energy Management, ground-track and other sections. TOP ROW - four vertical visuals in order: (1) SCORE as a symmetric vertical density/violin of the group field scores in mid-grey, with the winner as a blue line at 1000 and Bill as a green line at his score over the top; (2) ENTRY SPEED, (3) ENTRY ALTITUDE, (4) AVERAGE SPEED (SINGLE-LAP SPEED on speed runs) as BULLET plots - the grey track top is the regs cap where one exists (entry speed 120, entry altitude 400) else a sensible domain max; the leader is a blue line; Bill is the green fill; Bill's value labelled in GREEN to the RIGHT of the bar (not black, not on the bar); NO orange cap line and NO field on the bullets. BOTTOM ROW: LAPS as a small paired bar chart (no axis; value labels on top; Bill green, leader blue); within-group RANK as text (N/field); a WIND compass card (arrow at source bearing blowing inward + speed); SOLAR as a relative colour-bar - height proportional to the round's solar normalised across all rounds (lowest round still shows a small bar), each bar a SOLID colour interpolated deep-red at the event max to pastel-yellow at the min, no scale/labels. LEGEND top-right as a colour key with SQUARE swatches: Bill Maisey (green), 'Round Leader (<name>)' with the round leader's actual name (blue), and 'Regs limit / Other pilots' (grey - grey means both the regs cap on bullets and the field on the violin) - this replaces the per-round 'Bill vs leader' header text. Lay the dashboard as a 2-row x 4-column grid with the bottom row (laps/rank/wind/solar) aligned to the top row's columns",
+      "roadmap": "v1.0",
+      "steps": [
+        "Build score-violin, bullet, paired-bar, wind-card and solar-colourbar SVG components; assemble as the first per-round section",
+        "Test: renders the score violin (blue 1000 + green Bill over grey field density), four bullets (grey=regs cap or domain, blue leader, green Bill, green value on the right, no orange), a laps paired-bar, rank text, wind card, and a normalised red-to-yellow solar bar; works for triangle and speed rounds"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-022",
+      "category": "content",
+      "description": "Overview (Analysis) gains a 'Performance summary' section at the top: all-rounds grouped bar charts with three bars per round - round winner (blue), overall event winner (grey), Bill (green) - one chart each for points/score, laps, average speed, and entry speed (plus entry altitude and a conditions strip e.g. solar radiation aligned beneath, so performance reads against lift). Keeps the existing Overview plots/insights below it",
+      "roadmap": "v1.0",
+      "steps": [
+        "Build a grouped-bar all-rounds chart component (winner/overall-winner/Bill) and render it for score, laps, avg speed, entry speed, entry altitude; add a conditions strip",
+        "Test: Performance summary renders the grouped-bar charts across all rounds with the three series, above the existing Overview content"
       ],
       "passes": false
     },

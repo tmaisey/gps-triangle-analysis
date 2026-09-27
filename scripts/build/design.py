@@ -13,6 +13,9 @@ Stage 2 composes pages using these tokens; charts.py themes every figure from
 
 from __future__ import annotations
 
+import base64
+from pathlib import Path
+
 # --- Palette tokens (exact values mandated by the brief / PRD §8) -----------
 PALETTE: dict[str, str] = {
     # surfaces / text
@@ -47,15 +50,54 @@ FONT_BODY = (
     "Roboto, Helvetica, Arial, sans-serif"
 )
 
-# The single allowed remote resource: Google Fonts stylesheet.
-GOOGLE_FONTS_LINK = (
-    '<link rel="preconnect" href="https://fonts.googleapis.com">'
-    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-    '<link rel="stylesheet" '
-    'href="https://fonts.googleapis.com/css2?'
-    "family=Spectral:ital,wght@0,400;0,500;0,600;1,400&"
-    'family=Source+Sans+3:wght@400;500;600;700&display=swap">'
-)
+# Fonts are inlined as base64 woff2 @font-face (RPT-019) so the report is fully
+# self-contained and renders identically offline. There is no remote font link;
+# ``GOOGLE_FONTS_LINK`` is retained (empty) only so any caller referencing it is
+# a no-op.
+GOOGLE_FONTS_LINK = ""
+
+# Latin-subset woff2 files (only the weights the report uses), cached in-repo
+# from Google Fonts and embedded at build time.
+FONTS_DIR = Path(__file__).resolve().parent / "assets" / "fonts"
+
+# filename stem -> (family, css weight, css style). Latin subset only.
+_FONT_FACES = [
+    ("Spectral-400", "Spectral", 400, "normal"),
+    ("Spectral-500", "Spectral", 500, "normal"),
+    ("Spectral-600", "Spectral", 600, "normal"),
+    ("Spectral-400i", "Spectral", 400, "italic"),
+    ("SourceSans3-400", "Source Sans 3", 400, "normal"),
+    ("SourceSans3-500", "Source Sans 3", 500, "normal"),
+    ("SourceSans3-600", "Source Sans 3", 600, "normal"),
+    ("SourceSans3-700", "Source Sans 3", 700, "normal"),
+]
+
+
+def font_face_css() -> str:
+    """Return ``@font-face`` rules with the woff2 fonts embedded as data URIs.
+
+    Reads the cached Latin-subset woff2 files under :data:`FONTS_DIR`, base64-
+    encodes each and emits one ``@font-face`` rule per used weight/style, with
+    ``font-display: swap`` and a system fallback in the family stacks. This makes
+    the single-file report render with the intended typefaces offline, with no
+    remote network dependency (RPT-019 / ADR-001). Missing files are skipped so
+    the build never fails on an absent asset (it degrades to the fallback fonts).
+
+    Returns:
+        str: CSS ``@font-face`` rules (no surrounding ``<style>`` tags).
+    """
+    rules = []
+    for stem, family, weight, style in _FONT_FACES:
+        path = FONTS_DIR / f"{stem}.woff2"
+        if not path.exists():
+            continue
+        b64 = base64.b64encode(path.read_bytes()).decode("ascii")
+        rules.append(
+            f"@font-face{{font-family:'{family}';font-style:{style};"
+            f"font-weight:{weight};font-display:swap;"
+            f"src:url(data:font/woff2;base64,{b64}) format('woff2');}}"
+        )
+    return "".join(rules)
 
 # Layout constants.
 MAX_WIDTH_PX = 1040
@@ -75,7 +117,7 @@ def css() -> str:
         str: A complete CSS stylesheet (no surrounding ``<style>`` tags).
     """
     p = PALETTE
-    return f"""
+    return font_face_css() + f"""
 :root {{
   --bg: {p['background']};
   --ink: {p['ink']};
@@ -305,6 +347,48 @@ figcaption {{
   font-family: var(--font-heading);
   font-size: 1.35rem;
   color: var(--ink);
+}}
+
+/* ---- Legality Consideration (inline bold body-size lead-in, RPT-015) --- */
+.legality {{ font-size: 1rem; }}
+.legality-label {{ font-weight: 700; color: var(--ink); }}
+
+/* ---- Per-round dashboard (RPT-021) ------------------------------------- */
+.dash-wrap {{ margin: 1.5rem 0; }}
+.dash-key {{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 18px;
+  justify-content: flex-end;
+  font-size: 0.72rem;
+  color: var(--text-2);
+  margin-bottom: 0.8rem;
+}}
+.dash-key span {{ display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }}
+.dash-key i {{ width: 11px; height: 11px; border-radius: 2px; display: inline-block; flex: 0 0 auto; }}
+.dash {{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px 28px;
+  align-items: start;
+  justify-items: start;
+}}
+.dash-divider {{ grid-column: 1 / -1; height: 0; border-top: 1px dotted var(--hairline); margin: 8px 0 2px; }}
+.dash-cell {{ display: flex; flex-direction: column; }}
+.dash-title {{ font-size: 0.75rem; font-weight: 600; color: var(--ink); margin-bottom: 8px; }}
+.dash-cap {{ font-size: 0.7rem; color: var(--text-2); margin-top: 8px; max-width: 160px; line-height: 1.4; }}
+.dash-sub {{ font-size: 0.72rem; color: var(--text-2); margin-top: 8px; }}
+.dash-bignum {{
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}}
+.dash svg {{ height: auto; }}
+@media (max-width: 760px) {{
+  .dash {{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 24px; }}
 }}
 
 /* ---- Responsive -------------------------------------------------------- */

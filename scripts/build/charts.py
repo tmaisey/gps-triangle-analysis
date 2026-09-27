@@ -228,8 +228,8 @@ def altitude_trace(bill_track, leader_track, *, bill_laps_s=None,
 
 
 # --- (b) Ground-track overlay ----------------------------------------------
-def ground_track(bill_track, leader_track, task=None, *,
-                 title="Ground track", w=560, h=520) -> str:
+def _ground_track_legacy(bill_track, leader_track, task=None, *,
+                         title="Ground track", w=560, h=520) -> str:
     """Lat/lon ground-track overlay for two pilots plus the triangle geometry.
 
     Projects lat/lon to a local equirectangular metre grid centred on the
@@ -317,6 +317,274 @@ def _triangle_points(task, to_xy):
     brg2 = brg + math.radians(120)
     p2 = (p1[0] + leg * math.sin(brg2), p1[1] + leg * math.cos(brg2))
     return [p0, p1, p2]
+
+
+_COMPASS_16 = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+               "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+
+
+def _compass_point(deg: float) -> str:
+    """Return the 16-point compass label nearest to a bearing in degrees."""
+    return _COMPASS_16[round((deg % 360) / 22.5) % 16]
+
+
+def ground_track(round_or_bill=None, leader_track=None, task=None, *,
+                 wind: dict | None = None, title: str | None = None,
+                 w: int = 1120, h: int = 980) -> str:
+    """Render the factual course + full-resolution GPS tracks for a round.
+
+    Two call styles are supported:
+
+    * **New (RPT-011):** ``ground_track(round_dict, wind=..., title=...)`` where
+      ``round_dict`` is a full per-round dataset (carries ``task``, ``round``,
+      ``bill``/``leader``). This is the current API for the report.
+    * **Legacy:** ``ground_track(bill_track, leader_track, task, ...)`` — the
+      earlier track-list overlay, kept for backwards compatibility.
+
+    The new renderer draws the right-isosceles course (bold ink, on top, with
+    turnpoint dots), full-resolution Bill + leader traces at low opacity in one
+    shared equirectangular grid, a dashed perpendicular start/finish line, a
+    North arrow (top-right of the plot), a 100 m scale bar (bottom-left), an
+    inline bottom-right legend (Bill / Leader / Course), and a wind vector
+    inside a reserved right band of the framed grid — pointing inward (the way
+    the wind blows) with a compass + degrees + knots label. Marks are laid out
+    so they do not overlap.
+
+    Args:
+        round_or_bill: a round dataset dict (new API), or Bill's track list
+            (legacy API).
+        leader_track: leader track list (legacy API only).
+        task: task dict (legacy API only).
+        wind: optional wind dict (``dir_deg``/``speed_kmh``/``speed_kn``); if
+            omitted in the new API it is loaded from the round's weather row.
+        title: accessible chart title.
+        w: SVG width.
+        h: SVG height.
+
+    Returns:
+        str: inline SVG; a placeholder if there is nothing to draw.
+    """
+    if not isinstance(round_or_bill, dict) or leader_track is not None or task is not None:
+        return _ground_track_legacy(
+            round_or_bill, leader_track, task,
+            title=title or "Ground track", w=w if w != 1120 else 560,
+            h=h if h != 980 else 520,
+        )
+    return _ground_track_course(round_or_bill, wind=wind, title=title, w=w, h=h)
+
+
+def _ground_track_course(round_data: dict, *, wind: dict | None = None,
+                         title: str | None = None, w: int = 1120,
+                         h: int = 980) -> str:
+    """Render the RPT-011 course + full-resolution track overlay for one round.
+
+    See :func:`ground_track` for the visual contract. Ports the approved
+    ``groundtrack_r17_v5`` prototype into inline SVG.
+    """
+    from . import data as D
+    from .data import TRACK_LAT, TRACK_LON
+
+    n = round_data["round"]
+    task = round_data["task"]
+    title = title or f"Round {n} ground track and course"
+    geom = D.course_geometry(task)
+    to_xy = D.projector(task["start_lat"], task["start_lon"])
+    if wind is None:
+        wind = D.wind_for_round(n)
+
+    # Full-resolution tracks (fall back to the embedded compact tracks offline).
+    try:
+        bill_raw, lead_raw = D.full_tracks_for_round(n)
+    except Exception:
+        bill_raw, lead_raw = [], []
+    if not bill_raw:
+        bill_raw = round_data.get("bill", {}).get("track", [])
+    if not lead_raw:
+        lead_raw = round_data.get("leader", {}).get("track", [])
+    bill_pts = [to_xy(r[TRACK_LAT], r[TRACK_LON]) for r in bill_raw]
+    lead_pts = [to_xy(r[TRACK_LAT], r[TRACK_LON]) for r in lead_raw]
+
+    course_pts = geom["turnpoints"]
+    ink = PALETTE["ink"]
+    grey = PALETTE["text_secondary"]
+    grid = "#EEF0F1"
+
+    # --- layout (ports v5): frame encloses data area + reserved wind band ----
+    frame = {"x": 52, "y": 56, "w": w - 52 - 24, "h": h - 56 - 40}
+    wind_band = 138
+    data_box = {
+        "x": frame["x"] + 16, "y": frame["y"] + 16,
+        "w": frame["w"] - 16 - wind_band, "h": frame["h"] - 32,
+    }
+    band_l = data_box["x"] + data_box["w"]
+    band_r = frame["x"] + frame["w"]
+
+    allx = [p[0] for p in bill_pts + lead_pts + course_pts]
+    ally = [p[1] for p in bill_pts + lead_pts + course_pts]
+    if not allx:
+        return _placeholder(title)
+    pad = 40
+    xmin, xmax = min(allx) - pad, max(allx) + pad
+    ymin, ymax = min(ally) - pad, max(ally) + pad
+    scale = min(data_box["w"] / (xmax - xmin), data_box["h"] / (ymax - ymin))
+    offx = data_box["x"] + (data_box["w"] - (xmax - xmin) * scale) / 2
+    offy = data_box["y"] + (data_box["h"] - (ymax - ymin) * scale) / 2
+
+    def X(x):
+        return offx + (x - xmin) * scale
+
+    def Y(y):
+        return offy + (ymax - y) * scale  # flip: north up
+
+    body = [
+        _svg_open(w, h, title),
+        f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
+    ]
+    # faint 100 m grid inside the data area
+    gx = math.ceil(xmin / 100) * 100
+    while gx < xmax:
+        body.append(f'<line x1="{X(gx):.1f}" y1="{data_box["y"]:.1f}" '
+                    f'x2="{X(gx):.1f}" y2="{data_box["y"]+data_box["h"]:.1f}" '
+                    f'stroke="{grid}" stroke-width="1"/>')
+        gx += 100
+    gy = math.ceil(ymin / 100) * 100
+    while gy < ymax:
+        body.append(f'<line x1="{data_box["x"]:.1f}" y1="{Y(gy):.1f}" '
+                    f'x2="{data_box["x"]+data_box["w"]:.1f}" y2="{Y(gy):.1f}" '
+                    f'stroke="{grid}" stroke-width="1"/>')
+        gy += 100
+    # divider + outer frame (encloses data area and wind band)
+    body.append(f'<line x1="{band_l:.1f}" y1="{frame["y"]:.1f}" x2="{band_l:.1f}" '
+                f'y2="{frame["y"]+frame["h"]:.1f}" stroke="{grid}" stroke-width="1"/>')
+    body.append(f'<rect x="{frame["x"]:.1f}" y="{frame["y"]:.1f}" width="{frame["w"]:.1f}" '
+                f'height="{frame["h"]:.1f}" fill="none" stroke="{PALETTE["hairline"]}" '
+                f'stroke-width="1.2"/>')
+
+    # traces (full-res, low opacity)
+    def trace(pts, color):
+        if not pts:
+            return ""
+        s = " ".join(f"{X(x):.1f},{Y(y):.1f}" for x, y in pts)
+        return (f'<polyline points="{s}" fill="none" stroke="{color}" '
+                f'stroke-width="1.1" stroke-opacity="0.38" '
+                f'stroke-linejoin="round" stroke-linecap="round"/>')
+    body.append(trace(bill_pts, SERIES["bill"]))
+    body.append(trace(lead_pts, SERIES["leader"]))
+
+    # start/finish: dashed perpendicular line through start
+    (sfa, sfb) = geom["start_finish"]
+    body.append(f'<line x1="{X(sfa[0]):.1f}" y1="{Y(sfa[1]):.1f}" '
+                f'x2="{X(sfb[0]):.1f}" y2="{Y(sfb[1]):.1f}" stroke="{ink}" '
+                f'stroke-width="1.6" stroke-dasharray="7 5" stroke-opacity="0.75"/>')
+
+    # course triangle (bold ink, drawn last / on top) + turnpoint dots
+    tri = " ".join(f"{X(x):.1f},{Y(y):.1f}" for x, y in course_pts)
+    body.append(f'<polygon points="{tri}" fill="{ink}" fill-opacity="0.04" '
+                f'stroke="{ink}" stroke-width="3.4" stroke-linejoin="round"/>')
+    for (x, y) in course_pts:
+        body.append(f'<circle cx="{X(x):.1f}" cy="{Y(y):.1f}" r="4.5" fill="{ink}"/>'
+                    f'<circle cx="{X(x):.1f}" cy="{Y(y):.1f}" r="4.5" fill="none" '
+                    f'stroke="#fff" stroke-width="1.4"/>')
+    body.append(f'<circle cx="{X(0):.1f}" cy="{Y(0):.1f}" r="5.5" fill="#fff" '
+                f'stroke="{ink}" stroke-width="2"/>'
+                f'<circle cx="{X(0):.1f}" cy="{Y(0):.1f}" r="1.6" fill="{ink}"/>')
+    body.append(f'<text x="{X(0)+9:.1f}" y="{Y(0)+14:.1f}" font-size="11.5" '
+                f'fill="{ink}" font-weight="600">START / FINISH</text>')
+
+    # North arrow (top-right of data area)
+    nx, ny = data_box["x"] + data_box["w"] - 30, data_box["y"] + 20
+    body.append(f'<line x1="{nx:.1f}" y1="{ny+34:.1f}" x2="{nx:.1f}" y2="{ny:.1f}" '
+                f'stroke="{ink}" stroke-width="2"/>'
+                f'<polygon points="{nx:.1f},{ny-2:.1f} {nx-5:.1f},{ny+9:.1f} '
+                f'{nx+5:.1f},{ny+9:.1f}" fill="{ink}"/>'
+                f'<text x="{nx:.1f}" y="{ny+50:.1f}" font-size="13" font-weight="700" '
+                f'fill="{ink}" text-anchor="middle">N</text>')
+
+    # 100 m scale bar (bottom-left of data area)
+    barm = 100 * scale
+    bx, by = data_box["x"] + 18, data_box["y"] + data_box["h"] - 20
+    body.append(f'<line x1="{bx:.1f}" y1="{by:.1f}" x2="{bx+barm:.1f}" y2="{by:.1f}" '
+                f'stroke="{ink}" stroke-width="2.4"/>'
+                f'<line x1="{bx:.1f}" y1="{by-5:.1f}" x2="{bx:.1f}" y2="{by+5:.1f}" '
+                f'stroke="{ink}" stroke-width="2.4"/>'
+                f'<line x1="{bx+barm:.1f}" y1="{by-5:.1f}" x2="{bx+barm:.1f}" '
+                f'y2="{by+5:.1f}" stroke="{ink}" stroke-width="2.4"/>'
+                f'<text x="{bx:.1f}" y="{by-9:.1f}" font-size="12" fill="{ink}" '
+                f'font-weight="600">100 m</text>')
+
+    # legend (bottom-right of data area, evenly spaced)
+    items = [("Bill", SERIES["bill"]), ("Leader", SERIES["leader"]), ("Course", ink)]
+    char_w, swatch, sw_gap, item_gap = 7.3, 18, 8, 28
+    widths = [swatch + sw_gap + len(lab) * char_w for lab, _ in items]
+    total = sum(widths) + item_gap * (len(items) - 1)
+    lx = (data_box["x"] + data_box["w"] - 16) - total
+    ly = data_box["y"] + data_box["h"] - 20
+    for i, (lab, col) in enumerate(items):
+        body.append(f'<line x1="{lx:.1f}" y1="{ly-6:.1f}" x2="{lx+swatch:.1f}" '
+                    f'y2="{ly-6:.1f}" stroke="{col}" stroke-width="3.2"/>'
+                    f'<text x="{lx+swatch+sw_gap:.1f}" y="{ly-2:.1f}" font-size="12" '
+                    f'fill="{ink}" font-weight="600">{_esc(lab)}</text>')
+        lx += widths[i] + item_gap
+
+    # wind vector inside the reserved band, pointing inward, with knots label
+    if wind and wind.get("dir_deg") is not None:
+        body.append(_wind_vector_in_band(wind, band_l, band_r, data_box, grey))
+
+    body.append("</svg>")
+    return "".join(body)
+
+
+def _wind_vector_in_band(wind: dict, band_l: float, band_r: float,
+                         data_box: dict, grey: str) -> str:
+    """Draw the wind arrow inside the framed right band, pointing inward.
+
+    The arrow head sits at the band's inner edge at the clockface height where
+    the wind's source bearing exits the data area; the tail runs out toward the
+    band's outer edge. A compass + degrees + km/h + knots label sits above it.
+    Ported from the v5 prototype.
+    """
+    deg = float(wind["dir_deg"])
+    src = math.radians(deg)
+    ux, uy = math.sin(src), -math.cos(src)  # outward (source) dir, screen up = N
+    inx, iny = -ux, -uy                     # inward (down-wind) dir
+    pcx = data_box["x"] + data_box["w"] / 2
+    pcy = data_box["y"] + data_box["h"] / 2
+    # height where bearing exits the data-area right edge (guard near-vertical)
+    if abs(ux) < 1e-3:
+        ey = pcy
+    else:
+        tt = (data_box["x"] + data_box["w"] - pcx) / ux
+        ey = pcy + uy * tt
+        ey = max(data_box["y"] + 24, min(data_box["y"] + data_box["h"] - 24, ey))
+    hx, hy = band_l + 14, ey
+    span = (band_r - 16) - hx
+    lw = span / (-inx) if abs(inx) > 1e-3 else span
+    tx, ty = hx - inx * lw, hy - iny * lw
+    perpx, perpy = -iny, inx
+    parts = [
+        f'<line x1="{tx:.1f}" y1="{ty:.1f}" x2="{hx:.1f}" y2="{hy:.1f}" '
+        f'stroke="{grey}" stroke-width="3"/>',
+        f'<polygon points="{hx+inx*2:.1f},{hy+iny*2:.1f} '
+        f'{hx-inx*11+perpx*6:.1f},{hy-iny*11+perpy*6:.1f} '
+        f'{hx-inx*11-perpx*6:.1f},{hy-iny*11-perpy*6:.1f}" fill="{grey}"/>',
+    ]
+    lxr = band_r - 8
+    lyr = min(ty, hy) - 44
+    kmh = wind.get("speed_kmh")
+    kn = wind.get("speed_kn")
+    speed_txt = ""
+    if isinstance(kmh, (int, float)):
+        speed_txt = f"{kmh:.1f} km/h"
+        if isinstance(kn, (int, float)):
+            speed_txt += f" · {kn:.1f} kn"
+    parts.append(f'<text x="{lxr:.1f}" y="{lyr:.1f}" font-size="12.5" fill="{grey}" '
+                 f'font-weight="700" text-anchor="end">WIND</text>')
+    parts.append(f'<text x="{lxr:.1f}" y="{lyr+16:.1f}" font-size="12" fill="{grey}" '
+                 f'text-anchor="end">{_compass_point(deg)} {int(round(deg)):03d}°</text>')
+    if speed_txt:
+        parts.append(f'<text x="{lxr:.1f}" y="{lyr+31:.1f}" font-size="12" fill="{grey}" '
+                     f'text-anchor="end">{speed_txt}</text>')
+    return "".join(parts)
 
 
 # --- (c) Cumulative laps step chart ----------------------------------------
@@ -720,5 +988,369 @@ def bullet_bar(value, benchmark, *, vmax=None, title="Metric", label="",
         f'font-size="12" font-variant-numeric="tabular-nums">'
         f'{_fmt(round(value,1))}{_esc(unit)}</text>'
     )
+    body.append("</svg>")
+    return "".join(body)
+
+
+# --- (j) Energy Management dual-panel (RPT-018) -----------------------------
+def _rolling_mean(vals: Sequence[float], window: int) -> list[float]:
+    """Return a centred simple rolling mean with an odd, edge-shrinking window."""
+    if window <= 1 or len(vals) < 3:
+        return list(vals)
+    half = window // 2
+    out = []
+    n = len(vals)
+    for i in range(n):
+        lo, hi = max(0, i - half), min(n, i + half + 1)
+        out.append(sum(vals[lo:hi]) / (hi - lo))
+    return out
+
+
+def energy_management(round_data: dict, *, title: str = "Energy Management",
+                      speed_smooth: int = 5, w: int = 980, h: int = 600) -> str:
+    """Stacked dual-panel altitude + ground-speed chart for one round (RPT-018).
+
+    Ports the approved ``energy_management_v3`` prototype. A single shared x-axis
+    (run-relative flight time, T0 = the scored start-line crossing) spans the
+    full 0-30 min working window. Altitude occupies the top ~80% at full GPS
+    resolution; ground speed the bottom ~20%, lightly smoothed. Both pilots
+    appear on both panels as solid lines (Bill green, leader blue); one figure
+    title, no per-panel titles, one legend. Each trace is clipped at that pilot's
+    last turn-point crossing (the descent/rollout is dropped).
+
+    Args:
+        round_data: a full per-round dataset dict (carries ``round``, ``bill``,
+            ``leader``).
+        title: figure title (kept as 'Energy Management').
+        speed_smooth: rolling-mean window (samples ~= seconds at 1 Hz) applied to
+            the ground-speed panel only.
+        w: SVG width.
+        h: SVG height.
+
+    Returns:
+        str: inline SVG; a placeholder if no track data is available.
+    """
+    from . import data as D
+    from .data import TRACK_T, TRACK_ALT, TRACK_GS
+
+    n = round_data["round"]
+    try:
+        bill_rows, lead_rows = D.full_tracks_for_round(n, clip_to_last_tpc=True)
+    except Exception:
+        bill_rows, lead_rows = [], []
+    if not bill_rows:
+        bill_rows = round_data.get("bill", {}).get("track", [])
+    if not lead_rows:
+        lead_rows = round_data.get("leader", {}).get("track", [])
+    if not bill_rows and not lead_rows:
+        return _placeholder(title)
+
+    bill = _series_from_rows(bill_rows, TRACK_T, TRACK_ALT, TRACK_GS, speed_smooth)
+    lead = _series_from_rows(lead_rows, TRACK_T, TRACK_ALT, TRACK_GS, speed_smooth)
+
+    x_max = 30.0  # full working window in minutes
+    all_alt = bill["alt"] + lead["alt"]
+    all_spd = bill["spd"] + lead["spd"]
+    if not all_alt:
+        return _placeholder(title)
+    alt_lo, alt_hi = min(all_alt), max(all_alt)
+    pad = (alt_hi - alt_lo) * 0.06 or 1.0
+    alt_lo, alt_hi = alt_lo - pad, alt_hi + pad
+    spd_hi = (max(all_spd) * 1.10) if all_spd else 1.0
+
+    ink, grey, hair, bg = (PALETTE["ink"], PALETTE["muted"], PALETTE["hairline"],
+                           PALETTE["background"])
+    ml, mr, mt, mb = 64, 24, 44, 54
+    gap = 30
+    px0, px1 = ml, w - mr
+    py0, py1 = mt, h - mb
+    total_h = py1 - py0 - gap
+    alt_h = total_h * 0.80
+    alt_y0, alt_y1 = py0, py0 + alt_h
+    spd_y0, spd_y1 = alt_y1 + gap, py1
+
+    def sx(m):
+        return px0 + (m / x_max) * (px1 - px0)
+
+    def sy_alt(v):
+        return alt_y1 - (v - alt_lo) / (alt_hi - alt_lo) * (alt_y1 - alt_y0)
+
+    def sy_spd(v):
+        return spd_y1 - (v / spd_hi) * (spd_y1 - spd_y0)
+
+    def pts(mins, vals, yf):
+        return " ".join(f"{sx(m):.1f},{yf(v):.1f}" for m, v in zip(mins, vals))
+
+    body = [
+        _svg_open(w, h, title),
+        f'<rect x="0" y="0" width="{w}" height="{h}" fill="{bg}"/>',
+        f'<text x="{px0}" y="26" font-size="19" font-weight="600" fill="{ink}">'
+        f'{_esc(title)}</text>',
+    ]
+    # shared x gridlines across both panels
+    step = 5.0
+    xt = 0.0
+    xticks = []
+    while xt <= x_max + 1e-6:
+        xticks.append(xt)
+        xt += step
+    for xt in xticks:
+        x = sx(xt)
+        body.append(f'<line x1="{x:.1f}" y1="{alt_y0:.1f}" x2="{x:.1f}" y2="{alt_y1:.1f}" '
+                    f'stroke="{hair}" stroke-width="1"/>')
+        body.append(f'<line x1="{x:.1f}" y1="{spd_y0:.1f}" x2="{x:.1f}" y2="{spd_y1:.1f}" '
+                    f'stroke="{hair}" stroke-width="1"/>')
+    # altitude horizontal gridlines + labels
+    for a in _nice_ticks(alt_lo, alt_hi, 5):
+        if a < alt_lo or a > alt_hi:
+            continue
+        y = sy_alt(a)
+        body.append(f'<line x1="{px0}" y1="{y:.1f}" x2="{px1}" y2="{y:.1f}" '
+                    f'stroke="{hair}" stroke-width="1"/>'
+                    f'<text x="{px0-8}" y="{y+3.5:.1f}" text-anchor="end" font-size="11" '
+                    f'fill="{grey}">{_fmt(a)}</text>')
+    # speed horizontal gridlines + labels
+    for sv in _nice_ticks(0, spd_hi, 3):
+        if sv < 0 or sv > spd_hi:
+            continue
+        y = sy_spd(sv)
+        body.append(f'<line x1="{px0}" y1="{y:.1f}" x2="{px1}" y2="{y:.1f}" '
+                    f'stroke="{hair}" stroke-width="1"/>'
+                    f'<text x="{px0-8}" y="{y+3.5:.1f}" text-anchor="end" font-size="11" '
+                    f'fill="{grey}">{_fmt(sv)}</text>')
+    # panel left axes + shared baseline
+    for y0, y1 in ((alt_y0, alt_y1), (spd_y0, spd_y1)):
+        body.append(f'<line x1="{px0}" y1="{y0:.1f}" x2="{px0}" y2="{y1:.1f}" '
+                    f'stroke="{grey}" stroke-width="1"/>')
+    body.append(f'<line x1="{px0}" y1="{spd_y1:.1f}" x2="{px1}" y2="{spd_y1:.1f}" '
+                f'stroke="{grey}" stroke-width="1"/>')
+    # x tick labels once, under bottom panel + axis title
+    for xt in xticks:
+        body.append(f'<text x="{sx(xt):.1f}" y="{spd_y1+16:.1f}" text-anchor="middle" '
+                    f'font-size="11" fill="{grey}">{xt:g}</text>')
+    body.append(f'<text x="{(px0+px1)/2:.1f}" y="{h-8}" text-anchor="middle" '
+                f'font-size="12.5" fill="{ink}">Relative flight time (minutes since '
+                f'scored start-line crossing)</text>')
+    # rotated y-axis labels naming each panel
+    acy = (alt_y0 + alt_y1) / 2
+    scy = (spd_y0 + spd_y1) / 2
+    body.append(f'<text x="16" y="{acy:.1f}" text-anchor="middle" font-size="12.5" '
+                f'fill="{ink}" transform="rotate(-90 16 {acy:.1f})">Altitude (m)</text>')
+    body.append(f'<text x="16" y="{scy:.1f}" text-anchor="middle" font-size="12.5" '
+                f'fill="{ink}" transform="rotate(-90 16 {scy:.1f})">Ground speed (km/h)</text>')
+    # data lines (leader under Bill)
+    for sdat, color in ((lead, SERIES["leader"]), (bill, SERIES["bill"])):
+        if sdat["mins"]:
+            body.append(f'<polyline points="{pts(sdat["mins"], sdat["alt"], sy_alt)}" '
+                        f'fill="none" stroke="{color}" stroke-width="2" '
+                        f'stroke-linejoin="round" stroke-linecap="round"/>')
+            body.append(f'<polyline points="{pts(sdat["mins"], sdat["spd"], sy_spd)}" '
+                        f'fill="none" stroke="{color}" stroke-width="1.8" '
+                        f'stroke-linejoin="round" stroke-linecap="round"/>')
+    # single legend, top-right of altitude panel
+    bname = round_data.get("bill", {}).get("name", "Bill Maisey")
+    lname = round_data.get("leader", {}).get("name", "Leader")
+    entries = [(bname, SERIES["bill"]), (f"{lname} (leader)", SERIES["leader"])]
+    box_w, row_h = 200, 18
+    lgx0 = px1 - box_w - 8
+    lgy0 = alt_y0 + 10
+    body.append(f'<rect x="{lgx0:.1f}" y="{lgy0:.1f}" width="{box_w}" '
+                f'height="{row_h*len(entries)+8}" rx="4" fill="{bg}" fill-opacity="0.85" '
+                f'stroke="{hair}" stroke-width="1"/>')
+    for i, (label, color) in enumerate(entries):
+        yy = lgy0 + 14 + i * row_h
+        body.append(f'<line x1="{lgx0+10:.1f}" y1="{yy:.1f}" x2="{lgx0+30:.1f}" '
+                    f'y2="{yy:.1f}" stroke="{color}" stroke-width="3"/>'
+                    f'<text x="{lgx0+38:.1f}" y="{yy+4:.1f}" font-size="12" '
+                    f'fill="{ink}">{_esc(label)}</text>')
+    body.append("</svg>")
+    return "".join(body)
+
+
+def _series_from_rows(rows, ti, ai, gi, smooth):
+    """Build a run-relative {mins, alt, spd} series from track rows for a panel."""
+    mins = [r[ti] / 60.0 for r in rows]
+    alt = [r[ai] for r in rows]
+    spd_raw = [r[gi] for r in rows]
+    return {"mins": mins, "alt": alt, "spd": _rolling_mean(spd_raw, smooth)}
+
+
+# --- (k) All-rounds grouped bars + condition/rank strips (RPT-022) ----------
+def grouped_bar_rounds(rounds, series, *, title="", ylabel="", unit="",
+                       w=_W, h=300) -> str:
+    """All-rounds grouped bar chart: several series, one group of bars per round.
+
+    Built for the Overview Performance summary (RPT-022): three bars per round —
+    round winner (blue), overall event winner (grey), Bill (green). Generic over
+    the metric, so the same component renders score, laps, avg speed, entry speed
+    and entry altitude.
+
+    Args:
+        rounds: x-axis round labels/numbers (e.g. ``list(range(1, 18))``).
+        series: list of ``(label, values, color_key)`` tuples, where ``values``
+            aligns with ``rounds`` (``None`` entries are skipped, e.g. a speed
+            round with no distance metric) and ``color_key`` is one of
+            ``'leader'`` (round winner), ``'field'`` (event winner), ``'bill'``.
+        title: accessible chart title.
+        ylabel: y-axis title.
+        unit: optional unit suffix (unused on axis, kept for callers).
+
+    Returns:
+        str: inline SVG; placeholder if no rounds/series.
+    """
+    if not rounds or not series:
+        return _placeholder(title or "Rounds")
+    pl, pr, pt, pb = _PAD["l"], _PAD["r"], _PAD["t"], _PAD["b"]
+    allv = [v for _, vals, _ in series for v in vals if v is not None]
+    if not allv:
+        return _placeholder(title or "Rounds")
+    vmax = max(allv + [0])
+    vmin = min(allv + [0])
+    ys = _scaler(vmin, vmax, h - pb, pt)
+    n = len(rounds)
+    band = (w - pl - pr) / n
+    k = len(series)
+    bw = band * 0.8 / k
+    zero = ys(0 if vmin <= 0 <= vmax else vmin)
+    body = [
+        _svg_open(w, h, title or "Rounds"),
+        f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
+    ]
+    for tv in _nice_ticks(vmin, vmax):
+        y = ys(tv)
+        body.append(f'<line x1="{pl}" y1="{y:.1f}" x2="{w-pr}" y2="{y:.1f}" '
+                    f'stroke="{PALETTE["hairline"]}"/>'
+                    f'<text x="{pl-8}" y="{y+4:.1f}" text-anchor="end" '
+                    f'fill="{PALETTE["muted"]}" font-size="11">{_fmt(tv)}</text>')
+    for i, rnd in enumerate(rounds):
+        gx = pl + band * i + band * 0.1
+        for j, (_, vals, ckey) in enumerate(series):
+            v = vals[i] if i < len(vals) else None
+            if v is None:
+                continue
+            y = ys(v)
+            top, ht = min(y, zero), abs(y - zero)
+            body.append(f'<rect x="{gx+j*bw:.1f}" y="{top:.1f}" width="{bw*0.92:.1f}" '
+                        f'height="{ht:.1f}" fill="{SERIES.get(ckey, PALETTE["field"])}" '
+                        f'rx="1"/>')
+        body.append(f'<text x="{pl+band*(i+0.5):.1f}" y="{h-pb+15}" text-anchor="middle" '
+                    f'fill="{PALETTE["muted"]}" font-size="10">{_esc(rnd)}</text>')
+    if ylabel:
+        cy = (pt + h - pb) / 2
+        body.append(f'<text x="14" y="{cy:.1f}" text-anchor="middle" '
+                    f'fill="{PALETTE["text_secondary"]}" font-size="12" '
+                    f'transform="rotate(-90 14 {cy:.1f})">{_esc(ylabel)}</text>')
+    labels = [(lab, SERIES.get(ck, PALETTE["field"])) for lab, _, ck in series]
+    body.append(_legend(labels, w))
+    body.append("</svg>")
+    return "".join(body)
+
+
+def _lerp(a, b, t):
+    return round(a + (b - a) * t)
+
+
+def conditions_strip(values, *, labels=None, title="Conditions",
+                     low_rgb=(250, 224, 139), high_rgb=(176, 32, 32),
+                     unit="", w=_W, h=70) -> str:
+    """Horizontal per-round colour strip normalised across all rounds (RPT-022).
+
+    Each round is a cell whose colour interpolates from ``low_rgb`` (pastel
+    yellow, the minimum across all rounds) to ``high_rgb`` (deep red, the
+    maximum) by the round's normalised value. Built for the solar-radiation /
+    lift-proxy strip aligned beneath the grouped bars so performance reads
+    against conditions.
+
+    Args:
+        values: per-round numeric values (``None`` allowed; renders a hairline
+            cell). Aligns with ``labels``.
+        labels: per-round labels for the cells; defaults to ``1..len(values)``.
+        title: accessible chart title.
+        unit: optional unit label appended to the caption context (unused here).
+
+    Returns:
+        str: inline SVG; placeholder if no values.
+    """
+    vals = [v for v in values if isinstance(v, (int, float))]
+    if not vals:
+        return _placeholder(title)
+    labels = labels or list(range(1, len(values) + 1))
+    lo, hi = min(vals), max(vals)
+    span = (hi - lo) or 1.0
+    n = len(values)
+    pl, pr = _PAD["l"], _PAD["r"]
+    cellw = (w - pl - pr) / n
+    top, ch = 14, h - 34
+    body = [
+        _svg_open(w, h, title),
+        f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
+    ]
+    for i, v in enumerate(values):
+        x = pl + i * cellw
+        if isinstance(v, (int, float)):
+            t = (v - lo) / span
+            col = (f'rgb({_lerp(low_rgb[0], high_rgb[0], t)},'
+                   f'{_lerp(low_rgb[1], high_rgb[1], t)},'
+                   f'{_lerp(low_rgb[2], high_rgb[2], t)})')
+            body.append(f'<rect x="{x+1:.1f}" y="{top}" width="{cellw-2:.1f}" '
+                        f'height="{ch:.1f}" rx="2" fill="{col}"/>')
+        else:
+            body.append(f'<rect x="{x+1:.1f}" y="{top}" width="{cellw-2:.1f}" '
+                        f'height="{ch:.1f}" rx="2" fill="none" '
+                        f'stroke="{PALETTE["hairline"]}"/>')
+        body.append(f'<text x="{x+cellw/2:.1f}" y="{h-8}" text-anchor="middle" '
+                    f'fill="{PALETTE["muted"]}" font-size="10">{_esc(labels[i])}</text>')
+    body.append("</svg>")
+    return "".join(body)
+
+
+def rank_strip(ranks, *, group_sizes=None, labels=None,
+               title="Within-group rank", w=_W, h=70) -> str:
+    """Per-round within-group rank strip (Bill), 1 = best (RPT-022).
+
+    Each round is a cell shaded by Bill's finishing position in his group (dark
+    green = near the top of the group, pale = near the bottom), with the rank
+    printed. Aligns column-for-column with :func:`grouped_bar_rounds`.
+
+    Args:
+        ranks: Bill's within-group rank per round (``None`` allowed).
+        group_sizes: per-round group sizes used to normalise the shade; defaults
+            to the max rank seen.
+        labels: per-round labels; defaults to ``1..len(ranks)``.
+        title: accessible chart title.
+
+    Returns:
+        str: inline SVG; placeholder if no ranks.
+    """
+    rk = [r for r in ranks if isinstance(r, (int, float))]
+    if not rk:
+        return _placeholder(title)
+    labels = labels or list(range(1, len(ranks) + 1))
+    n = len(ranks)
+    pl, pr = _PAD["l"], _PAD["r"]
+    cellw = (w - pl - pr) / n
+    top, ch = 14, h - 34
+    body = [
+        _svg_open(w, h, title),
+        f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
+    ]
+    for i, r in enumerate(ranks):
+        x = pl + i * cellw
+        if isinstance(r, (int, float)):
+            gs = (group_sizes[i] if group_sizes and i < len(group_sizes)
+                  and group_sizes[i] else max(rk))
+            t = 1 - (r - 1) / max(gs - 1, 1)  # 1 (best) -> 1.0
+            col = (f'rgb({_lerp(230, 4, t)},{_lerp(233, 106, t)},{_lerp(219, 56, t)})')
+            body.append(f'<rect x="{x+1:.1f}" y="{top}" width="{cellw-2:.1f}" '
+                        f'height="{ch:.1f}" rx="2" fill="{col}"/>')
+            body.append(f'<text x="{x+cellw/2:.1f}" y="{top+ch/2+4:.1f}" '
+                        f'text-anchor="middle" fill="{PALETTE["ink"]}" font-size="10" '
+                        f'font-weight="600">{int(r)}</text>')
+        else:
+            body.append(f'<rect x="{x+1:.1f}" y="{top}" width="{cellw-2:.1f}" '
+                        f'height="{ch:.1f}" rx="2" fill="none" '
+                        f'stroke="{PALETTE["hairline"]}"/>')
+        body.append(f'<text x="{x+cellw/2:.1f}" y="{h-8}" text-anchor="middle" '
+                    f'fill="{PALETTE["muted"]}" font-size="10">{_esc(labels[i])}</text>')
     body.append("</svg>")
     return "".join(body)

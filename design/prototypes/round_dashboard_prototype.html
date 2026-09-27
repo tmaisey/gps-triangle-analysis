@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round Dashboard</title>
+<meta name="description" content="Per-round visual overview of performance for the GPS Triangle report (prototype RPT-021).">
+<style>
+  :root{
+    --bill:#86BC25; --bill-ink:#5c8f10; --leader:#00A3E0; --field:#D0D0CE;
+    --ink:#101820; --secondary:#53565A; --hair:#E4E4DF; --bg:#FFFFFF; --track:#EFEFE9;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.45;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:40px 24px 64px;}
+  .page-head h1{font-family:Georgia,serif; font-weight:500; font-size:26px; margin:0 0 4px; letter-spacing:.2px;}
+  .page-head p{margin:0; color:var(--secondary); font-size:14px;}
+  .round{margin-top:44px;}
+  .round-head{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+    padding-bottom:14px; border-bottom:1px solid var(--hair); margin-bottom:26px;}
+  .round-head h2{font-family:Georgia,serif; font-weight:500; font-size:20px; margin:0;}
+  .round-head .tag{font-size:11px; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--secondary); border:1px solid var(--hair); border-radius:999px; padding:3px 11px;}
+  .round-head .matchup{color:var(--secondary); font-size:13px; margin-left:auto;}
+  .round-head .matchup b{color:var(--ink); font-weight:600;}
+
+  .charts{display:flex; flex-wrap:wrap; gap:22px 34px; align-items:flex-start;}
+  .metrics{display:flex; flex-wrap:wrap; gap:26px 44px; align-items:flex-start;
+    margin-top:30px; padding-top:24px; border-top:1px dotted var(--hair);}
+
+  .cell{display:flex; flex-direction:column;}
+  .cell-title{font-size:12px; font-weight:600; color:var(--ink); margin-bottom:8px; height:16px;}
+  .cell-cap{font-size:11px; color:var(--secondary); margin-top:8px; max-width:150px; line-height:1.4; min-height:30px;}
+  .cell-sub{font-size:11.5px; color:var(--secondary); margin-top:8px;}
+
+  .bignum{font-family:Georgia,serif; font-weight:500; font-size:46px; line-height:1; color:var(--ink); letter-spacing:-.5px;}
+
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:34px; font-size:11.5px; color:var(--secondary);}
+  .legend span{display:inline-flex; align-items:center; gap:7px;}
+  .legend i{width:14px; height:0; border-top-width:3px; border-top-style:solid; display:inline-block;}
+  .legend i.fill{height:11px; border:0; border-radius:2px;}
+  .legend i.vio{height:11px; width:14px; border:0; border-radius:2px; background:var(--field);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="page-head">
+    <h1>Visual overview of performance</h1>
+    <p>Per-round dashboard &mdash; Bill against the same-air leader and his group field. Prototype (RPT-021). Speeds km/h, altitudes m.</p>
+  </div>
+  <div id="rounds"></div>
+  <div class="legend">
+    <span><i class="fill" style="background:var(--bill)"></i> Bill</span>
+    <span><i style="border-color:var(--leader)"></i> Same-air leader</span>
+    <span><i class="vio"></i> Group field (density)</span>
+  </div>
+</div>
+
+<script>
+const D = {"rad_min": 110.0, "rad_max": 811.0, "rounds": {"R17": {"round": 17, "heat": "Heat 17", "task_type": "triangle", "leader_name": "Jens Geider", "entry_speed": {"bill": 66.1, "leader": 71.2, "cap": 120.0}, "entry_alt": {"bill": 383.4, "leader": 395.0, "cap": 400.0}, "avg_speed": {"bill": 44.6, "leader": 44.8}, "laps": {"bill": 13, "leader": 13}, "rank": 2, "field": 10, "bill_score": 999, "scores": [1000, 999, 937, 936, 875, 812, 795, 750, 734, 0], "wind": {"dir_deg": 72.0, "speed_kmh": 8.3}, "radiation": 811.0}, "R4": {"round": 4, "heat": "Heat 4", "task_type": "speedrun", "leader_name": "Ralph Losemann", "entry_speed": {"bill": 88.9, "leader": 98.5, "cap": 120.0}, "entry_alt": {"bill": 353.8, "leader": 398.6, "cap": 400.0}, "avg_speed": {"bill": 109.1, "leader": 156.4}, "laps": {"bill": 1, "leader": 1}, "rank": 29, "field": 38, "bill_score": 695, "scores": [1000, 970, 925, 925, 910, 910, 895, 895, 895, 890, 880, 875, 870, 840, 830, 825, 815, 810, 805, 795, 780, 760, 760, 755, 740, 735, 725, 715, 695, 685, 670, 640, 590, 420, 305, 0, 0, 0], "wind": {"dir_deg": 115.0, "speed_kmh": 4.2}, "radiation": 591.0}}};
+const C = {bill:'#86BC25', billInk:'#5c8f10', leader:'#00A3E0', field:'#D0D0CE',
+           ink:'#101820', sec:'#53565A', hair:'#E4E4DF', track:'#EFEFE9'};
+const SVGNS='http://www.w3.org/2000/svg';
+function el(tag, attrs, txt){
+  const e=document.createElementNS(SVGNS,tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]);
+  if(txt!=null) e.textContent=txt;
+  return e;
+}
+function fmt(v, d){ return Number(v).toFixed(d==null?1:d); }
+
+// ---- vertical bullet plot ----
+// o: {bill, leader, domainMax, dec}
+// grey track top = domainMax (the regs limit, or a domain ceiling where none exists).
+function bullet(o){
+  const W=138, TH=196, top=24, bottom=top+TH, trackX=40, trackW=30;
+  const svg=el('svg',{width:W, height:bottom+8, viewBox:`0 0 ${W} ${bottom+8}`, role:'img'});
+  const y = v => bottom - Math.max(0,Math.min(1,v/o.domainMax))*TH;
+  // grey track (top edge = the limit / domain ceiling)
+  svg.appendChild(el('rect',{x:trackX, y:top, width:trackW, height:TH, rx:4, fill:C.track}));
+  // Bill fill from bottom
+  const by=y(o.bill);
+  svg.appendChild(el('rect',{x:trackX, y:by, width:trackW, height:bottom-by, rx:4, fill:C.bill}));
+  // leader marker (solid blue horizontal line) + small blue value on the left
+  const ly=y(o.leader);
+  svg.appendChild(el('line',{x1:trackX-5, y1:ly, x2:trackX+trackW+5, y2:ly, stroke:C.leader, 'stroke-width':3}));
+  svg.appendChild(el('text',{x:trackX-8, y:ly+3, fill:C.leader, 'font-size':9.5, 'text-anchor':'end'}, fmt(o.leader,o.dec)));
+  // Bill value: to the RIGHT of the bar, green
+  svg.appendChild(el('text',{x:trackX+trackW+8, y:by+4.5, fill:C.billInk, 'font-size':13, 'font-weight':700,
+    'font-family':'Georgia,serif', 'text-anchor':'start'}, fmt(o.bill,o.dec)));
+  return svg;
+}
+
+// ---- score violin (symmetric vertical density of the group field) ----
+function violin(o){
+  const W=138, TH=196, top=24, bottom=top+TH, cx=W/2, halfW=30;
+  const svg=el('svg',{width:W, height:bottom+8, viewBox:`0 0 ${W} ${bottom+8}`, role:'img'});
+  const scores=o.scores.slice();
+  const dmin=Math.min.apply(null,scores), dmax=1000, span=(dmax-dmin)||1;
+  const y = v => bottom - ((v-dmin)/span)*TH;
+  // kernel density
+  const N=64, bw=Math.max(35, span*0.06);
+  const dens=[], ys=[];
+  let dmaxv=0;
+  for(let i=0;i<N;i++){
+    const v=dmin + span*i/(N-1);
+    let d=0; for(const s of scores){ const z=(v-s)/bw; d+=Math.exp(-0.5*z*z); }
+    ys.push(y(v)); dens.push(d); if(d>dmaxv) dmaxv=d;
+  }
+  // build mirrored path
+  let left='', right='';
+  for(let i=0;i<N;i++){
+    const w=(dens[i]/dmaxv)*halfW;
+    left += (i===0?'M':'L')+(cx-w).toFixed(2)+' '+ys[i].toFixed(2)+' ';
+  }
+  for(let i=N-1;i>=0;i--){
+    const w=(dens[i]/dmaxv)*halfW;
+    right += 'L'+(cx+w).toFixed(2)+' '+ys[i].toFixed(2)+' ';
+  }
+  svg.appendChild(el('path',{d:left+right+'Z', fill:C.field, opacity:0.9}));
+  // winner (blue) at 1000 and Bill (green) over the top
+  const winY=y(1000);
+  let by=y(o.bill_score); if(by-winY < 9) by=winY+9;
+  svg.appendChild(el('line',{x1:cx-halfW-4, y1:winY, x2:cx+halfW+4, y2:winY, stroke:C.leader, 'stroke-width':3.5}));
+  svg.appendChild(el('text',{x:cx-halfW-4, y:winY-6, fill:C.leader, 'font-size':10, 'font-weight':700}, 'Winner 1000'));
+  svg.appendChild(el('line',{x1:cx-halfW-4, y1:by, x2:cx+halfW+4, y2:by, stroke:C.bill, 'stroke-width':3.5}));
+  svg.appendChild(el('text',{x:cx-halfW-4, y:by+13, fill:C.billInk, 'font-size':10, 'font-weight':700}, 'Bill '+o.bill_score));
+  return svg;
+}
+
+// ---- laps paired bars (Bill green, leader blue), no axis, value labels on top ----
+function lapsBars(bill, leader){
+  const W=112, H=132, base=104, topPad=22, bw=30, gap=20;
+  const svg=el('svg',{width:W, height:H, viewBox:`0 0 ${W} ${H}`, role:'img'});
+  const mx=Math.max(bill,leader,1), barMax=base-topPad;
+  const x0=(W-(bw*2+gap))/2;
+  const draw=(x,val,col)=>{
+    const h=(val/mx)*barMax, yv=base-h;
+    svg.appendChild(el('rect',{x, y:yv, width:bw, height:h, rx:3, fill:col}));
+    svg.appendChild(el('text',{x:x+bw/2, y:yv-6, fill:C.ink, 'font-size':14, 'font-weight':700,
+      'font-family':'Georgia,serif', 'text-anchor':'middle'}, val));
+  };
+  draw(x0, bill, C.bill);
+  draw(x0+bw+gap, leader, C.leader);
+  return svg;
+}
+
+// ---- wind compass card ----
+function windCard(dir_deg){
+  const S=118, cx=S/2, cy=S/2, R=40;
+  const svg=el('svg',{width:S, height:S, viewBox:`0 0 ${S} ${S}`, role:'img'});
+  svg.appendChild(el('circle',{cx, cy, r:R, fill:'none', stroke:C.hair, 'stroke-width':1.4}));
+  ['N','E','S','W'].forEach((lab,i)=>{
+    const a=i*90*Math.PI/180;
+    svg.appendChild(el('text',{x:cx+Math.sin(a)*(R+9), y:cy-Math.cos(a)*(R+9)+3, fill:C.sec,
+      'font-size':8.5, 'text-anchor':'middle'}, lab));
+  });
+  const a=dir_deg*Math.PI/180;
+  const tailX=cx+Math.sin(a)*(R-4), tailY=cy-Math.cos(a)*(R-4);
+  const headX=cx+Math.sin(a)*8, headY=cy-Math.cos(a)*8;
+  svg.appendChild(el('line',{x1:tailX, y1:tailY, x2:headX, y2:headY, stroke:C.ink, 'stroke-width':2.4, 'stroke-linecap':'round'}));
+  const dx=headX-tailX, dy=headY-tailY, dl=Math.hypot(dx,dy), ux=dx/dl, uy=dy/dl, px=-uy, py=ux, ah=6;
+  svg.appendChild(el('polygon',{points:`${headX},${headY} ${headX-ux*ah+px*ah*0.6},${headY-uy*ah+py*ah*0.6} ${headX-ux*ah-px*ah*0.6},${headY-uy*ah-py*ah*0.6}`, fill:C.ink}));
+  return svg;
+}
+function compass(deg){
+  const d=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+  return d[Math.round(deg/22.5)%16];
+}
+
+// ---- solar colour-bar: height & colour by radiation normalised across all 17 rounds ----
+function lerp(a,b,t){ return Math.round(a+(b-a)*t); }
+function solarBar(rad){
+  const norm=Math.max(0,Math.min(1,(rad-D.rad_min)/(D.rad_max-D.rad_min)));
+  // pastel-yellow (min) -> deep-red (max)
+  const yEl=[250,224,139], rEl=[176,32,32];
+  const col=`rgb(${lerp(yEl[0],rEl[0],norm)},${lerp(yEl[1],rEl[1],norm)},${lerp(yEl[2],rEl[2],norm)})`;
+  const W=70, H=150, base=138, minH=16, maxH=118, bw=44;
+  const svg=el('svg',{width:W, height:H, viewBox:`0 0 ${W} ${H}`, role:'img'});
+  const h=minH+norm*(maxH-minH);
+  svg.appendChild(el('rect',{x:(W-bw)/2, y:base-h, width:bw, height:h, rx:4, fill:col}));
+  return svg;
+}
+
+function stack(nodes){ const d=document.createElement('div'); nodes.forEach(n=>d.appendChild(n)); return d; }
+function txt(cls, html){ const d=document.createElement('div'); d.className=cls; d.innerHTML=html; return d; }
+
+function cell(title, body, sub){
+  const d=document.createElement('div'); d.className='cell';
+  d.appendChild(txt('cell-title', title));
+  d.appendChild(body);
+  if(sub) d.appendChild(txt('cell-sub', sub));
+  return d;
+}
+function cellCap(title, body, cap){
+  const d=document.createElement('div'); d.className='cell';
+  d.appendChild(txt('cell-title', title));
+  d.appendChild(body);
+  if(cap) d.appendChild(txt('cell-cap', cap));
+  return d;
+}
+
+function renderRound(R){
+  const isSpeed = R.task_type==='speedrun';
+  const sec=document.createElement('section'); sec.className='round';
+  const head=document.createElement('div'); head.className='round-head';
+  head.innerHTML=`<h2>Round ${R.round}</h2>`+
+    `<span class="tag">${isSpeed?'Speed run':'Triangle'} &middot; ${R.heat}</span>`+
+    `<span class="matchup"><b style="color:${C.bill}">Bill</b> vs same-air leader <b>${R.leader_name}</b></span>`;
+  sec.appendChild(head);
+
+  // ---- top row: score, entry speed, entry altitude, average (or single-lap) speed ----
+  const top=document.createElement('div'); top.className='charts';
+  top.appendChild(cellCap('Group score',
+    violin({scores:R.scores, bill_score:R.bill_score}),
+    'Field score density. Winner 1000, Bill over the top.'));
+  top.appendChild(cellCap('Entry speed',
+    bullet({bill:R.entry_speed.bill, leader:R.entry_speed.leader, domainMax:R.entry_speed.cap, dec:1}),
+    'km/h at gate. Track top = 120 regs cap.'));
+  top.appendChild(cellCap('Entry altitude',
+    bullet({bill:R.entry_alt.bill, leader:R.entry_alt.leader, domainMax:R.entry_alt.cap, dec:0}),
+    'm at gate. Track top = 400 regs cap.'));
+  if(isSpeed){
+    const ceil=Math.ceil(Math.max(R.avg_speed.bill,R.avg_speed.leader)*1.1/10)*10;
+    top.appendChild(cellCap('Single-lap speed',
+      bullet({bill:R.avg_speed.bill, leader:R.avg_speed.leader, domainMax:ceil, dec:1}),
+      'km/h over the single run. No regs cap.'));
+  }else{
+    const ceil=Math.ceil(Math.max(R.avg_speed.bill,R.avg_speed.leader)*1.1/10)*10;
+    top.appendChild(cellCap('Average speed',
+      bullet({bill:R.avg_speed.bill, leader:R.avg_speed.leader, domainMax:ceil, dec:1}),
+      'km/h over task. No regs cap.'));
+  }
+  sec.appendChild(top);
+
+  // ---- bottom row: laps, rank, wind, solar ----
+  const bot=document.createElement('div'); bot.className='metrics';
+  bot.appendChild(cell('Laps', lapsBars(R.laps.bill, R.laps.leader), 'Bill vs leader'));
+  bot.appendChild(cell('Within-group rank',
+    txt('bignum', R.rank+'/'+R.field), `${R.field} pilots in group`));
+  // wind
+  const wind=stack([windCard(R.wind.dir_deg),
+    txt('', `<span style="font-family:Georgia,serif;font-size:15px">${fmt(R.wind.speed_kmh,1)}</span><span style="font-size:11px;color:${C.sec}"> km/h</span>`),
+    txt('', `<span style="font-size:11px;color:${C.sec}">${compass(R.wind.dir_deg)} · ${String(Math.round(R.wind.dir_deg)).padStart(3,'0')}° from</span>`)]);
+  bot.appendChild(cell('Wind', wind, null));
+  bot.appendChild(cell('Solar radiation', solarBar(R.radiation), 'Relative to all 17 rounds · lift proxy'));
+  sec.appendChild(bot);
+  return sec;
+}
+
+const host=document.getElementById('rounds');
+host.appendChild(renderRound(D.rounds.R17));
+host.appendChild(renderRound(D.rounds.R4));
+</script>
+</body>
+</html>
