@@ -34,6 +34,7 @@ Once the build reaches green, and **before it is considered done**, subagents re
 |---|---|---|
 | `docs/PRD.md` | Intent, scope, deliverable spec, findings, limitations | Read first; update when intent or scope changes |
 | `docs/SPEC.json` | Feature + test backlog with `passes` state | Check before building; flip status through red → green |
+| `docs/ADR.md` | Architecture decision records (standing build constraints) | Read before an architectural choice; add an ADR when one is made |
 | `reviews/` | Build-review reports (`yymmddThhmm-<domain>.md`) | Written at end of build phase; read before proposing fixes |
 | `scripts/` | Fetch + analysis scripts (and, to come, the build harness) | — |
 | `data/scores/`, `data/tracks/` | Cached raw rcmodelspot API JSON (re-fetchable) | — |

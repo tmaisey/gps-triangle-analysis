@@ -115,6 +115,8 @@ Established from the data pulls (subject to the weather and phase passes finalis
 | Path | What it holds |
 |---|---|
 | `docs/PRD.md` | This document — intent, scope, deliverable spec |
+| `docs/SPEC.json` | Feature + test backlog with `passes` state |
+| `docs/ADR.md` | Architecture decision records (standing build constraints) |
 | `scripts/` | Fetch and analysis scripts (`fetch_data.py`, `fetch_replays.py`, `compute_metrics.py`, weather, phase decomposition) |
 | `data/scores/` | Cached raw JSON: competition results tree, competitors |
 | `data/tracks/` | Cached raw ~1 Hz GPS replay JSON per group (re-fetchable) |

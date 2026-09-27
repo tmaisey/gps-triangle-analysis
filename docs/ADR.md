@@ -1,0 +1,40 @@
+# Architecture Decision Records
+
+Standing decisions that constrain how the report is built. Kept lightweight (simple build). Status: `accepted` unless noted.
+
+---
+
+## ADR-001 — Single self-contained HTML file (inline SVG, embedded data)
+**Status:** accepted
+**Decision:** The deliverable is one `.html` file with charts as **inline SVG**, the per-round dataset embedded as JSON, and CSS/JS inlined. It renders standalone by opening the file. Web fonts load from Google Fonts via `<link>` with system fallbacks (graceful offline degradation); nothing else is remote.
+**Rationale:** The user needs to email it and have anyone open it, offline. A file — not a hosted page.
+**Rejected:** hosted dashboard/claude.ai artifact (not a sendable file); CDN chart libraries (offline fragility, generic look); rendered PNG charts (not crisp, larger, no text scaling).
+**Refs:** SPEC RPT-001, DSN-001.
+
+## ADR-002 — Deterministic Python build harness generates the HTML
+**Status:** accepted
+**Decision:** A Python harness reads `analysis/` outputs and emits the HTML; the HTML is generated, not hand-maintained. Modular: shared library (design tokens, chart functions, layout components, data loaders) + one module per page, composed by an assembler.
+**Rationale:** Repeatable and testable — figures reconcile to source data, and the report regenerates when data changes. Modules let build subagents work in parallel without clobbering one file.
+**Rejected:** hand-authored HTML (drifts from data, not reconcilable, not parallelisable).
+**Refs:** SPEC RPT-001; PRD §11.
+
+## ADR-003 — Same-air (within-group) leader is the per-round benchmark
+**Status:** accepted
+**Decision:** Each round compares Bill to the top scorer in **his own heat-group** (same time slot, same air). The overall event winner is referenced only where co-grouped with Bill.
+**Rationale:** Scores are normalised within a group; different groups fly different thermals, so cross-group comparison confounds skill with conditions.
+**Rejected:** benchmarking every round against the event winner (unfair; conflates conditions and skill).
+**Refs:** PRD §9; SPEC ANL-001, ANL-004.
+
+## ADR-004 — Four-page client-side app in one file
+**Status:** accepted
+**Decision:** Home / Analysis / Recommendations / Innovations as four JS-toggled pages within the single file. Recommendations are one canonical set, surfaced **inline in Analysis** and **consolidated by theme** on the Recommendations page via shared anchor ids; Analysis and Recommendations cross-link to Innovations points.
+**Rationale:** Organises dense content and keeps evidence, action, and future ideas navigable and in context — while staying one file.
+**Rejected:** multiple files (breaks single-send); one long scroll page (poor navigability).
+**Refs:** SPEC RPT-002, RPT-005, RPT-006, RPT-009.
+
+## ADR-005 — Bespoke inline-SVG charts, not a charting library
+**Status:** accepted
+**Decision:** Chart types (altitude/energy trace, ground-track overlay, cumulative laps, phase bars, scatter, waterfall, progression, climb distributions, metric strips) are authored as bespoke SVG generators in the harness.
+**Rationale:** Self-containment (ADR-001), full control of the palette and the no-AI-tell / no-emoji design rules, and consistent theming across every figure.
+**Rejected:** Chart.js/Plotly/D3 (remote or heavy bundle, generic styling that fights the design constraints).
+**Refs:** SPEC DSN-001, RPT-003, RPT-004.
