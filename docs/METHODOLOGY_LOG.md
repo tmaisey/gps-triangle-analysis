@@ -80,5 +80,10 @@ Cumulative subagent working-time ≈ 3h15m across 12 subagents; wall-clock was m
 **User (verbatim):** [request to add a Methodology page replaying how the work was done between user and agents — grouped steps, expandable summary→verbatim exchange, durations at each level, collapsed setup panel, high-autonomy summary; built after the main product is accepted; plus a Playwright CLI UI-review subagent during review; the Methodology page gets its own review; then finally the README.]
 **Agent:** captured into PRD/SPEC/ADR and this log; the Methodology page (RPT-010) is scheduled after the four-page product is accepted.
 
-## Step 8 — Review & finish (pending)
-Build-review workflow (output-quality + Playwright visual + batched spec reviewers) → propose fixes → user accepts product → build Methodology page → review it → write README.md last.
+## Step 8 — Refinement (user review feedback)
+The user reviewed the built product and gave targeted fixes, captured as spec items and applied via the same red/green workflow: dynamic Expand/Collapse labels (RPT-014); GPS ground-track fixes — correct reference-triangle geometry, bolder and drawn on top, full-resolution traces, a North arrow, and a per-plot wind vector with a knots label (RPT-011, RPT-012); run-relative time on the speed-run overlay (RPT-013); "Legality gate" to "Legality Consideration" (RPT-015); hyperlinked regs references (RPT-016); retitle to "GPS Triangle World Masters, Oschatz 2026" and repo/file rename (RPT-017).
+
+## Step 9 — Review, Methodology, Finish (pending)
+Formal build-review (output-quality + Playwright visual/UI + batched spec reviewers) -> consolidate -> propose fixes to the user -> product accepted. Then build the Methodology page (this narrative) and review it. Finally write the repo README.md.
+
+**Phase taxonomy for the page:** Specify -> Research -> Design -> Build -> Refinement -> Review -> Finish.

@@ -196,7 +196,7 @@
     {
       "id": "RPT-010",
       "category": "content",
-      "description": "Methodology page (added after the four-page product is accepted): visual narrative of the human+agent build. Top summary paragraph + collapsed-by-default setup panel (Claude Code; CLAUDE.md/AGENTS.md intent-capture heuristics; laptop with Python). Work grouped into high-level steps (Specify/Research/Design/Build/Review/Finish); each step expandable from an ask-summary to the verbatim user prompts + a summary of what the agent/subagents did; durations shown at each level (agent working-time exact from harness metadata; user clarifications marked). Adds Methodology to the nav (5th page)",
+      "description": "Methodology page (added after the four-page product is accepted): visual narrative of the human+agent build. Top summary paragraph + collapsed-by-default setup panel (Claude Code; CLAUDE.md/AGENTS.md intent-capture heuristics; laptop with Python). Work grouped into high-level steps (Specify/Research/Design/Build/Refinement/Review/Finish); each step expandable from an ask-summary to the verbatim user prompts + a summary of what the agent/subagents did; durations shown at each level (agent working-time exact from harness metadata; user clarifications marked). Adds Methodology to the nav (5th page)",
       "roadmap": "v1.1",
       "steps": [
         "Assemble from docs/METHODOLOGY_LOG.md; render steps as expandable sections with durations; add nav link",
