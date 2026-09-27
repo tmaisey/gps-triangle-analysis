@@ -4,10 +4,11 @@ Composes the top nav, the four client-side pages, the Analysis view dropdown
 (Overview + 17 rounds), a small vanilla-JS app (page routing, mobile burger,
 collapsible toggles, expand/collapse-all, anchor + back-to-top) and the
 embedded per-round track dataset into ONE self-contained HTML string, then
-writes it to ``report/bill_oschatz_2026.html``.
+writes it to ``report/gps-triangle-world-masters-oschatz-2026.html`` (RPT-017).
 
-The only remote resource is the Google Fonts ``<link>`` (ADR-001): there are no
-remote ``<script src>`` or ``<img src>`` references.
+The file is fully self-contained (RPT-019): fonts are inlined as base64 woff2
+@font-face and there are no remote ``<link>``, ``<script src>`` or ``<img src>``
+references.
 
 Build command:
     uv run python -m scripts.build.assemble
@@ -21,7 +22,7 @@ from . import components as C
 from .data import REPO_ROOT, build_context, embed_round_data_json
 from .pages import home, innovations, overview, recommendations, rounds
 
-OUTPUT_PATH = REPO_ROOT / "report" / "bill_oschatz_2026.html"
+OUTPUT_PATH = REPO_ROOT / "report" / "gps-triangle-world-masters-oschatz-2026.html"
 
 
 def _analysis_page(ctx: dict) -> str:

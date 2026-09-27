@@ -128,7 +128,7 @@ Established from the data pulls (subject to the weather and phase passes finalis
 | `analysis/round_data/` | Compact downsampled per-round tracks for embedding (`round_NN.json` + `index.json`) |
 | `analysis/charts/` | PoC chart PNGs |
 | `reviews/` | Build-review reports (`yymmddThhmm-<domain>.md`), written at end of build phase |
-| *(to build)* `report/bill_oschatz_2026.html` | The single-file deliverable |
+| `report/gps-triangle-world-masters-oschatz-2026.html` | The single-file deliverable (RPT-017) |
 
 ## 13. Open questions / future
 

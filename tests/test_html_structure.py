@@ -99,17 +99,21 @@ def test_background_is_white(html):
     assert "background: var(--bg)" in html
 
 
-def test_no_remote_script_or_image(soup):
-    """No remote <script src> or remote <img src>; only a Google-Fonts link."""
+def test_fully_self_contained_no_remote_resources(soup, html):
+    """No remote <script src>, remote <img src> or remote stylesheet/font link:
+    the report is a single self-contained file (RPT-019). Fonts are inlined as
+    base64 woff2 @font-face, so the Google-Fonts network dependency is gone."""
     for s in soup.find_all("script"):
         assert not s.get("src"), "unexpected remote <script src>"
     for img in soup.find_all("img"):
         src = img.get("src", "")
         assert src.startswith("data:"), f"remote <img src>: {src}"
-    # The only remote stylesheet link allowed is Google Fonts.
+    # No remote stylesheet links at all (fonts are inlined, not linked).
     for link in soup.find_all("link", rel="stylesheet"):
-        href = link.get("href", "")
-        assert "fonts.googleapis.com" in href, f"non-fonts remote link: {href}"
+        assert False, f"unexpected remote stylesheet link: {link.get('href')}"
+    assert "fonts.googleapis.com" not in html, "remote Google-Fonts link remains"
+    assert "fonts.gstatic.com" not in html, "remote gstatic font remains"
+    assert "data:font/woff2;base64," in html, "fonts not inlined as data URIs"
 
 
 def test_all_figures_have_captions(soup):
@@ -140,6 +144,55 @@ def test_xref_and_anchor_handler_wired(html):
     assert "scrollToAnchor" in html
     assert "addEventListener('click'" in html
     assert ".xref" in html
+
+
+def test_no_old_title_and_legality_wording(html):
+    """The retitle (RPT-017) and label rename (RPT-015) hold across the whole
+    document: the old title and 'Legality gate' are gone; the nav title and the
+    'Legality Consideration' wording are present."""
+    assert "Bill's GPS Triangle Analysis 2026" not in html
+    assert "Legality gate" not in html and "Legality Gate" not in html
+    assert "GPS Triangle World Masters, Oschatz 2026" in html
+    assert "Legality Consideration" in html
+
+
+def test_regs_section_references_are_linked(html):
+    """Every 'section 2.7' regs mention sits inside a gps-triangle.net link
+    (RPT-016) - no bare unlinked regs reference remains."""
+    for m in re.finditer(r"section 2\.7", html):
+        start = html.rfind("<a ", 0, m.start())
+        end = html.find("</a>", m.start())
+        assert start != -1 and end != -1, "regs mention not inside an anchor"
+        seg = html[start:end]
+        href = re.search(r'href="([^"]+)"', seg)
+        assert href and "gps-triangle.net" in href.group(1), \
+            f"regs 'section 2.7' not linked to gps-triangle.net: {seg[:80]}"
+
+
+def test_no_css_gradients(html):
+    """No gradient hero / gradient fills anywhere (DSN-001 no-AI-tell)."""
+    assert "linear-gradient" not in html
+    assert "radial-gradient" not in html
+
+
+def test_no_banned_lexical_tics(html):
+    """None of the flagged lexical tics appear (RPT-003 tone rule); 'real-time'
+    is explicitly allowed, but a standalone 'real' as a filler is not."""
+    banned = [
+        r"\bhonest(ly)?\b",
+        r"\bgenuine(ly)?\b",
+        r"sit with",
+        r"that'?s not\b.{1,40}?\bit'?s\b",
+        r"that is not\b.{1,40}?\bit is\b",
+    ]
+    for pat in banned:
+        hits = re.findall(pat, html, re.I)
+        assert not hits, f"banned tic {pat!r}: {hits[:5]}"
+    # 'real' is only permitted inside 'real-time'.
+    real_words = re.findall(r"\breal\b", html, re.I)
+    realtime = re.findall(r"real-time", html, re.I)
+    assert len(real_words) == len(realtime), \
+        "standalone 'real' filler present (only 'real-time' allowed)"
 
 
 def test_captions_render_source_links_not_escaped(html):

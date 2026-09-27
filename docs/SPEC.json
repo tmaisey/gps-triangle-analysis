@@ -24,7 +24,7 @@
         "Identify the scoring flight (handle multi-start artefacts) and the top-scoring same-group leader",
         "Test: Bill and leader present in all 17 groups; parsed laps/speed reconcile to the results tree"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "DATA-003",
@@ -36,7 +36,7 @@
         "Map each flight's group start time to the nearest hour",
         "Test: every flight has a weather row within the event window; wind cross-checks track drift order-of-magnitude"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "ANL-001",
@@ -59,7 +59,7 @@
         "Attribute per-lap deficit across phases; rank phases by cost to Bill",
         "Test: phase times per flight sum to the motor-off flight duration (within tolerance); speedrun rounds excluded"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "ANL-003",
@@ -70,7 +70,7 @@
         "Join weather to per-flight scores; compute associations with n caveat",
         "Test: correlations computed over the 14 distance rounds; reported as suggestive, not significant"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "ANL-004",
@@ -81,7 +81,7 @@
         "Order rounds by day/time; trend normalised score and raw laps",
         "Test: rounds ordered chronologically; both series present for all distance rounds"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-001",
@@ -89,7 +89,7 @@
       "description": "Single self-contained HTML file, emailable and openable offline, with all data and charts embedded",
       "roadmap": "v1.0",
       "steps": [
-        "Generate report/bill_oschatz_2026.html with inline SVG charts and embedded per-round data",
+        "Generate report/gps-triangle-world-masters-oschatz-2026.html with inline SVG charts and embedded per-round data",
         "Test: no remote script/image/style dependencies required to render; file opens standalone; size reasonable"
       ],
       "passes": true
@@ -97,7 +97,7 @@
     {
       "id": "RPT-002",
       "category": "report",
-      "description": "Four-page app in one file with a top nav bar: title text left ('Bill's GPS Triangle Analysis 2026', no emoji/logo), right-aligned always-visible links Home/Analysis/Recommendations/Innovations that collapse to a burger menu on mobile; JS toggles the visible page. The Analysis page carries the Overview/Rounds dropdown (Overview default + 17 rounds)",
+      "description": "Four-page app in one file with a top nav bar: title text left ('GPS Triangle World Masters, Oschatz 2026', no emoji/logo), right-aligned always-visible links Home/Analysis/Recommendations/Innovations that collapse to a burger menu on mobile; JS toggles the visible page. The Analysis page carries the Overview/Rounds dropdown (Overview default + 17 rounds)",
       "roadmap": "v1.0",
       "steps": [
         "Build top-bar nav, page-routing JS, mobile burger, and the Analysis Overview/Rounds dropdown",
@@ -224,7 +224,7 @@
         "Per heat parse the .rct T: header (start, axis, radius); turnpoints = start + radius at {axis, axis+180, axis-90}, apex = axis-90; project course and replay identically; render with the orientation aids",
         "Test (both pilots, thermalling excluded): turn-arc radius from start ~ the .rct length (350 m) within ~15%; flown leg bearings match course-leg bearings within a few degrees; each corner's fitted arc centre within a small margin of the course corner with the pilot apex just OUTSIDE; start-crossing centroid at the course start; projected distance between two .rct coords equals their haversine distance; Bill and leader agree; triangle drawn last; North+scale+legend present and clear of the wind vector"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-012",
@@ -235,7 +235,7 @@
         "Pass per-round wind (dir/speed) to the ground-track chart; place arrow+label at the bearing's clockface position outside the plot; convert km/h to knots; compute the compass point from the bearing",
         "Test: each ground-track plot renders a wind arrow at the correct clockface position with a knots label; northerly does not collide with the North marker"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-013",
@@ -246,7 +246,7 @@
         "Normalise each pilot's time series to its start-line crossing for the speed-run overlays; review triangle-round time charts and align to a sensible zero",
         "Test: speed-run altitude traces both start at t=0 (run time); no chart shows large empty offsets from absolute wall-clock"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-014",
@@ -257,7 +257,7 @@
         "Update the collapsible control markup + JS to reflect state",
         "Test: control reads 'Expand' when a section is collapsed and 'Collapse' when expanded; no 'toggle' label remains"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-015",
@@ -268,7 +268,7 @@
         "Replace the label text and render it as bold inline emphasis at body size",
         "Test: no 'Legality gate' or 'Legality Gate' string remains; the replacement reads 'Legality Consideration' as bold body-size text, not a heading element"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-016",
@@ -279,7 +279,7 @@
         "Find regs references across all pages and wrap them in links to gps-triangle.net regulations (PDF for section-specific, index for general)",
         "Test: regs references render as links to a gps-triangle.net regulations URL; no bare 'regs section N' text remains unlinked"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-017",
@@ -290,7 +290,7 @@
         "Update TITLE_TEXT and Home h1; rename report output file; update tests/build refs; rename the repo via gh and update the remote",
         "Test: nav title and Home h1 read 'GPS Triangle World Masters, Oschatz 2026'; Home text names Bill Maisey; output file renamed; no 'Bill's GPS Triangle Analysis 2026' remains"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-018",
@@ -301,7 +301,7 @@
         "Refactor altitude_trace into a two-panel chart sharing one bottom x-axis; add compressed speed panel for both pilots",
         "Test: energy figure renders both an altitude panel and a speed panel for both pilots on one shared x-axis; panels do not overlap"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-019",
@@ -312,7 +312,7 @@
         "Subset Spectral + Source Sans 3 to Latin and the used weights; embed as base64 @font-face; drop the Google-Fonts link",
         "Test: no remote font <link> remains; fonts embedded as data URIs; total added size within budget; report renders offline with the intended fonts"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-021",
@@ -323,7 +323,7 @@
         "Build score-violin, bullet, paired-bar, wind-card and solar-colourbar SVG components; assemble as the first per-round section",
         "Test: renders the score violin (blue 1000 + green Bill over grey field density), four bullets (grey=regs cap or domain, blue leader, green Bill, green value on the right, no orange), a laps paired-bar, rank text, wind card, and a normalised red-to-yellow solar bar; works for triangle and speed rounds"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-022",
@@ -334,7 +334,7 @@
         "Build a grouped-bar all-rounds chart component (winner/overall-winner/Bill) and render it for score, laps, avg speed, entry speed, entry altitude; add a conditions strip",
         "Test: Performance summary renders the grouped-bar charts across all rounds with the three series, above the existing Overview content"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "DOC-001",
