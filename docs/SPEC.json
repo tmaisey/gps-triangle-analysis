@@ -181,6 +181,18 @@
         "Test: background white; no 'deloitte' string/logo; no left/top accent-bar pattern; every <figure> has a <figcaption>"
       ],
       "passes": false
+    },
+    {
+      "id": "DOC-001",
+      "category": "docs",
+      "description": "Repo README.md written after the product is finished, styled after the user's bloaty-mcbloatface project: fairly thorough taster covering objective, visual storytelling, what was built, key insights, design, and recommendations — not exhaustive",
+      "roadmap": "v1.0",
+      "steps": [
+        "Read the bloaty-mcbloatface README to match its voice/structure",
+        "Write README covering objective, visual story, what was built, key insights, design, recommendations",
+        "Test: README present with those sections, embeds/links representative visuals, and reads as a taster not an exhaustive dump"
+      ],
+      "passes": false
     }
   ]
 }
