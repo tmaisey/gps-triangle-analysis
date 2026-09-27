@@ -96,6 +96,9 @@ def css() -> str:
 
 * {{ box-sizing: border-box; }}
 
+/* Anchor targets clear the 60px sticky top nav when scrolled to. */
+.section, .summary, figure, h2, h3 {{ scroll-margin-top: 76px; }}
+
 html, body {{
   margin: 0;
   padding: 0;

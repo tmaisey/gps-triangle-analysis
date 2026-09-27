@@ -126,8 +126,9 @@ def _triangle_sections(r: dict, ctx: dict, n: int, top: str) -> list[tuple]:
         f"Altitude over the 30-minute task for Bill (green) and same-air "
         f"leader {C.esc(l['name'])} (teal); dots mark lap crossings. Both "
         f"start near the 400 m cap and glide the budget down, topping up on "
-        f"thermals. Source: {_event_link()}.",
+        f"thermals.",
         fig_id=f"r{n}-fig-energy",
+        source=(EVENT_URL, "event results"),
     )
     if lap_gap <= 0:
         energy_pee = (
@@ -182,8 +183,9 @@ def _triangle_sections(r: dict, ctx: dict, n: int, top: str) -> list[tuple]:
         ),
         f"Laps completed over the task. Bill finished {b['laps']} to the "
         f"leader's {l['laps']}; the vertical gap between the steps is the "
-        f"lead opening up. Source: {_event_link()}.",
+        f"lead opening up.",
         fig_id=f"r{n}-fig-laps",
+        source=(EVENT_URL, "event results"),
     )
     laps_pee = (
         f"<p><strong>Point.</strong> The gap opens gradually, not in one "
@@ -245,9 +247,9 @@ def _sprint_sections(r: dict, ctx: dict, n: int, top: str) -> list[tuple]:
         ),
         f"Speed task: altitude through the single flat-out lap for Bill "
         f"(green) and the run leader {C.esc(l['name'])} (teal). Both trade "
-        f"height for speed; the dot marks the finish crossing. Source: "
-        f"{_event_link()}.",
+        f"height for speed; the dot marks the finish crossing.",
         fig_id=f"r{n}-fig-energy",
+        source=(EVENT_URL, "event results"),
     )
     energy_note = (
         f"<p>This is the <strong>speed sprint</strong>, run in heats 4, 10 and "

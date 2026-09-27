@@ -12,7 +12,7 @@
         "Parse standings (38 pilots) and heats -> groups -> per-flight results",
         "Test: Bill's 17 flights are present and his total (12562) and rank (22) reconcile to the standings"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "DATA-002",
@@ -47,7 +47,7 @@
         "Compute metrics from tracks; convert units (groundSpeed km/h, vario, haversine distances)",
         "Test: computed laps and avg speed equal the authoritative results for every flight; distances within ~3% of API distance fields"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "ANL-002",
@@ -92,7 +92,7 @@
         "Generate report/bill_oschatz_2026.html with inline SVG charts and embedded per-round data",
         "Test: no remote script/image/style dependencies required to render; file opens standalone; size reasonable"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-002",
@@ -103,7 +103,7 @@
         "Build top-bar nav, page-routing JS, mobile burger, and the Analysis Overview/Rounds dropdown",
         "Test: 4 nav links present and right-aligned; Home shown on load; each link shows only its page; burger appears at mobile width; Analysis dropdown has 18 options (Overview + 17 rounds)"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-009",
@@ -114,7 +114,7 @@
         "Author a short summary and three linked section headings that route to the pages",
         "Test: Home holds a summary paragraph and exactly three section links that navigate to Analysis/Recommendations/Innovations"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-003",
@@ -125,7 +125,7 @@
         "Author sections in Point-Evidence-Explain form",
         "Test: each Overview insight has an evidence figure/number and an explain/recommendation; no flagged lexical tics present"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-004",
@@ -136,7 +136,7 @@
         "Render each round from the embeddable dataset",
         "Test: all 17 rounds render their charts and a captioned figure each; speedruns labelled distinctly"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-005",
@@ -147,7 +147,7 @@
         "Author recommendations with stable anchor ids; render inline in Analysis and grouped by theme on the Recommendations page",
         "Test: every top-level weakness has at least one drill and one further-analysis suggestion; each recommendation appears inline in Analysis and on the themed Recommendations page under the same anchor; back-links to Analysis evidence resolve"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-006",
@@ -158,7 +158,7 @@
         "Author forward-looking tiers with legality framing from Sport-class regs (no data into model control; navigator AR at CD discretion; pilot HUD training-only); give each point an anchor id",
         "Test: Innovations is its own page, tonally separated from findings; legality claims cite the rules basis; anchor links from Analysis/Recommendations resolve to the right point"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-007",
@@ -169,7 +169,7 @@
         "Add per-page summary block, anchor links, back-to-top links, collapse/expand JS and controls",
         "Test: each page has a summary with ~5 bullets that anchor to on-page section ids; each section header links to top; Expand all/Collapse all toggle every section; summary stays visible"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-008",
@@ -180,7 +180,7 @@
         "Attach a figure reference and/or source-data link to each claim; add resource links to recommendations where relevant",
         "Test: no claim lacks either an on-page figure or a source link; every external link resolves and is topically relevant; recommendations without a useful source carry no link"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "DSN-001",
@@ -191,7 +191,7 @@
         "Define palette tokens and typography; render charts on the shared palette",
         "Test: background white; no 'deloitte' string/logo; no left/top accent-bar pattern; no emoji characters anywhere in the output; every <figure> has a <figcaption>"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-010",
@@ -212,6 +212,83 @@
       "steps": [
         "A review subagent drives Playwright to load report/*.html and capture/inspect each page at >=2 viewports",
         "Test: screenshots captured for all pages at desktop + mobile; no horizontal overflow; charts render; nav, burger, and collapsibles operate; findings written to reviews/"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-011",
+      "category": "report",
+      "description": "GPS ground-track chart correctness + orientation aids: fix the reference-triangle geometry so it sits correctly over the flown course (right position/scale/rotation), render it bold and LAST so it is on top of the traces; add a North arrow (N + arrowhead) in the top-right; render full-resolution traces (remove downsampling); dark grey/off-black for the orientation marks",
+      "roadmap": "v1.0",
+      "steps": [
+        "Debug turnpoint reconstruction from start point + course axis + leg length (correct geodesic offset and equirectangular projection with cos(lat) scaling); draw triangle last, bold; add North arrow; use full tracks",
+        "Test: reference triangle vertices lie within the flown-track bounding envelope; triangle drawn after traces; North marker present; traces use full resolution"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-012",
+      "category": "report",
+      "description": "Per-plot wind annotation: on each GPS-trace plot show a wind vector arrow positioned at the clockface location of the wind source bearing, OUTSIDE the trace box, pointing inward (the direction the wind blows), with a compass+degrees label (e.g. WNW 285) and speed in KNOTS beneath; small but legible; dark grey/off-black",
+      "roadmap": "v1.0",
+      "steps": [
+        "Pass per-round wind (dir/speed) to the ground-track chart; place arrow+label at the bearing's clockface position outside the plot; convert km/h to knots; compute the compass point from the bearing",
+        "Test: each ground-track plot renders a wind arrow at the correct clockface position with a knots label; northerly does not collide with the North marker"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-013",
+      "category": "report",
+      "description": "Time axes use RUN-RELATIVE time (T0 = start-line crossing) for like-for-like overlays, fixing the speed-run altitude showing absolute clock (pilots offset by ~25 min); audit all time-based charts for the same issue",
+      "roadmap": "v1.0",
+      "steps": [
+        "Normalise each pilot's time series to its start-line crossing for the speed-run overlays; review triangle-round time charts and align to a sensible zero",
+        "Test: speed-run altitude traces both start at t=0 (run time); no chart shows large empty offsets from absolute wall-clock"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-014",
+      "category": "report",
+      "description": "Collapsible section control shows a dynamic label: 'Expand' when collapsed, 'Collapse' when expanded (replaces the static 'toggle'), updating on state change",
+      "roadmap": "v1.0",
+      "steps": [
+        "Update the collapsible control markup + JS to reflect state",
+        "Test: control reads 'Expand' when a section is collapsed and 'Collapse' when expanded; no 'toggle' label remains"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-015",
+      "category": "content",
+      "description": "Rename the 'Legality gate' label to 'Legality Consideration' in Innovations and any other section using it; style it as bold inline emphasis at body-text size (a highlighted lead-in, not a large sub-header)",
+      "roadmap": "v1.0",
+      "steps": [
+        "Replace the label text and render it as bold inline emphasis at body size",
+        "Test: no 'Legality gate' or 'Legality Gate' string remains; the replacement reads 'Legality Consideration' as bold body-size text, not a heading element"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-016",
+      "category": "content",
+      "description": "Hyperlink references to the rules/regs throughout the report (e.g. 'regs section 2.7', 'Sport-class regs') to the regulations source: section-specific mentions to the Sport-class regs PDF, general mentions to the regulations index",
+      "roadmap": "v1.0",
+      "steps": [
+        "Find regs references across all pages and wrap them in links to gps-triangle.net regulations (PDF for section-specific, index for general)",
+        "Test: regs references render as links to a gps-triangle.net regulations URL; no bare 'regs section N' text remains unlinked"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-017",
+      "category": "report",
+      "description": "Retitle to 'GPS Triangle World Masters, Oschatz 2026' in the nav header bar and the Home page h1 (replacing 'Bill's GPS Triangle Analysis 2026'); Home content makes clear the focus is Bill Maisey. Rename the output HTML file and the GitHub repo to match (gps-triangle-world-masters-oschatz-2026)",
+      "roadmap": "v1.0",
+      "steps": [
+        "Update TITLE_TEXT and Home h1; rename report output file; update tests/build refs; rename the repo via gh and update the remote",
+        "Test: nav title and Home h1 read 'GPS Triangle World Masters, Oschatz 2026'; Home text names Bill Maisey; output file renamed; no 'Bill's GPS Triangle Analysis 2026' remains"
       ],
       "passes": false
     },

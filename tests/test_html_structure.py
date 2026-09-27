@@ -118,3 +118,35 @@ def test_all_figures_have_captions(soup):
     for fig in figures:
         cap = fig.find("figcaption")
         assert cap is not None and cap.get_text(strip=True), "empty figcaption"
+
+
+def test_xref_anchors_all_resolve(soup):
+    """Every cross-page ``.xref`` link points at a real page and a real
+    on-page element id (no dangling data-page/data-anchor)."""
+    page_ids = {"home", "analysis", "recommendations", "innovations"}
+    ids = {el["id"] for el in soup.select("[id]")}
+    xrefs = soup.select("a.xref")
+    assert xrefs, "no xref links found at all"
+    for a in xrefs:
+        page = a.get("data-page")
+        anchor = a.get("data-anchor")
+        assert page in page_ids, f"xref to unknown page: {page}"
+        assert anchor in ids, f"dangling xref anchor: {anchor}"
+
+
+def test_xref_and_anchor_handler_wired(html):
+    """The app JS wires a global click handler for ``.xref`` links and an
+    anchor-scroller that expands collapsed targets (RPT-005/006/007)."""
+    assert "scrollToAnchor" in html
+    assert "addEventListener('click'" in html
+    assert ".xref" in html
+
+
+def test_captions_render_source_links_not_escaped(html):
+    """Figure source links render as real anchors, never as escaped literal
+    ``<a>`` markup inside a <figcaption> (RPT-008 grounding)."""
+    caps = re.findall(r"<figcaption>(.*?)</figcaption>", html, re.S)
+    assert caps, "no figcaptions rendered"
+    escaped = [c for c in caps if "&lt;a" in c]
+    assert not escaped, f"{len(escaped)} figcaptions contain escaped <a> markup"
+    assert any("<a href=" in c for c in caps), "no figcaption carries a source link"

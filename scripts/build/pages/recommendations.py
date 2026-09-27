@@ -85,7 +85,7 @@ def _cruise() -> str:
     ])
     further = _block("Further analysis", [
         "Per-leg speed against wind direction once a task file with turnpoint "
-        "coordinates is available, to separate genuine cruise pace from "
+        "coordinates is available, to separate true cruise pace from "
         "head/tail-wind legs.",
     ])
     return point_evidence + drills + further

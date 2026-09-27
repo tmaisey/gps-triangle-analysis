@@ -168,22 +168,40 @@ def expand_collapse_controls() -> str:
     )
 
 
-def figure(svg: str, caption: str, *, fig_id: str | None = None) -> str:
+def figure(svg: str, caption: str, *, fig_id: str | None = None,
+           source: tuple[str, str] | list[tuple[str, str]] | None = None) -> str:
     """Wrap an inline-SVG chart in a captioned ``<figure>``.
 
     Every figure in the report is captioned (DSN-001), so ``caption`` must be
     non-empty; a blank caption is replaced with a minimal placeholder to keep
     the ``<figcaption>`` present.
 
+    The caption text is always HTML-escaped. To ground a figure with a
+    resolvable source link (RPT-008) the caller passes ``source`` rather than
+    embedding raw ``<a>`` markup in ``caption`` (which would be escaped and
+    render as literal text). This dedicated path is the only way trusted HTML
+    enters a caption: each source is rendered as a single ``<a>`` whose href and
+    text are both escaped, so no untrusted markup can leak through.
+
     Args:
         svg: the inline SVG string.
         caption: figure caption text (required, non-empty).
         fig_id: optional element id for anchoring.
+        source: an optional ``(url, text)`` pair, or a list of them, appended to
+            the caption as ``Source: <a>...</a>`` external links.
 
     Returns:
         str: a ``<figure>`` with a non-empty ``<figcaption>``.
     """
     cap = esc(caption) if caption else "Figure"
+    if source:
+        pairs = [source] if isinstance(source, tuple) else list(source)
+        links = "; ".join(
+            f'<a href="{esc(url)}" target="_blank" rel="noopener">{esc(text)}</a>'
+            for url, text in pairs
+        )
+        if links:
+            cap = f"{cap} Source: {links}."
     idattr = f' id="{esc(fig_id)}"' if fig_id else ""
     return f"<figure{idattr}>{svg}<figcaption>{cap}</figcaption></figure>"
 

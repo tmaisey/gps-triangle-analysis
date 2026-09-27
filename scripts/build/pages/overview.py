@@ -148,8 +148,7 @@ def _levers(ctx: dict) -> str:
     scatter_cap = (
         "Every pilot's average task speed against average laps over the 14 "
         "distance rounds; Bill (green) sits low-left - fewer laps because the "
-        "average pace is slower. Laps decide the score, and pace drives laps. "
-        "Source: event results (rcmodelspot)."
+        "average pace is slower. Laps decide the score, and pace drives laps."
     )
 
     # (3) Speeds: cruise + start-gate entry (both km/h).
@@ -219,7 +218,8 @@ def _levers(ctx: dict) -> str:
     return (
         point
         + C.figure(deficit_wf, deficit_cap, fig_id="ov-fig-deficit")
-        + C.figure(scatter_svg, scatter_cap, fig_id="ov-fig-field")
+        + C.figure(scatter_svg, scatter_cap, fig_id="ov-fig-field",
+                   source=(_EVENT_URL, "event results (rcmodelspot)"))
         + C.figure(speeds, speeds_cap, fig_id="ov-fig-speeds")
         + C.figure(climb_geom, climb_cap, fig_id="ov-fig-climb-geom")
         + C.figure(climb_rate, "Climb rate, mean and best, Bill vs the same-air "
@@ -276,7 +276,7 @@ def _conditions(ctx: dict) -> str:
     cap = (
         "Each round's within-group normalised score against solar radiation, the "
         "usable thermal-strength proxy (CAPE was unavailable). Score rises with "
-        "radiation. Weather source: Open-Meteo ERA5."
+        "radiation."
     )
     point = _point(
         "Wind shows <strong>no association</strong> with Bill's relative "
@@ -294,7 +294,10 @@ def _conditions(ctx: dict) -> str:
         f"{_link(_WEATHER_URL, 'Open-Meteo ERA5')}, flights from the "
         f"{_link(_EVENT_URL, 'event results')}."
     )
-    return point + C.figure(svg, cap, fig_id="ov-fig-conditions") + explain
+    return point + C.figure(
+        svg, cap, fig_id="ov-fig-conditions",
+        source=(_WEATHER_URL, "Open-Meteo ERA5 (weather)"),
+    ) + explain
 
 
 def _progression(ctx: dict) -> str:
@@ -311,8 +314,7 @@ def _progression(ctx: dict) -> str:
     cap = (
         "The 14 distance rounds in time order. The solid line is the within-group "
         "normalised score (conditions controlled, a skill proxy); the dashed line "
-        "is raw laps (conditions and skill together). "
-        "Source: event results (rcmodelspot)."
+        "is raw laps (conditions and skill together)."
     )
     point = _point(
         "Splitting conditions from skill, there is <strong>no clear week-long "
@@ -327,7 +329,10 @@ def _progression(ctx: dict) -> str:
         "signal is weak either way. Per-round scores: "
         f"{_link(_EVENT_URL, 'event results (rcmodelspot)')}."
     )
-    return point + C.figure(svg, cap, fig_id="ov-fig-progression") + explain
+    return point + C.figure(
+        svg, cap, fig_id="ov-fig-progression",
+        source=(_EVENT_URL, "event results (rcmodelspot)"),
+    ) + explain
 
 
 def _consistency(ctx: dict) -> str:
@@ -361,7 +366,7 @@ def _consistency(ctx: dict) -> str:
     strip_cap = (
         "The 14 distance-round scores on one scale; the lower row isolates the two "
         "bombouts (R12 = 418, dropped; R9 = 581). These sit far below the median "
-        f"of {score_med:.0f}. Source: event results (rcmodelspot)."
+        f"of {score_med:.0f}."
     )
 
     r17 = load_round(17)
@@ -393,7 +398,8 @@ def _consistency(ctx: dict) -> str:
     return (
         point
         + tiles
-        + C.figure(strip, strip_cap, fig_id="ov-fig-consistency")
+        + C.figure(strip, strip_cap, fig_id="ov-fig-consistency",
+                   source=(_EVENT_URL, "event results (rcmodelspot)"))
         + C.figure(ceiling, ceiling_cap, fig_id="ov-fig-ceiling")
         + explain
     )

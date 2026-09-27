@@ -132,6 +132,45 @@ def _app_js() -> str:
     qa('.section', currentScope()).forEach(function (s) { s.classList.add('collapsed'); });
   };
 
+  // Reveal an anchor target: expand its enclosing collapsible (and itself if
+  // it is one), then bring it into view. Reuses expandSection for the section
+  // case so the collapse/expand logic lives in one place.
+  function scrollToAnchor(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var sec = el.closest ? el.closest('.section') : null;
+    if (sec) sec.classList.remove('collapsed');
+    expandSection(id);
+    try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    catch (e) { el.scrollIntoView(); }
+  }
+  window.scrollToAnchor = scrollToAnchor;
+
+  // One delegated handler for cross-page (.xref) links and in-page hash links.
+  // An xref switches page (and, on Analysis, the owning view) before scrolling;
+  // an in-page link just reveals and scrolls to its target. Back-to-top links
+  // call event.stopPropagation() in markup, so they keep their native jump.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a.xref, a[href^="#"]') : null;
+    if (!a) return;
+    var isXref = a.classList.contains('xref');
+    var anchor = isXref
+      ? a.getAttribute('data-anchor')
+      : (a.getAttribute('href') || '').slice(1);
+    if (!anchor) return;
+    e.preventDefault();
+    if (isXref) {
+      var page = a.getAttribute('data-page');
+      if (page) showPage(page);
+    }
+    var target = document.getElementById(anchor);
+    if (target && target.closest) {
+      var view = target.closest('.view');
+      if (view && view.id) showView(view.id.replace('view-', ''));
+    }
+    requestAnimationFrame(function () { scrollToAnchor(anchor); });
+  });
+
   // Parse embedded round data once, expose for Stage 2 chart hydration if needed.
   try {
     var raw = document.getElementById('round-data');
