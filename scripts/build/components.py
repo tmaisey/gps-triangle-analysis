@@ -137,11 +137,14 @@ def collapsible(section_id: str, heading: str, body: str, *,
         str: a ``<div class="section">`` fragment.
     """
     tag = f"h{level}"
-    cls = "section collapsed" if collapsed else "section"
+    # All sections start EXPANDED on load for every page (user preference); the
+    # `collapsed` argument is retained for call compatibility but no longer sets
+    # the initial state. Expand all / Collapse all still toggle at runtime.
+    cls = "section"
     # Dynamic control label (RPT-014): 'Expand' when collapsed, 'Collapse' when
-    # expanded. The initial text matches the initial state; the app JS keeps it
-    # in sync on every state change.
-    toggle_label = "Expand" if collapsed else "Collapse"
+    # expanded. Initial state is expanded, so the label starts as 'Collapse';
+    # the app JS keeps it in sync on every state change.
+    toggle_label = "Collapse"
     return (
         f'<div class="{cls}" data-section id="{esc(section_id)}">'
         '<div class="section-head" onclick="toggleSection(this)">'

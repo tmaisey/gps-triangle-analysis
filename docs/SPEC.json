@@ -119,7 +119,7 @@
     {
       "id": "RPT-003",
       "category": "content",
-      "description": "Overview content: result, strengths/weaknesses verdict, phase levers ranked, conditions, progression, consistency, prioritised recommendations",
+      "description": "Overview content: result, strengths/weaknesses verdict, phase levers ranked, conditions, progression, consistency, prioritised recommendations Each insight: bold short title + explanatory text placed BEFORE the plot.",
       "roadmap": "v1.0",
       "steps": [
         "Author sections in Point-Evidence-Explain form",
@@ -163,7 +163,7 @@
     {
       "id": "RPT-007",
       "category": "report",
-      "description": "In-page summary + collapsible sections on every page (Overview and each round): opening summary (few sentences + ~5 bullets of key points/recommendations) with bullets anchor-linking to sections; section headers link back to top; sections collapsible with Expand all / Collapse all controls",
+      "description": "In-page summary + collapsible sections on every page (Overview and each round): opening summary (few sentences + ~5 bullets of key points/recommendations) with bullets anchor-linking to sections; section headers link back to top; sections collapsible with Expand all / Collapse all controls All collapsible sections start EXPANDED by default on every page (Expand all / Collapse all still toggle at runtime).",
       "roadmap": "v1.0",
       "steps": [
         "Add per-page summary block, anchor links, back-to-top links, collapse/expand JS and controls",
@@ -328,7 +328,7 @@
     {
       "id": "RPT-022",
       "category": "content",
-      "description": "Overview (Analysis) gains a 'Performance summary' section at the top: all-rounds grouped bar charts with three bars per round - round winner (blue), overall event winner (grey), Bill (green) - one chart each for points/score, laps, average speed, and entry speed (plus entry altitude and a conditions strip e.g. solar radiation aligned beneath, so performance reads against lift). Keeps the existing Overview plots/insights below it",
+      "description": "Overview (Analysis) gains a 'Performance summary' section at the top: all-rounds grouped bar charts with three bars per round - round winner (blue), overall event winner (grey), Bill (green) - one chart each for points/score, laps, average speed, and entry speed (plus entry altitude and a conditions strip e.g. solar radiation aligned beneath, so performance reads against lift). Keeps the existing Overview plots/insights below it Each Overview insight leads with a 2-3 word BOLD title, then the explanatory text, then its plot (text BEFORE the plot, not after).",
       "roadmap": "v1.0",
       "steps": [
         "Build a grouped-bar all-rounds chart component (winner/overall-winner/Bill) and render it for score, laps, avg speed, entry speed, entry altitude; add a conditions strip",

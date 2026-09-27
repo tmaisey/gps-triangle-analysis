@@ -143,14 +143,16 @@ def test_title_retitled():
     assert C.TITLE_TEXT == "GPS Triangle World Masters, Oschatz 2026"
 
 
-def test_collapsible_label_is_dynamic():
-    """The collapsible control reads 'Expand' when collapsed and 'Collapse' when
-    expanded; no static 'toggle' label remains (RPT-014)."""
-    collapsed = C.collapsible("s1", "H", "body", collapsed=True)
-    expanded = C.collapsible("s2", "H", "body", collapsed=False)
-    assert ">Expand<" in collapsed
-    assert ">Collapse<" in expanded
-    assert ">toggle<" not in collapsed and ">toggle<" not in expanded
+def test_collapsible_starts_expanded_with_dynamic_label():
+    """Every section starts EXPANDED on load (label 'Collapse') regardless of the
+    `collapsed` arg; the label is dynamic via the app JS and no static 'toggle'
+    remains (RPT-014 + expand-by-default)."""
+    a = C.collapsible("s1", "H", "body", collapsed=True)
+    b = C.collapsible("s2", "H", "body", collapsed=False)
+    # No section renders an initial collapsed class; both show the 'Collapse' label.
+    assert "section collapsed" not in a and "section collapsed" not in b
+    assert ">Collapse<" in a and ">Collapse<" in b
+    assert ">toggle<" not in a and ">toggle<" not in b
 
 
 def test_legality_consideration_is_inline_bold_not_heading():
