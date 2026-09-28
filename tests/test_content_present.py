@@ -146,6 +146,35 @@ def test_home_summary_and_exactly_three_linked_section_headings(soup):
     assert not home.select(".section"), "Home should stay minimal"
 
 
+# --- Home positive-recognition disclaimer (RPT-026) ------------------------
+def test_home_has_the_strong_performance_acknowledgement(soup):
+    """Home carries the acknowledgement paragraph between summary and links.
+
+    RPT-026: exactly one paragraph opens with the bold lead-in, it directly
+    follows the project summary, precedes the section links, and carries the
+    four statements the user asked for (newcomer, on par, top GB, not a
+    judgement).
+    """
+    home = soup.select_one("#page-home")
+    assert home is not None
+    paras = [p for p in home.find_all("p", recursive=False)]
+    lead = "Important acknowledgement of a strong performance"
+    ack = [p for p in paras if p.get_text(" ", strip=True).startswith(lead)]
+    assert len(ack) == 1, f"expected one acknowledgement paragraph, got {len(ack)}"
+    ack = ack[0]
+    strong = ack.find("strong")
+    assert strong is not None and strong.get_text(strip=True).startswith(lead), \
+        "lead-in must be bold"
+    assert paras.index(ack) == 1, "acknowledgement must be the second paragraph"
+    links = home.select_one("ul.home-links")
+    assert links is not None and ack.sourceline < links.sourceline or \
+        home.decode().index(lead) < home.decode().index('class="home-links"')
+    txt = ack.get_text(" ", strip=True)
+    for phrase in ("relative newcomer", "on par with the best",
+                   "top national (GB) pilots", "not a judgement of performance"):
+        assert phrase in txt, f"missing: {phrase}"
+
+
 # --- Start Energy airframe note (RPT-025) -----------------------------------
 def test_start_energy_names_the_top_airframe_families(soup):
     """The airframe note names the four top-field families and the framing.

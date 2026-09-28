@@ -372,6 +372,17 @@
         "Test: tests/test_readme.py - README present with those sections, embeds >=6 visuals that exist in docs/images/, links the deliverable and the viewer, bounded length, no emojis/lexical tics, no Methodology page promise"
       ],
       "passes": true
+    },
+    {
+      "id": "RPT-026",
+      "category": "content",
+      "description": "Home intro carries a positive-recognition disclaimer as its own paragraph after the project summary: an 'Important acknowledgement of a strong performance' that frames the report as coaching comparisons against the best in the world and AI-analysis insight, not a judgement of performance, noting Bill is a relative newcomer already completing some rounds on par with the best and close to the top GB pilots. Purpose: temper unnecessarily negative sentiment up front.",
+      "roadmap": "v1.1",
+      "steps": [
+        "Add the acknowledgement paragraph (user-supplied wording) to pages/home.py directly after the summary paragraph, bold lead-in, no other Home changes",
+        "Test: Home has exactly one paragraph opening with the bold lead-in 'Important acknowledgement of a strong performance', it follows the summary paragraph and precedes the section links, and it contains the newcomer, on-par, top-GB and not-a-judgement statements"
+      ],
+      "passes": true
     }
   ]
 }

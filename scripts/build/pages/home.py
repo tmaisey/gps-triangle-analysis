@@ -64,6 +64,19 @@ def render(ctx: dict) -> str:
         "who led Bill's own heat group and flew the same air, rather than "
         "against the overall winner in different conditions.</p>"
     )
+    # RPT-026: positive-recognition disclaimer, user-supplied wording. Frames
+    # the comparisons that follow so the report does not read as a judgement.
+    acknowledgement = (
+        "<p><strong>Important acknowledgement of a strong performance:</strong> "
+        "This analysis focuses on comparisons to the best GPS Triangle pilots "
+        "in the world in order to provide coaching insights. Up front, it "
+        "should be made clear that performance overall is strong relative to "
+        "the field. As a relative newcomer to the sport, Bill is already "
+        "completing some rounds on par with the best in the game, and "
+        "performing close to the top national (GB) pilots. This analysis is "
+        "intended to be insight into AI analysis, not a judgement of "
+        "performance, which was objectively high.</p>"
+    )
     items = []
     for pid, anchor, label, desc in _SECTIONS:
         # The three section links are headings (RPT-009 "linked headings"), so
@@ -81,5 +94,6 @@ def render(ctx: dict) -> str:
     return (
         "<h1>GPS Triangle World Masters, Oschatz 2026</h1>"
         f"{intro}"
+        f"{acknowledgement}"
         f'<ul class="home-links">{"".join(items)}</ul>'
     )
