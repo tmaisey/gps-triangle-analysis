@@ -2,9 +2,9 @@
 
 Product requirements and plan. Captures intent ahead of the build so the deliverable and its scope are agreed before construction.
 
-*Status: the four-page v2 report is **built and refined** — `report/gps-triangle-world-masters-oschatz-2026.html` (Home / Analysis / Recommendations / Innovations). Data, analysis, per-round views, and the restructured four-section Overview are all rendering. Remaining: the build-review workflow, then the Methodology page (RPT-010) + its review, then the repo README (DOC-001). Last updated 2026-09-28.*
+*Status: the four-page v2 report is **built and refined** — `report/gps-triangle-world-masters-oschatz-2026.html` (Home / Analysis / Recommendations / Innovations). Data, analysis, per-round views, and the restructured four-section Overview are all rendering. The build-review has run (six Opus reviewers; reports in `reviews/260928T0239-*.md`, consolidated proposal in `reviews/260928T0239-consolidated.md`). Remaining: user approves the fix list → fix agents → re-review → user accepts; then the Methodology page (RPT-010) + its review, then the repo README (DOC-001). Last updated 2026-09-28.*
 
-> **Next step:** run the build-review workflow (see AGENTS.md) — output-quality + Playwright visual/UI + batched spec reviewers → consolidate → propose fixes → user accepts. Only then build the Methodology page, review it, and finally write the README.*
+> **Next step:** user approves the consolidated fix proposal; apply fixes red→green in parallel batches; re-run the Playwright driver and re-review Tier 1. Only then build the Methodology page, review it, and finally write the README.*
 
 ## 1. Vision
 
