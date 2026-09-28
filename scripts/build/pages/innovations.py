@@ -39,18 +39,15 @@ _SUMMARY_BULLETS = [
     ("inn-flywheel", "A season-long data flywheel"),
 ]
 
-_RULES_URL = "https://gps-triangle.net/gps-triangle/regulations-documents/"
-_REGS_PDF = (
-    "https://gps-triangle.net/wp-content/uploads/2022/03/"
-    "regulations_sport_en_V1.6_Release01.pdf"
+from ..links import (
+    EVENT_URL as _EVENT_URL,
+    META_GLASSES_URL as _META_GLASSES,
+    OLC_URL as _OLC,
+    ROKID_URL as _ROKID,
+    RULES_INDEX_URL as _RULES_URL,
+    RULES_PDF_URL as _REGS_PDF,
+    XREAL_URL as _XREAL,
 )
-_EVENT_URL = (
-    "https://www.rcmodelspot.com/Ranking/"
-    "f772fc7c-c4c5-406d-9c21-f4e76044ddb7"
-)
-_OLC = "https://www.onlinecontest.org"
-_XREAL = "https://www.xreal.com"
-_ROKID = "https://www.rokid.com"
 
 
 def _xref(page: str, anchor: str, text: str) -> str:
@@ -95,10 +92,10 @@ def _navigator() -> str:
         "permitted, in a form that is faster to read.</strong> Climb rate, "
         "energy state, distance-to-turn, line deviation and a live thermal map "
         "could sit in the navigator's field of view instead of being read off "
-        "a screen and spoken. Hardware matters here: today's Ray-Ban Meta "
-        "glasses are audio and camera only with no display, so a visual HUD "
-        "needs display-class glasses (for example Ray-Ban Display) or AR "
-        "glasses such as "
+        "a screen and spoken. Hardware matters here: Meta sells the "
+        "camera-and-audio Ray-Ban Meta line separately from the "
+        f"display-equipped Meta Ray-Ban Display ({_ext(_META_GLASSES, 'Meta AI glasses range')}), "
+        "so a visual HUD needs a display-class model or AR glasses such as "
         f"{_ext(_XREAL, 'Xreal')} or {_ext(_ROKID, 'Rokid')}.</p>"
         + C.legality_consideration(
             "The regulations do not name AR or wearables. A navigator-worn HUD "
@@ -169,8 +166,8 @@ def render(ctx: dict) -> str:
     intro = (
         "The art of the possible for coaching technology, ordered from the most "
         "tractable to the most ambitious. Each tier is framed against the "
-        f'Sport-class rules (<a href="{C.esc(_RULES_URL)}" target="_blank" '
-        'rel="noopener">regulations</a>): passive telemetry display and relay '
+        f'<a href="{C.esc(_RULES_URL)}" target="_blank" rel="noopener">'
+        "Sport-class rules</a>: passive telemetry display and relay "
         "are permitted and a navigator may relay them, but nothing may feed "
         "data into control of the model ("
         f"{_ext(_REGS_PDF, 'section 2.7')}). Where a tier touches "

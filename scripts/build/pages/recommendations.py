@@ -19,10 +19,16 @@ Anchor / id scheme (theme section ids, shared with Analysis inline recos):
 from __future__ import annotations
 
 from .. import components as C
+from ..links import (
+    BMFA_SFTC_URL as _BMFA_SFTC,
+    OLC_URL as _OLC,
+    RULES_INDEX_URL as _RULES_URL,
+    SM_GPS_URL as _SM_GPS,
+)
 
 _SECTIONS = [
     ("rec-cruise", "Cruise Speed Between Thermals"),
-    ("rec-climb", "Climb Quality - Height Banked Per Thermal"),
+    ("rec-climb", "Climb Quality - Height Banked per Thermal"),
     ("rec-entry", "Entry Speed - Use the 120 km/h Cap"),
     ("rec-turns", "Turnpoint Lines"),
     ("rec-signals", "Rules-Legal Live Signals"),
@@ -35,14 +41,6 @@ _SUMMARY_BULLETS = [
     ("rec-turns", "Tighten turnpoint lines (near a strength)"),
     ("rec-signals", "Audio vario and speech telemetry callouts, today"),
 ]
-
-# Regulations index (general rules mentions link here).
-_RULES_URL = "https://gps-triangle.net/gps-triangle/regulations-documents/"
-
-# Resource links, used only where a source adds something useful.
-_SM_GPS = "https://www.sm-modellbau.de/GPS-Logger-3"
-_OLC = "https://www.onlinecontest.org"
-_BMFA_SFTC = "https://silent-flight-tech.bmfa.org/specialisms/gps"
 
 
 def _xref(page: str, anchor: str, text: str) -> str:
@@ -142,7 +140,14 @@ def _entry() -> str:
         "Practise the timed dive-to-gate so the peak speed lands on the line, "
         "not before or after it.",
     ])
-    return point_evidence + drills
+    further = _block("Further Analysis", [
+        "Quantify the opening-lap time value of each 10 km/h of unused entry "
+        "speed across the 14 distance rounds, so the gate practice has a "
+        "target worth chasing rather than a cap to fill "
+        + _xref("analysis", "ov-fig-sum-entryspd",
+                "(per-round entry speeds)") + ".",
+    ])
+    return point_evidence + drills + further
 
 
 def _turns() -> str:
@@ -157,7 +162,14 @@ def _turns() -> str:
         "Modest line tightening at the turnpoints, without bleeding the speed "
         "that the cruise lever is there to build - the two must not fight.",
     ])
-    return point_evidence + drills
+    further = _block("Further Analysis", [
+        "Measure per-turnpoint arc radius and exit-speed retention against the "
+        "leader to confirm the roughly 2 s per lap estimate, which currently "
+        "comes from a segmentation that blends some thermalling into the turns "
+        + _xref("analysis", "ov-fig-turn-radius",
+                "(pooled turn-radius density)") + ".",
+    ])
+    return point_evidence + drills + further
 
 
 def _signals() -> str:
@@ -168,7 +180,10 @@ def _signals() -> str:
         "explicitly permitted. None of these feed data into control of the "
         "model, so they stay inside the "
         f"{_ext(_RULES_URL, 'Sport-class rules')} "
-        f"({_xref('innovations', 'inn-live', 'the same permitted channel the live-cueing tier builds on')}).</p>"
+        f"({_xref('innovations', 'inn-live', 'the same permitted channel the live-cueing tier builds on')}). "
+        "The signals worth relaying are the ones the evidence points at - climb "
+        "rate and height banked per thermal "
+        f"({_xref('analysis', 'ov-conditions', 'see the climb-quality evidence in Analysis')}).</p>"
     )
     aids = _block("Set up now", [
         "Audio vario tuning: shape the tone gradient tightly around the core so "

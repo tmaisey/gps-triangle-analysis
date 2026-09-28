@@ -18,12 +18,7 @@ switches page and scrolls to the anchor is wired centrally, not here.
 from __future__ import annotations
 
 from .. import components as C
-
-# Public event page on rcmodelspot (the standings + telemetry source).
-_EVENT_URL = (
-    "https://www.rcmodelspot.com/Ranking/"
-    "f772fc7c-c4c5-406d-9c21-f4e76044ddb7"
-)
+from ..links import EVENT_URL as _EVENT_URL, RULES_INDEX_URL as _RULES_URL
 
 # (target page id, target anchor, heading label, one-line description).
 _SECTIONS = [
@@ -38,8 +33,15 @@ _SECTIONS = [
     ("innovations", "inn-top", "Innovations",
      "The art of the possible for coaching technology, from a post-flight AI "
      "coach to a navigator heads-up display, each weighed against the "
-     "Sport-class rules."),
+     "{rules} that govern the class."),
 ]
+
+# Descriptions may carry a ``{rules}`` placeholder, filled with the linked
+# regulations reference (RPT-016: every regs mention is hyperlinked).
+_RULES_LINK = (
+    f'<a href="{C.esc(_RULES_URL)}" target="_blank" rel="noopener">'
+    "Sport-class rules</a>"
+)
 
 
 def render(ctx: dict) -> str:
@@ -64,11 +66,16 @@ def render(ctx: dict) -> str:
     )
     items = []
     for pid, anchor, label, desc in _SECTIONS:
+        # The three section links are headings (RPT-009 "linked headings"), so
+        # they carry the document outline. The inline margin reset keeps the
+        # existing `.home-links a` look without touching the shared stylesheet.
         items.append(
             "<li>"
+            f'<h2 class="home-link" style="margin:0">'
             f'<a class="xref" id="home-link-{pid}" data-page="{pid}" '
-            f'data-anchor="{anchor}">{C.esc(label)}</a>'
-            f'<p class="home-link-desc">{C.esc(desc)}</p>'
+            f'data-anchor="{anchor}">{C.esc(label)}</a></h2>'
+            f'<p class="home-link-desc">'
+            f"{C.esc(desc).replace('{rules}', _RULES_LINK)}</p>"
             "</li>"
         )
     return (

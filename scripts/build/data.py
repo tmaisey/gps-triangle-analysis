@@ -19,6 +19,7 @@ import json
 import math
 import statistics
 from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
 
 # Repo root = two levels up from this file (scripts/build/data.py).
@@ -222,6 +223,84 @@ def load_weather_correlations() -> list[dict]:
         {k: _num(v) for k, v in row.items()}
         for row in _read_csv(ANALYSIS / "weather_correlations.csv")
     ]
+
+
+def load_pilot_equipment() -> list[dict]:
+    """Return per-pilot equipment rows from ``pilot_equipment.csv``.
+
+    Keys include ``rank``, ``name``, ``aircraft``, ``airframe_family``,
+    ``totalScore``, ``userGuid`` and ``is_bill``. Model names are self-entered
+    by pilots, so the ``airframe_family`` grouping is the trustworthy column
+    (RPT-025).
+    """
+    return [
+        {k: _num(v) for k, v in row.items()}
+        for row in _read_csv(ANALYSIS / "pilot_equipment.csv")
+    ]
+
+
+def top_airframe_families(top_n: int = 12) -> list[tuple[str, int]]:
+    """Return the airframe families flown by the top ``top_n`` finishers.
+
+    Args:
+        top_n: how many finishers, by final standing, to count over.
+
+    Returns:
+        list[tuple[str, int]]: ``(family, count)`` pairs, most common first,
+        ties broken alphabetically so the build stays deterministic.
+    """
+    rows = sorted(load_pilot_equipment(), key=lambda r: r.get("rank", 10**6))
+    counts: dict[str, int] = {}
+    for row in rows[:top_n]:
+        fam = str(row.get("airframe_family") or "").strip()
+        if fam:
+            counts[fam] = counts.get(fam, 0) + 1
+    return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+
+
+def _ranks(values: list[float]) -> list[float]:
+    """Return average (tie-corrected) ranks for ``values``, 1-based."""
+    order = sorted(range(len(values)), key=lambda i: values[i])
+    out = [0.0] * len(values)
+    i = 0
+    while i < len(order):
+        j = i
+        while j + 1 < len(order) and values[order[j + 1]] == values[order[i]]:
+            j += 1
+        avg = (i + j) / 2.0 + 1
+        for k in range(i, j + 1):
+            out[order[k]] = avg
+        i = j + 1
+    return out
+
+
+def spearman_rho(xs: list[float], ys: list[float]) -> float:
+    """Return Spearman's rank correlation between two equal-length series.
+
+    Used to quote the conditions-dependence association in the report from the
+    exact rows the accompanying scatter plots, so prose and figure cannot drift
+    apart. Reported as suggestive only (PRD section 9), never as significance.
+
+    Args:
+        xs: the predictor series.
+        ys: the target series.
+
+    Returns:
+        float: rho in ``[-1, 1]``; ``0.0`` when either series is constant.
+
+    Raises:
+        ValueError: if the series differ in length or hold fewer than 3 points.
+    """
+    if len(xs) != len(ys):
+        raise ValueError("spearman_rho needs equal-length series")
+    if len(xs) < 3:
+        raise ValueError("spearman_rho needs at least 3 points")
+    rx, ry = _ranks(list(xs)), _ranks(list(ys))
+    mx, my = statistics.mean(rx), statistics.mean(ry)
+    num = sum((a - mx) * (b - my) for a, b in zip(rx, ry))
+    den = (sum((a - mx) ** 2 for a in rx)
+           * sum((b - my) ** 2 for b in ry)) ** 0.5
+    return num / den if den else 0.0
 
 
 def load_field_summary() -> list[dict]:
@@ -555,13 +634,54 @@ def pilot_track_run_relative(pilot: dict, *, window_s: float = WORKING_WINDOW_S,
     return rows
 
 
+def group_leader_guid(group_id: int) -> str:
+    """Return the ``userGuid`` of the top scorer in a heat-group.
+
+    The same-air leader is the group's highest normalised score (ADR-003).
+    Resolving the benchmark pilot by guid rather than by display name removes
+    the spelling/accent dependency between the results tree and the replay feed.
+    Ties break on laps then speed, so the result is deterministic.
+
+    Args:
+        group_id: the heat-group id.
+
+    Returns:
+        str: the leading pilot's ``userGuid``.
+
+    Raises:
+        KeyError: if the group is absent from the results tree or holds no
+            results - an unresolvable benchmark must fail loudly, not silently
+            produce an empty comparison.
+    """
+    results = _read_json(SCORES / "results.json")
+    for heat in results.get("competitionGpsTriangleHeat", []):  # type: ignore[union-attr]
+        for grp in heat.get("competitionGpsTriangleGroup", []):
+            if grp.get("competitionGpsTriangleGroupId") != group_id:
+                continue
+            rows = grp.get("competitionGpsTriangleResult", [])
+            if not rows:
+                raise KeyError(f"heat-group {group_id} holds no results")
+            best = max(rows, key=lambda r: (r.get("score", 0), r.get("laps", 0),
+                                            r.get("speed", 0)))
+            return best["userGuid"]
+    raise KeyError(f"heat-group {group_id} not found in results.json")
+
+
+@lru_cache(maxsize=None)
 def full_tracks_for_round(round_no: int, *, clip_to_last_tpc: bool = False
                           ) -> tuple[list[list], list[list]]:
     """Return ``(bill_rows, leader_rows)`` full-res run-relative tracks for a round.
 
-    Bill is matched by ``userGuid``; the same-air leader by the name recorded in
-    the round index. Falls back to an empty list for a pilot not found in the
-    replay. Uses the cached replay (fetches it if missing).
+    Results are memoised: a round's replay JSON is several megabytes and is
+    needed by the energy chart, the ground track and both pooled trajectory
+    helpers, so parsing it once per round keeps the build quick. The cached
+    lists are shared, so callers must treat them as read-only.
+
+    Both pilots are matched by ``userGuid``: Bill by :data:`BILL_GUID`, the
+    same-air leader by :func:`group_leader_guid`. A pilot missing from the
+    replay raises rather than yielding an empty track, so a broken benchmark
+    cannot pass silently into a chart. Uses the cached replay (fetches it if
+    missing).
 
     Args:
         round_no: round number (1-17).
@@ -569,19 +689,24 @@ def full_tracks_for_round(round_no: int, *, clip_to_last_tpc: bool = False
 
     Returns:
         tuple[list, list]: Bill's and the leader's run-relative track rows.
+
+    Raises:
+        KeyError: if either pilot is absent from the heat-group replay.
     """
     idx = {e["round"]: e for e in load_index()}[round_no]
     replay = load_replay(idx["group_id"])
-    leader_name = (idx.get("leader_name") or "").strip().lower()
+    leader_guid = group_leader_guid(idx["group_id"])
 
-    def full_name(p: dict) -> str:
-        pi = p["pilot"]
-        return f"{pi.get('name', '')} {pi.get('surname', '')}".strip().lower()
+    def by_guid(guid: str) -> dict:
+        for p in replay:
+            if p["pilot"].get("userGuid") == guid:
+                return p
+        raise KeyError(f"round {round_no}: pilot {guid} not in the replay")
 
-    bill = next((p for p in replay if p["pilot"].get("userGuid") == BILL_GUID), None)
-    leader = next((p for p in replay if full_name(p) == leader_name), None)
-    bill_rows = pilot_track_run_relative(bill, clip_to_last_tpc=clip_to_last_tpc) if bill else []
-    lead_rows = pilot_track_run_relative(leader, clip_to_last_tpc=clip_to_last_tpc) if leader else []
+    bill_rows = pilot_track_run_relative(
+        by_guid(BILL_GUID), clip_to_last_tpc=clip_to_last_tpc)
+    lead_rows = pilot_track_run_relative(
+        by_guid(leader_guid), clip_to_last_tpc=clip_to_last_tpc)
     return bill_rows, lead_rows
 
 
