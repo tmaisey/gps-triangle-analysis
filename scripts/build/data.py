@@ -365,7 +365,7 @@ def parse_rct_task(path: str | Path) -> dict:
 def course_geometry(task: dict) -> dict:
     """Build the right-isosceles course geometry in the shared metre grid.
 
-    Construction rule (RPT-011): the three turnpoints sit at ``radius`` from the
+    Construction rule (RPT-011; ADR: ADR-008): the three turnpoints sit at ``radius`` from the
     start on bearings ``{axis, axis+180, axis-90}``; the apex (right angle) is at
     ``axis-90``; the base/hypotenuse (``2*radius``) runs along the axis with the
     start at its midpoint; the two legs are ``radius*sqrt(2)``. The start/finish

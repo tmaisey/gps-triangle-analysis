@@ -7,7 +7,7 @@ State capture of how this project was built between the user (Tom) and Claude (C
 ## Setup (for the page's collapsed setup panel)
 - **Claude Code** (CLI agent) running on the user's laptop (macOS), Python available (managed with `uv`).
 - A project **CLAUDE.md/AGENTS.md** carrying intent-capture heuristics: capture intent in a PRD before building, decompose into a spec, TDD for the build, a doc index, and a build + build-review workflow.
-- Public GitHub repo `tmaisey/gps-triangle-analysis`; work committed and pushed per stage.
+- Public GitHub repo `tmaisey/gps-triangle-world-masters-oschatz-2026` (created as `gps-triangle-analysis`, renamed when the report was retitled); work committed and pushed per stage.
 - Data source: the public rcmodelspot JSON API (anonymous); weather from the Open-Meteo ERA5 archive.
 - High-autonomy pattern: the user gives intent and refinements; the orchestrator agent plans, delegates heavy work to subagents (research, analysis, build, review) to manage context, and reports back at decision points.
 
