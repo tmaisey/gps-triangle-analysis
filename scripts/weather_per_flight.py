@@ -6,6 +6,10 @@ field size, and the group leader's laps/speed by top rawScore), converts each
 group's UTC start time to Europe/Berlin local, snaps to the nearest hour, and
 joins the hourly weather. Writes ``analysis/weather_per_flight.csv`` plus a
 richer ``analysis/bill_flights_weather_full.csv`` for downstream analysis.
+
+CAPE is requested from the archive but ERA5 returns it null for every hour of
+the event, so it is not carried into either CSV; boundary-layer height is the
+secondary thermal proxy alongside shortwave radiation.
 """
 import csv
 import json
@@ -127,7 +131,6 @@ def main():
             "temp_c": w.get("temperature_2m"),
             "cloud_pct": w.get("cloudcover"),
             "shortwave_radiation": w.get("shortwave_radiation"),
-            "cape": w.get("cape"),
             "laps": f["laps"],
             "speed_kmh": f["speed_kmh"],
             "normalised_score": f["score"],
@@ -165,7 +168,7 @@ def main():
     for r in main_rows:
         print(f"{r['round']} {r['heat']:8} {r['start_datetime_local']} "
               f"wind={s(r['wind_speed_kmh'])} gust={s(r['wind_gust_kmh'])} "
-              f"rad={s(r['shortwave_radiation'])} cape={s(r['cape'])} "
+              f"rad={s(r['shortwave_radiation'])} "
               f"laps={r['laps']} score={r['normalised_score']} rank={r['within_group_rank']}")
 
 

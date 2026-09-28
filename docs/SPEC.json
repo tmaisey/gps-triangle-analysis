@@ -22,7 +22,8 @@
       "steps": [
         "For each of Bill's 17 groups, GET /CompetitionGpsTriangle/ReplayGroup/{groupId}",
         "Identify the scoring flight (handle multi-start artefacts) and the top-scoring same-group leader",
-        "Test: Bill and leader present in all 17 groups; parsed laps/speed reconcile to the results tree"
+        "Test: Bill and leader tracks present in all 17 groups and leader laps/speed/score reconcile to the results tree (test_data002_bill_and_leader_tracks_present_all_rounds, test_data002_leader_laps_and_speed_reconcile)",
+        "Test: the scored start T0 equals the flightStart of the gpsTriangleStats entry the API itself scored, for both pilots in all 17 rounds including the multi-start cases (test_data002_scored_start_matches_api_scored_stats, test_data002_multi_start_rounds_are_present_and_isolated)"
       ],
       "passes": true
     },
@@ -32,9 +33,9 @@
       "description": "Enrich each flight with weather from the Open-Meteo ERA5 archive at the Oschatz coordinates",
       "roadmap": "v1.0",
       "steps": [
-        "GET ERA5 hourly (wind, temp, cloud, radiation, cape) for 3-8 Aug 2026, Europe/Berlin",
+        "GET ERA5 hourly (wind, temp, cloud, radiation, boundary-layer height) for 3-8 Aug 2026, Europe/Berlin. CAPE is requested but the archive returns null for all 144 hours, so it is not carried into the CSVs; boundary-layer height is the secondary thermal proxy",
         "Map each flight's group start time to the nearest hour",
-        "Test: every flight has a weather row within the event window; wind cross-checks track drift order-of-magnitude"
+        "Test: every flight's weather hour is its published group start time rounded to the nearest hour, recomputed from results.json and the archive's own utc_offset_seconds, and the joined values equal that ERA5 row (test_data003_every_flight_maps_to_its_own_start_hour, test_data003_weather_values_come_from_the_archive_hour, test_data003_cape_is_null_in_the_archive_and_absent_from_the_csv)"
       ],
       "passes": true
     },
@@ -45,7 +46,8 @@
       "roadmap": "v1.0",
       "steps": [
         "Compute metrics from tracks; convert units (groundSpeed km/h, vario, haversine distances)",
-        "Test: computed laps and avg speed equal the authoritative results for every flight; distances within ~3% of API distance fields"
+        "Test: computed laps and avg speed equal the authoritative results for every flight; track-derived lap markers equal the official lap count (test_anl001_track_derived_lap_count_matches_official)",
+        "Test: the API's distanceCovered/distance/lapStats fields are all zero, so distances are validated against the API-IMPLIED scoring lap instead - allTrianglesAvgSpeed * timeElapsedSeconds / laps equals the ADR-008 perimeter 350*(2+2*sqrt(2)) = 1689.9 m on all 17 rounds, and the analysis scripts' PERIMETER_M matches it (test_anl001_api_implied_lap_distance_is_the_course_perimeter, test_anl001_perimeter_constants_match_the_adr008_course)"
       ],
       "passes": true
     },
@@ -57,7 +59,8 @@
       "steps": [
         "Segment tracks by bearing-rate and vario; separate turnpoint turns from thermal circles by duration/continuity",
         "Attribute per-lap deficit across phases; rank phases by cost to Bill",
-        "Test: phase times per flight sum to the motor-off flight duration (within tolerance); speedrun rounds excluded"
+        "Test: cruise+turn+climb reconstructs each lap time and the lap times sum to the aloft window; speedrun rounds 4/10/16 excluded (test_anl002_phase_times_sum_to_lap_time, test_anl002_lap_times_sum_to_aloft_time, test_anl002_speedrun_rounds_are_excluded)",
+        "Test: aloft time equals the API's timeElapsedSeconds on every single-attempt flight; on re-started flights the window spans all logged attempts and is pinned as a known limitation (test_anl002_aloft_time_matches_api_elapsed, test_anl002_multi_start_aloft_spans_all_attempts)"
       ],
       "passes": true
     },
@@ -67,8 +70,8 @@
       "description": "Condition-dependence analysis: Bill's within-group (conditions-controlled) score vs wind and thermal-strength proxies, and time-of-day",
       "roadmap": "v1.0",
       "steps": [
-        "Join weather to per-flight scores; compute associations with n caveat",
-        "Test: correlations computed over the 14 distance rounds; reported as suggestive, not significant"
+        "Join weather to per-flight scores; compute associations with n caveat. The normalised-score target is reported twice - over all 17 flights (labelled as such) and over the 14 distance heats alone, since the three one-lap sprints are scored by a different model; the report quotes the distance-only row",
+        "Test: the score, laps and speed correlations are available over the 14 distance rounds, the all-17 row stays explicitly labelled, and the radiation association is asserted as a direction and magnitude band rather than a significance claim (test_anl003_distance_only_score_correlations_are_reported, test_anl003_all_17_score_row_is_labelled_as_such, test_anl003_radiation_association_is_positive_and_suggestive, test_anl003_laps_correlations_use_the_14_distance_rounds)"
       ],
       "passes": true
     },
@@ -79,7 +82,7 @@
       "roadmap": "v1.0",
       "steps": [
         "Order rounds by day/time; trend normalised score and raw laps",
-        "Test: rounds ordered chronologically; both series present for all distance rounds"
+        "Test: the 14 distance rounds are in date order across the six competition days with both series populated, and the plotted scores are the authoritative round scores (test_anl004_progression_is_chronological_over_14_distance_rounds, test_anl004_progression_scores_match_the_results_tree)"
       ],
       "passes": true
     },

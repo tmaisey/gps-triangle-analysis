@@ -3,8 +3,11 @@
 Consumes ``analysis/bill_flights_weather_full.csv`` and reports Pearson and
 Spearman associations between conditions (wind, gusts, thermal proxies,
 time-of-day) and Bill's normalised within-group score (conditions-controlled)
-and raw laps (distance heats only; conditions+skill). Also derives the triangle
-course orientation from the task geometry. Writes ``analysis/weather_correlations.csv``.
+and raw laps (distance heats only; conditions+skill). The normalised score is
+reported twice: over all 17 flights, and over the 14 distance heats alone — the
+three one-lap speed sprints are scored by a different model, so the
+distance-only row is the one the report quotes. Also derives the triangle course
+orientation from the task geometry. Writes ``analysis/weather_correlations.csv``.
 
 n is small (17 flights; 14 distance) so all associations are suggestive only.
 The two-sided p<0.05 critical |r| for n=17 (df=15) is ~0.482; for n=14 ~0.532.
@@ -17,10 +20,16 @@ ROOT = Path(__file__).resolve().parent.parent
 FULL = ROOT / "analysis" / "bill_flights_weather_full.csv"
 OUT = ROOT / "analysis" / "weather_correlations.csv"
 
-# Task geometry (from GPS-track task block; identical across all replays)
+# Task geometry (from GPS-track task block; identical across all replays).
+# ADR-008: the task 'length' is the RADIUS / half-base of a right-isosceles
+# course, not a leg. Base (hypotenuse) = 2R along the axis with the start at its
+# midpoint; the two legs are R*sqrt(2); the apex (right angle) sits at axis-90.
 START_LAT, START_LON = 51.297718, 13.082957
-COURSE_DIR = 74.8  # degrees: axis / apex bearing from start
-LEG_LEN = 350      # metres, equilateral GPS-triangle side
+COURSE_DIR = 74.8    # degrees: course axis; the base runs along it
+COURSE_RADIUS = 350  # metres: task 'length' = radius / half-base
+BASE_LEN = 2 * COURSE_RADIUS
+LEG_LEN = COURSE_RADIUS * math.sqrt(2)
+PERIMETER_M = BASE_LEN + 2 * LEG_LEN  # ~1689.9 m — the regs scoring lap
 
 
 def pearson(x, y):
@@ -81,18 +90,26 @@ def fnum(v):
 
 
 def geometry():
-    """Print the derived triangle course orientation and candidate leg bearings."""
+    """Print the derived triangle course orientation and turnpoint bearings.
+
+    Geometry follows ADR-008: a right-isosceles course whose turnpoints lie at
+    ``COURSE_RADIUS`` from the start on bearings ``{axis, axis+180, axis-90}``,
+    with the right angle (apex) at ``axis-90``.
+    """
     print("\n=== TRIANGLE COURSE ORIENTATION (Task 5) ===")
     print(f"Start line: lat {START_LAT}, lon {START_LON}")
-    print(f"Course axis (task 'direction'): {COURSE_DIR}deg (ENE); leg length {LEG_LEN} m; equilateral.")
-    # In a closed triangular loop successive flight-leg bearings differ by 120deg.
-    # Convention: apex at course bearing; base perpendicular; one circulation sense.
-    base = COURSE_DIR
-    legs_ccw = [(base + k * 120) % 360 for k in range(3)]
-    print("Under 'flight legs 120deg apart, first leg on axis' convention, leg flight-bearings:")
-    print(f"  candidate set: {[round(b, 1) for b in legs_ccw]} deg (and the reverse-circulation set +180).")
-    print("  NOTE: exact vertex order / rotation sense needs the .rct task file "
-          "(taskAttachmentGuid b7dd856d...), not present. Axis 74.8deg is firm; "
+    print(f"Course axis (task 'direction'): {COURSE_DIR}deg (ENE); "
+          f"radius / half-base {COURSE_RADIUS} m (right-isosceles, ADR-008).")
+    print(f"  base (hypotenuse) {BASE_LEN:.0f} m along the axis, start at its midpoint; "
+          f"legs {LEG_LEN:.0f} m; perimeter {PERIMETER_M:.1f} m (the regs scoring lap).")
+    tps = [(COURSE_DIR % 360, "axis turnpoint"),
+           ((COURSE_DIR + 180) % 360, "opposite turnpoint"),
+           ((COURSE_DIR - 90) % 360, "apex (right angle)")]
+    print("Turnpoint bearings from the start:")
+    for brg, label in tps:
+        print(f"  {brg:6.1f} deg  {label}")
+    print("  NOTE: rotation sense (which turnpoint is taken first) comes from the "
+          ".rct task header; the axis 74.8deg and the apex side are firm, so "
           "per-leg headwind/tailwind is derivable once the sense is fixed.")
 
 
@@ -117,6 +134,8 @@ def main():
 
     for target_name, subset, tgt_key, df in [
         ("normalised_score (all 17, conditions-controlled)", rows, "normalised_score", 15),
+        ("normalised_score (distance heats, n=14, conditions-controlled)",
+         dist, "normalised_score", 12),
         ("laps (distance heats, n=14, conditions+skill)", dist, "laps", 12),
         ("speed_kmh (distance heats, n=14)", dist, "speed_kmh", 12),
         ("laps_deficit vs same-air leader (distance, n=14)", dist, "laps_deficit", 12),

@@ -30,7 +30,7 @@ WANTED = [
     "cloudcover",
     "cloudcover_low",
     "shortwave_radiation",
-    "cape",
+    "cape",  # requested, but the ERA5 archive returns null for every hour
     "surface_pressure",
     "boundary_layer_height",
 ]

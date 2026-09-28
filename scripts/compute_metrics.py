@@ -13,7 +13,10 @@ Outputs:
 
 Parsing facts (verified in the PoC): groundSpeed is km/h; lapStat.time is a
 per-lap DURATION (s); use gpsAlt for altitude; haversine on lat/lon for
-distance. Triangle perimeter floor = 3 x 350 m = 1050 m.
+distance. The scoring lap is the ADR-008 right-isosceles course: the task
+``length`` (350 m) is the RADIUS / half-base, so the perimeter is
+350 x (2 + 2*sqrt(2)) ~ 1689.9 m — confirmed by the API's own
+``allTrianglesAvgSpeed * timeElapsedSeconds / laps`` on all 17 rounds.
 """
 import csv
 import json
@@ -29,7 +32,8 @@ BILL = "2e6eb0fb-d61f-410c-a08e-313b1dd87977"
 
 CAP_ALT_M = 400.0
 CAP_SPEED_KMH = 120.0
-PERIMETER_M = 3 * 350
+COURSE_RADIUS_M = 350.0   # task 'length' = radius / half-base (ADR-008)
+PERIMETER_M = COURSE_RADIUS_M * (2 + 2 * math.sqrt(2))  # ~1689.9 m regs lap
 MS_TO_KMH = 3.6
 TARGET_PTS = 300          # downsample target per track
 DP_GAP_S = 60.0           # bin size for biggest-loss gap-growth scan
@@ -381,7 +385,8 @@ def biggest_loss(bill_m, lead_m, task_type):
     s, e = best_bin
     # what was Bill doing in that window?
     idx = [i for i in range(len(b_off)) if s <= b_off[i] <= e]
-    note = f"Leader gained {int(best_growth)} lap(s) here"
+    gained = int(best_growth)
+    note = f"Leader gained {gained} lap{'' if gained == 1 else 's'} here"
     if idx:
         d_alt = b_alt[idx[-1]] - b_alt[idx[0]]
         mean_v = sum(b_var[i] for i in idx) / len(idx)
@@ -480,7 +485,7 @@ def main():
                                       if m["time_to_connect_s"] is not None else ""),
                 "fastest_clean_lap_speed_kmh": round(m["fastest_clean_lap_speed_kmh"], 1),
                 "fastest_clean_lap_dist_m": round(m["fastest_clean_lap_dist_m"]),
-                "fastest_clean_lap_eff_vs_1050": round(m["fastest_clean_lap_eff"], 2),
+                "fastest_clean_lap_eff_vs_course": round(m["fastest_clean_lap_eff"], 2),
                 "line_eff_ratio_bill_vs_leader": (round(eff_ratio, 3)
                                                   if role == "BILL" and eff_ratio else ""),
                 "biggest_loss_note": loss["note"] if role == "BILL" else "",

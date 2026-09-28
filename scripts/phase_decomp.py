@@ -36,7 +36,8 @@ TRACKS = ROOT / "data" / "tracks"
 ANALYSIS = ROOT / "analysis"
 BILL_GUID = "2e6eb0fb-d61f-410c-a08e-313b1dd87977"
 
-# ---- segmentation thresholds (documented; tuned for a 350 m-leg triangle) -------
+# ---- segmentation thresholds (documented; tuned for the 350 m-radius,
+# ---- right-isosceles course of ADR-008: 700 m base, ~495 m legs) ---------------
 TURN_THRESH = 7.0        # deg/s smoothed bearing-rate above which a point is "turning"
 BR_SMOOTH = 3            # points in the bearing-rate smoothing window (~3 s)
 VARIO_SMOOTH = 5         # points in the vario smoothing window (~5 s)

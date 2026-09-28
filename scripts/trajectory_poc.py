@@ -32,7 +32,8 @@ FLIGHTS = [
 ]
 
 MS_TO_KMH = 3.6
-PERIMETER_M = 3 * 350  # geometric triangle baseline (3 legs x 350 m)
+COURSE_RADIUS_M = 350.0  # task 'length' is the radius / half-base (ADR-008)
+PERIMETER_M = COURSE_RADIUS_M * (2 + 2 * math.sqrt(2))  # right-isosceles lap, ~1689.9 m
 
 
 def parse_time(s):
@@ -213,7 +214,7 @@ def main():
                 "total_track_km": round(m["total_track_m"] / 1000, 2),
                 "clean_lap_dist_m": round(m["clean_lap_dist_m"]),
                 "clean_lap_dur_s": round(m["clean_lap_dur_s"], 1),
-                "clean_lap_eff_vs_1050m": round(m["clean_lap_eff"], 2),
+                "clean_lap_eff_vs_course": round(m["clean_lap_eff"], 2),
             })
 
     # ---- CSV ----
