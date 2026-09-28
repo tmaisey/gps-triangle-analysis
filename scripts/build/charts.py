@@ -22,10 +22,21 @@ from typing import Sequence
 
 from .design import PALETTE, SERIES
 
-# Default drawing box. Charts scale to 100% width via CSS; the viewBox keeps
-# the aspect ratio. Callers may override width/height.
-_W, _H = 720, 380
-_PAD = {"l": 56, "r": 24, "t": 34, "b": 46}
+# Default drawing box. Every figure in the report is drawn at ONE width so the
+# charts share a left and right edge down the content column (the column is
+# 1040px capped minus two 16px gutters). Charts scale to 100% width via CSS; the
+# viewBox keeps the aspect ratio. Callers may override width/height.
+CHART_W = 1008
+_W, _H = CHART_W, 380
+_PAD = {"l": 62, "r": 26, "t": 38, "b": 50}
+
+# Label sizes in viewBox units. The report's charts are scaled down inside the
+# mobile scroll container, so the base sizes are set high enough to stay legible
+# there (see design.css `.fig-scroll`); nothing is emitted below 12.
+FS_TICK = 13.0      # axis tick labels
+FS_AXIS = 14.0      # axis titles
+FS_LEGEND = 13.0    # legend entries
+FS_NOTE = 12.0      # in-plot annotations (medians, captions, small marks)
 
 
 # --- Primitives -------------------------------------------------------------
@@ -48,14 +59,18 @@ def _svg_open(w: int, h: int, title: str, desc: str = "") -> str:
 
 
 def _placeholder(title: str, msg: str = "No data available") -> str:
-    """Return a small, neutral placeholder SVG for empty/degenerate input."""
-    w, h = 480, 140
+    """Return a neutral placeholder SVG for empty/degenerate input.
+
+    Drawn at the shared :data:`CHART_W` so a placeholder keeps the column's
+    single chart width.
+    """
+    w, h = CHART_W, 140
     return (
         _svg_open(w, h, title, msg)
         + f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>'
         + f'<text x="{w/2}" y="{h/2}" text-anchor="middle" '
         f'dominant-baseline="middle" fill="{PALETTE["muted"]}" '
-        f'font-size="14">{_esc(msg)}</text></svg>'
+        f'font-size="{FS_AXIS}">{_esc(msg)}</text></svg>'
     )
 
 
@@ -91,6 +106,31 @@ def _nice_ticks(dmin: float, dmax: float, n: int = 5) -> list[float]:
     return ticks
 
 
+def _nice_domain(dmin: float, dmax: float, n: int = 5):
+    """Return ``(lo, hi, ticks)`` with the domain widened to whole ticks.
+
+    :func:`_nice_ticks` may return a tick just outside ``[dmin, dmax]`` (it
+    rounds outward by up to half a step). Scaling such a tick against the raw
+    data range puts its label outside the plot box, where the outer ``<svg>``
+    clips it — the cause of the missing final x-ticks and the truncated top
+    y-ticks found in the build review. Widening the domain to cover the ticks
+    keeps every label inside the box and makes the axis end on a round number
+    that is never short of the data.
+
+    Args:
+        dmin: smallest data value.
+        dmax: largest data value.
+        n: approximate number of ticks wanted.
+
+    Returns:
+        tuple[float, float, list[float]]: the scaling domain and its ticks.
+    """
+    ticks = _nice_ticks(dmin, dmax, n)
+    if not ticks:
+        return dmin, dmax, ticks
+    return min(dmin, ticks[0]), max(dmax, ticks[-1]), ticks
+
+
 def _axes(w, h, xlabel, ylabel, xticks, yticks, xs, ys) -> str:
     """Render x/y axis lines, gridlines, tick labels and axis titles."""
     pl, pr, pt, pb = _PAD["l"], _PAD["r"], _PAD["t"], _PAD["b"]
@@ -104,29 +144,30 @@ def _axes(w, h, xlabel, ylabel, xticks, yticks, xs, ys) -> str:
         )
         parts.append(
             f'<text x="{pl-8}" y="{y+4:.1f}" text-anchor="end" '
-            f'fill="{PALETTE["muted"]}" font-size="11" '
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}" '
             f'font-variant-numeric="tabular-nums">{_fmt(tv)}</text>'
         )
     # x labels
     for tv in xticks:
         x = xs(tv)
         parts.append(
-            f'<text x="{x:.1f}" y="{h-pb+18}" text-anchor="middle" '
-            f'fill="{PALETTE["muted"]}" font-size="11" '
+            f'<text x="{x:.1f}" y="{h-pb+20}" text-anchor="middle" '
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}" '
             f'font-variant-numeric="tabular-nums">{_fmt(tv)}</text>'
         )
     # axis titles
     if xlabel:
         parts.append(
-            f'<text x="{(pl+w-pr)/2:.1f}" y="{h-4}" text-anchor="middle" '
-            f'fill="{PALETTE["text_secondary"]}" font-size="12">{_esc(xlabel)}</text>'
+            f'<text x="{(pl+w-pr)/2:.1f}" y="{h-6}" text-anchor="middle" '
+            f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}">'
+            f'{_esc(xlabel)}</text>'
         )
     if ylabel:
         cy = (pt + h - pb) / 2
         parts.append(
-            f'<text x="14" y="{cy:.1f}" text-anchor="middle" '
-            f'fill="{PALETTE["text_secondary"]}" font-size="12" '
-            f'transform="rotate(-90 14 {cy:.1f})">{_esc(ylabel)}</text>'
+            f'<text x="16" y="{cy:.1f}" text-anchor="middle" '
+            f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}" '
+            f'transform="rotate(-90 16 {cy:.1f})">{_esc(ylabel)}</text>'
         )
     return "".join(parts)
 
@@ -152,17 +193,30 @@ def _polyline(points: Sequence[tuple[float, float]], color: str, width=2.0,
     )
 
 
-def _legend(entries: Sequence[tuple[str, str]], w: int, y: int = 16) -> str:
-    """Render a right-aligned inline legend of (label, colour) pairs."""
+def _legend(entries: Sequence[tuple[str, str]], w: int, y: int = 18,
+            x_right: float | None = None) -> str:
+    """Render a right-aligned inline legend of (label, colour) pairs.
+
+    Args:
+        entries: ``(label, colour)`` pairs, drawn left to right.
+        w: the chart width (the legend is right-aligned inside it).
+        y: baseline-ish y for the legend row.
+        x_right: right edge to align to; defaults to the chart's right padding.
+            Charts with a right-hand axis pass the plot's right edge so the
+            legend cannot share a band with the axis labels.
+
+    Returns:
+        str: SVG fragment for the legend.
+    """
     parts = []
-    x = w - _PAD["r"]
+    x = (w - _PAD["r"]) if x_right is None else x_right
     for label, color in reversed(entries):
-        label_w = len(label) * 6.6 + 22
+        label_w = len(label) * FS_LEGEND * 0.56 + 26
         x -= label_w
         parts.append(
-            f'<rect x="{x:.1f}" y="{y-8}" width="12" height="4" rx="2" fill="{color}"/>'
-            f'<text x="{x+18:.1f}" y="{y-1}" fill="{PALETTE["text_secondary"]}" '
-            f'font-size="11.5">{_esc(label)}</text>'
+            f'<rect x="{x:.1f}" y="{y-9}" width="14" height="4" rx="2" fill="{color}"/>'
+            f'<text x="{x+21:.1f}" y="{y-1}" fill="{PALETTE["text_secondary"]}" '
+            f'font-size="{FS_LEGEND}">{_esc(label)}</text>'
         )
     return "".join(parts)
 
@@ -191,11 +245,11 @@ def altitude_trace(bill_track, leader_track, *, bill_laps_s=None,
     tmax = max(r[TRACK_T] for r in allrows)
     amin = min(r[TRACK_ALT] for r in allrows)
     amax = max(r[TRACK_ALT] for r in allrows)
-    xs = _scaler(0, tmax, pl, w - pr)
-    ys = _scaler(amin, amax, h - pb, pt)
-    xt = _nice_ticks(0, tmax / 60.0)  # minutes on axis
-    xs_min = _scaler(0, tmax / 60.0, pl, w - pr)
-    yt = _nice_ticks(amin, amax)
+    xlo, xhi, xt = _nice_domain(0, tmax / 60.0)   # minutes on axis
+    alo, ahi, yt = _nice_domain(amin, amax)
+    xs = _scaler(xlo * 60.0, xhi * 60.0, pl, w - pr)
+    ys = _scaler(alo, ahi, h - pb, pt)
+    xs_min = _scaler(xlo, xhi, pl, w - pr)
 
     def line(track, color):
         return _polyline([(xs(r[TRACK_T]), ys(r[TRACK_ALT])) for r in track], color)
@@ -328,9 +382,12 @@ def _compass_point(deg: float) -> str:
     return _COMPASS_16[round((deg % 360) / 22.5) % 16]
 
 
+_GT_H = 882   # ground-track height at CHART_W (keeps the plot near-square)
+
+
 def ground_track(round_or_bill=None, leader_track=None, task=None, *,
                  wind: dict | None = None, title: str | None = None,
-                 w: int = 1120, h: int = 980) -> str:
+                 w: int = CHART_W, h: int = _GT_H) -> str:
     """Render the factual course + full-resolution GPS tracks for a round.
 
     Two call styles are supported:
@@ -344,8 +401,9 @@ def ground_track(round_or_bill=None, leader_track=None, task=None, *,
     The new renderer draws the right-isosceles course (bold ink, on top, with
     turnpoint dots), full-resolution Bill + leader traces at low opacity in one
     shared equirectangular grid, a dashed perpendicular start/finish line, a
-    North arrow (top-right of the plot), a 100 m scale bar (bottom-left), an
-    inline bottom-right legend (Bill / Leader / Course), and a wind vector
+    North arrow (top-right of the plot), a 100 m scale bar (bottom-left), a
+    legend in the clear band BELOW the framed plot (Bill / Leader / Course, so
+    it never sits over a trace), and a wind vector
     inside a reserved right band of the framed grid — pointing inward (the way
     the wind blows) with a compass + degrees + knots label. Marks are laid out
     so they do not overlap.
@@ -367,15 +425,15 @@ def ground_track(round_or_bill=None, leader_track=None, task=None, *,
     if not isinstance(round_or_bill, dict) or leader_track is not None or task is not None:
         return _ground_track_legacy(
             round_or_bill, leader_track, task,
-            title=title or "Ground track", w=w if w != 1120 else 560,
-            h=h if h != 980 else 520,
+            title=title or "Ground track", w=w if w != CHART_W else CHART_W,
+            h=h if h != _GT_H else 760,
         )
     return _ground_track_course(round_or_bill, wind=wind, title=title, w=w, h=h)
 
 
 def _ground_track_course(round_data: dict, *, wind: dict | None = None,
-                         title: str | None = None, w: int = 1120,
-                         h: int = 980) -> str:
+                         title: str | None = None, w: int = CHART_W,
+                         h: int = _GT_H) -> str:
     """Render the RPT-011 course + full-resolution track overlay for one round.
 
     See :func:`ground_track` for the visual contract. Ports the approved
@@ -414,7 +472,8 @@ def _ground_track_course(round_data: dict, *, wind: dict | None = None,
     # wind's source bearing places it on the clockface (RPT-012). The glyph sits
     # in that margin — outside the trace box, inside the frame — on whichever
     # side the source points, so it is never pinned to one edge.
-    frame = {"x": 40, "y": 52, "w": w - 40 - 28, "h": h - 52 - 40}
+    # The bottom margin is deep enough to carry the legend clear of the frame.
+    frame = {"x": 40, "y": 52, "w": w - 40 - 28, "h": h - 52 - 58}
     wind_margin = 104
     data_box = {
         "x": frame["x"] + wind_margin, "y": frame["y"] + wind_margin,
@@ -488,7 +547,7 @@ def _ground_track_course(round_data: dict, *, wind: dict | None = None,
     body.append(f'<circle cx="{X(0):.1f}" cy="{Y(0):.1f}" r="5.5" fill="#fff" '
                 f'stroke="{ink}" stroke-width="2"/>'
                 f'<circle cx="{X(0):.1f}" cy="{Y(0):.1f}" r="1.6" fill="{ink}"/>')
-    body.append(f'<text x="{X(0)+9:.1f}" y="{Y(0)+14:.1f}" font-size="11.5" '
+    body.append(f'<text x="{X(0)+9:.1f}" y="{Y(0)+14:.1f}" font-size="{FS_TICK}" '
                 f'fill="{ink}" font-weight="600">START / FINISH</text>')
 
     # North arrow (top-right of data area)
@@ -509,20 +568,21 @@ def _ground_track_course(round_data: dict, *, wind: dict | None = None,
                 f'stroke="{ink}" stroke-width="2.4"/>'
                 f'<line x1="{bx+barm:.1f}" y1="{by-5:.1f}" x2="{bx+barm:.1f}" '
                 f'y2="{by+5:.1f}" stroke="{ink}" stroke-width="2.4"/>'
-                f'<text x="{bx:.1f}" y="{by-9:.1f}" font-size="12" fill="{ink}" '
+                f'<text x="{bx:.1f}" y="{by-9:.1f}" font-size="{FS_AXIS}" fill="{ink}" '
                 f'font-weight="600">100 m</text>')
 
-    # legend (bottom-right of data area, evenly spaced)
+    # legend, in the clear band BELOW the framed plot: inside the frame it sat
+    # on top of the leader's trace, which the traces cannot be moved away from.
     items = [("Bill", SERIES["bill"]), ("Leader", SERIES["leader"]), ("Course", ink)]
-    char_w, swatch, sw_gap, item_gap = 7.3, 18, 8, 28
+    char_w, swatch, sw_gap, item_gap = FS_AXIS * 0.58, 20, 8, 30
     widths = [swatch + sw_gap + len(lab) * char_w for lab, _ in items]
     total = sum(widths) + item_gap * (len(items) - 1)
-    lx = (data_box["x"] + data_box["w"] - 16) - total
-    ly = data_box["y"] + data_box["h"] - 20
+    lx = (frame["x"] + frame["w"]) - total
+    ly = frame["y"] + frame["h"] + 30
     for i, (lab, col) in enumerate(items):
         body.append(f'<line x1="{lx:.1f}" y1="{ly-6:.1f}" x2="{lx+swatch:.1f}" '
                     f'y2="{ly-6:.1f}" stroke="{col}" stroke-width="3.2"/>'
-                    f'<text x="{lx+swatch+sw_gap:.1f}" y="{ly-2:.1f}" font-size="12" '
+                    f'<text x="{lx+swatch+sw_gap:.1f}" y="{ly-2:.1f}" font-size="{FS_AXIS}" '
                     f'fill="{ink}" font-weight="600">{_esc(lab)}</text>')
         lx += widths[i] + item_gap
 
@@ -611,7 +671,7 @@ def _wind_vector_clockface(wind: dict, data_box: dict, frame: dict,
     weights = ("700", "400", "400")
     for i, s in enumerate(lines):
         parts.append(
-            f'<text x="{lcx:.1f}" y="{lcy + 12 + i * line_h:.1f}" font-size="12" '
+            f'<text x="{lcx:.1f}" y="{lcy + 12 + i * line_h:.1f}" font-size="{FS_AXIS}" '
             f'fill="{grey}" text-anchor="middle" '
             f'font-weight="{weights[i] if i < len(weights) else "400"}">'
             f'{_esc(s)}</text>')
@@ -637,8 +697,10 @@ def cumulative_laps(bill_laps_s, leader_laps_s, *, working_time_s=1800,
     pl, pr, pt, pb = _PAD["l"], _PAD["r"], _PAD["t"], _PAD["b"]
     tmax = max([working_time_s] + (bill_laps_s or []) + (leader_laps_s or []))
     lapmax = max(len(bill_laps_s or []), len(leader_laps_s or []))
-    xs = _scaler(0, tmax / 60.0, pl, w - pr)
-    ys = _scaler(0, lapmax, h - pb, pt)
+    xlo, xhi, xt = _nice_domain(0, tmax / 60.0)
+    ylo, yhi, yt = _nice_domain(0, lapmax)
+    xs = _scaler(xlo, xhi, pl, w - pr)
+    ys = _scaler(ylo, yhi, h - pb, pt)
 
     def step(laps, color):
         if not laps:
@@ -652,8 +714,7 @@ def cumulative_laps(bill_laps_s, leader_laps_s, *, working_time_s=1800,
     body = [
         _svg_open(w, h, title),
         f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
-        _axes(w, h, "Time (min)", "Laps", _nice_ticks(0, tmax / 60.0),
-              _nice_ticks(0, lapmax), xs, ys),
+        _axes(w, h, "Time (min)", "Laps", xt, yt, xs, ys),
         step(leader_laps_s or [], SERIES["leader"]),
         step(bill_laps_s or [], SERIES["bill"]),
         _legend([("Bill", SERIES["bill"]), ("Leader", SERIES["leader"])], w),
@@ -682,8 +743,7 @@ def paired_bars(categories, bill_values, leader_values, *,
         return _placeholder(title)
     pl, pr, pt, pb = _PAD["l"], _PAD["r"], _PAD["t"], _PAD["b"]
     vals = [v for v in (bill_values + leader_values) if v is not None]
-    vmax = max(vals + [0])
-    vmin = min(vals + [0])
+    vmin, vmax, yticks = _nice_domain(min(vals + [0]), max(vals + [0]))
     ys = _scaler(vmin, vmax, h - pb, pt)
     n = len(categories)
     band = (w - pl - pr) / n
@@ -693,13 +753,13 @@ def paired_bars(categories, bill_values, leader_values, *,
         f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
     ]
     zero = ys(0 if vmin <= 0 <= vmax else vmin)
-    for tv in _nice_ticks(vmin, vmax):
+    for tv in yticks:
         y = ys(tv)
         body.append(
             f'<line x1="{pl}" y1="{y:.1f}" x2="{w-pr}" y2="{y:.1f}" '
             f'stroke="{PALETTE["hairline"]}"/>'
             f'<text x="{pl-8}" y="{y+4:.1f}" text-anchor="end" '
-            f'fill="{PALETTE["muted"]}" font-size="11">{_fmt(tv)}</text>'
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}">{_fmt(tv)}</text>'
         )
     for i, cat in enumerate(categories):
         cx = pl + band * (i + 0.5)
@@ -714,15 +774,15 @@ def paired_bars(categories, bill_values, leader_values, *,
                 f'height="{ht:.1f}" fill="{color}" rx="1.5"/>'
             )
         body.append(
-            f'<text x="{cx:.1f}" y="{h-pb+16}" text-anchor="middle" '
-            f'fill="{PALETTE["muted"]}" font-size="11">{_esc(cat)}</text>'
+            f'<text x="{cx:.1f}" y="{h-pb+18}" text-anchor="middle" '
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}">{_esc(cat)}</text>'
         )
     if ylabel:
         cy = (pt + h - pb) / 2
         body.append(
-            f'<text x="14" y="{cy:.1f}" text-anchor="middle" '
-            f'fill="{PALETTE["text_secondary"]}" font-size="12" '
-            f'transform="rotate(-90 14 {cy:.1f})">{_esc(ylabel)}</text>'
+            f'<text x="16" y="{cy:.1f}" text-anchor="middle" '
+            f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}" '
+            f'transform="rotate(-90 16 {cy:.1f})">{_esc(ylabel)}</text>'
         )
     body.append(_legend([(bill_label, SERIES["bill"]),
                          (leader_label, SERIES["leader"])], w))
@@ -752,13 +812,14 @@ def scatter_highlight(points, *, highlight_index=None, xlabel="", ylabel="",
     pl, pr, pt, pb = _PAD["l"], _PAD["r"], _PAD["t"], _PAD["b"]
     xsv = [p[0] for p in pts]
     ysv = [p[1] for p in pts]
-    xs = _scaler(min(xsv), max(xsv), pl, w - pr)
-    ys = _scaler(min(ysv), max(ysv), h - pb, pt)
+    xlo, xhi, xt = _nice_domain(min(xsv), max(xsv))
+    ylo, yhi, yt = _nice_domain(min(ysv), max(ysv))
+    xs = _scaler(xlo, xhi, pl, w - pr)
+    ys = _scaler(ylo, yhi, h - pb, pt)
     body = [
         _svg_open(w, h, title),
         f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
-        _axes(w, h, xlabel, ylabel, _nice_ticks(min(xsv), max(xsv)),
-              _nice_ticks(min(ysv), max(ysv)), xs, ys),
+        _axes(w, h, xlabel, ylabel, xt, yt, xs, ys),
     ]
     for i, (x, y) in enumerate(points or []):
         if x is None or y is None:
@@ -780,9 +841,17 @@ def scatter_highlight(points, *, highlight_index=None, xlabel="", ylabel="",
             )
             lab = (labels[highlight_index] if labels
                    and highlight_index < len(labels) else "Bill")
+            # Flip the label inboard when the point sits near an edge, so the
+            # name is never clipped by the outer svg.
+            lab_w = len(lab) * FS_AXIS * 0.62
+            if xs(x) + 10 + lab_w > w - 4:
+                lx, anchor = xs(x) - 10, "end"
+            else:
+                lx, anchor = xs(x) + 10, "start"
+            ly = max(ys(y) - 8, pt + FS_AXIS)
             body.append(
-                f'<text x="{xs(x)+10:.1f}" y="{ys(y)-8:.1f}" '
-                f'fill="{PALETTE["primary_dark"]}" font-size="12" '
+                f'<text x="{lx:.1f}" y="{ly:.1f}" text-anchor="{anchor}" '
+                f'fill="{PALETTE["primary_dark"]}" font-size="{FS_AXIS}" '
                 f'font-weight="600">{_esc(lab)}</text>'
             )
     body.append("</svg>")
@@ -808,12 +877,20 @@ def waterfall(components, *, title="Gap decomposition", xlabel="",
         return _placeholder(title)
     rows = len(comps)
     h = h or (70 + rows * 46)
-    pl, pr, pt, pb = 150, 24, 30, 40
+    # Left gutter sized to the longest row label so it is never clipped.
+    pl = max(190.0, max(len(l) for l, _ in comps) * FS_AXIS * 0.62 + 26)
+    pr, pt, pb = 26, 30, 44
     total = sum(v for _, v in comps)
     hi = max(total, max(abs(v) for _, v in comps))
     xs = _scaler(0, hi, pl, w - pr)
-    palette_cycle = [SERIES["loss"], SERIES["leader"], PALETTE["primary_dark"],
-                     PALETTE["field"], SERIES["bill"]]
+    # Loss decomposition, not a series comparison: the dominant component (the
+    # one the reader is meant to act on, always passed first) takes the amber
+    # attention colour and the rest are neutral greys. Bill-green and
+    # leader-blue are deliberately absent here — they mean "pilot" everywhere
+    # else in the report and would read as a second, contradictory encoding.
+    palette_cycle = [SERIES["loss"], PALETTE["text_secondary"],
+                     PALETTE["muted"], PALETTE["primary_dark"],
+                     PALETTE["field"]]
     body = [
         _svg_open(w, h, title),
         f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
@@ -830,19 +907,29 @@ def waterfall(components, *, title="Gap decomposition", xlabel="",
             f'width="{abs(x1-x0):.1f}" height="{bh:.1f}" fill="{color}" rx="2"/>'
         )
         body.append(
-            f'<text x="{pl-10}" y="{y+bh/2+4:.1f}" text-anchor="end" '
-            f'fill="{PALETTE["text_secondary"]}" font-size="12">{_esc(label)}</text>'
+            f'<text x="{pl-12}" y="{y+bh/2+4:.1f}" text-anchor="end" '
+            f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}">'
+            f'{_esc(label)}</text>'
         )
+        # Value readout sits after the bar, or inside its end when the bar runs
+        # to the axis maximum and the text would fall outside the viewBox.
+        txt = _fmt(round(val, 1))
+        txt_w = len(txt) * FS_TICK * 0.62
+        if max(x0, x1) + 7 + txt_w > w - 4:
+            vx, v_anchor, v_fill = max(x0, x1) - 7, "end", PALETTE["background"]
+        else:
+            vx, v_anchor, v_fill = max(x0, x1) + 7, "start", PALETTE["muted"]
         body.append(
-            f'<text x="{max(x0,x1)+6:.1f}" y="{y+bh/2+4:.1f}" '
-            f'fill="{PALETTE["muted"]}" font-size="11" '
-            f'font-variant-numeric="tabular-nums">{_fmt(round(val,1))}</text>'
+            f'<text x="{vx:.1f}" y="{y+bh/2+4:.1f}" text-anchor="{v_anchor}" '
+            f'fill="{v_fill}" font-size="{FS_TICK}" '
+            f'font-variant-numeric="tabular-nums">{txt}</text>'
         )
         run += val
     if xlabel:
         body.append(
-            f'<text x="{(pl+w-pr)/2:.1f}" y="{h-6}" text-anchor="middle" '
-            f'fill="{PALETTE["text_secondary"]}" font-size="12">{_esc(xlabel)}</text>'
+            f'<text x="{(pl+w-pr)/2:.1f}" y="{h-8}" text-anchor="middle" '
+            f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}">'
+            f'{_esc(xlabel)}</text>'
         )
     body.append("</svg>")
     return "".join(body)
@@ -864,38 +951,40 @@ def progression(rounds, score_series, laps_series, *,
     """
     if not rounds:
         return _placeholder(title)
-    pl, pr, pt, pb = _PAD["l"], _PAD["r"] + 32, _PAD["t"], _PAD["b"]
+    pl, pr, pt, pb = _PAD["l"], _PAD["r"] + 38, _PAD["t"], _PAD["b"]
     n = len(rounds)
     xs = _scaler(0, max(n - 1, 1), pl, w - pr)
     sv = [s for s in score_series if s is not None]
     lv = [l for l in laps_series if l is not None]
-    ys_score = _scaler(min(sv + [0]), max(sv + [1]), h - pb, pt)
-    ys_laps = _scaler(0, max(lv + [1]), h - pb, pt)
+    slo, shi, sticks = _nice_domain(min(sv + [0]), max(sv + [1]))
+    llo, lhi, lticks = _nice_domain(0, max(lv + [1]))
+    ys_score = _scaler(slo, shi, h - pb, pt)
+    ys_laps = _scaler(llo, lhi, h - pb, pt)
     body = [
         _svg_open(w, h, title),
         f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
     ]
     # left axis ticks (score)
-    for tv in _nice_ticks(min(sv + [0]), max(sv + [1])):
+    for tv in sticks:
         y = ys_score(tv)
         body.append(
             f'<line x1="{pl}" y1="{y:.1f}" x2="{w-pr}" y2="{y:.1f}" '
             f'stroke="{PALETTE["hairline"]}"/>'
             f'<text x="{pl-8}" y="{y+4:.1f}" text-anchor="end" '
-            f'fill="{PALETTE["muted"]}" font-size="11">{_fmt(tv)}</text>'
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}">{_fmt(tv)}</text>'
         )
     # right axis ticks (laps)
-    for tv in _nice_ticks(0, max(lv + [1])):
+    for tv in lticks:
         y = ys_laps(tv)
         body.append(
-            f'<text x="{w-pr+8}" y="{y+4:.1f}" text-anchor="start" '
-            f'fill="{PALETTE["muted"]}" font-size="11">{_fmt(tv)}</text>'
+            f'<text x="{w-pr+9}" y="{y+4:.1f}" text-anchor="start" '
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}">{_fmt(tv)}</text>'
         )
     # x labels
     for i, r in enumerate(rounds):
         body.append(
-            f'<text x="{xs(i):.1f}" y="{h-pb+16}" text-anchor="middle" '
-            f'fill="{PALETTE["muted"]}" font-size="10">{_esc(r)}</text>'
+            f'<text x="{xs(i):.1f}" y="{h-pb+18}" text-anchor="middle" '
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}">{_esc(r)}</text>'
         )
     laps_pts = [(xs(i), ys_laps(v)) for i, v in enumerate(laps_series) if v is not None]
     score_pts = [(xs(i), ys_score(v)) for i, v in enumerate(score_series) if v is not None]
@@ -903,8 +992,10 @@ def progression(rounds, score_series, laps_series, *,
     body.append(_polyline(score_pts, SERIES["bill"], 2.4))
     for x, y in score_pts:
         body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3" fill="{SERIES["bill"]}"/>')
+    # The legend is aligned to the plot's right edge, not the chart's, so it
+    # cannot collide with the right-hand laps axis labels beyond it.
     body.append(_legend([("Norm. score", SERIES["bill"]),
-                         ("Laps", SERIES["field"])], w))
+                         ("Laps", SERIES["field"])], w, x_right=w - pr))
     body.append("</svg>")
     return "".join(body)
 
@@ -931,28 +1022,30 @@ def strip_plot(series, *, title="Distribution", xlabel="", w=_W, h=None,
         return _placeholder(title)
     all_vals = [v for _, vs in rows for v in vs]
     h = h or (60 + len(rows) * 54)
-    pl, pr, pt, pb = 130, 24, 26, 38
-    xs = _scaler(min(all_vals), max(all_vals), pl, w - pr)
+    pl, pr, pt, pb = 170, 26, 26, 42
+    xlo, xhi, xticks = _nice_domain(min(all_vals), max(all_vals))
+    xs = _scaler(xlo, xhi, pl, w - pr)
     colors = [SERIES["field"], SERIES["leader"], SERIES["bill"]]
     body = [
         _svg_open(w, h, title),
         f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
     ]
-    for tv in _nice_ticks(min(all_vals), max(all_vals)):
+    for tv in xticks:
         x = xs(tv)
         body.append(
             f'<line x1="{x:.1f}" y1="{pt}" x2="{x:.1f}" y2="{h-pb}" '
             f'stroke="{PALETTE["hairline"]}"/>'
-            f'<text x="{x:.1f}" y="{h-pb+16}" text-anchor="middle" '
-            f'fill="{PALETTE["muted"]}" font-size="11">{_fmt(tv)}</text>'
+            f'<text x="{x:.1f}" y="{h-pb+18}" text-anchor="middle" '
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}">{_fmt(tv)}</text>'
         )
     rowh = (h - pt - pb) / len(rows)
     for i, (label, vs) in enumerate(rows):
         cy = pt + rowh * (i + 0.5)
         color = colors[i % len(colors)]
         body.append(
-            f'<text x="{pl-10}" y="{cy+4:.1f}" text-anchor="end" '
-            f'fill="{PALETTE["text_secondary"]}" font-size="12">{_esc(label)}</text>'
+            f'<text x="{pl-12}" y="{cy+4:.1f}" text-anchor="end" '
+            f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}">'
+            f'{_esc(label)}</text>'
         )
         for v in vs:
             body.append(
@@ -968,8 +1061,9 @@ def strip_plot(series, *, title="Distribution", xlabel="", w=_W, h=None,
             )
     if xlabel:
         body.append(
-            f'<text x="{(pl+w-pr)/2:.1f}" y="{h-4}" text-anchor="middle" '
-            f'fill="{PALETTE["text_secondary"]}" font-size="12">{_esc(xlabel)}</text>'
+            f'<text x="{(pl+w-pr)/2:.1f}" y="{h-6}" text-anchor="middle" '
+            f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}">'
+            f'{_esc(xlabel)}</text>'
         )
     body.append("</svg>")
     return "".join(body)
@@ -1002,7 +1096,7 @@ def bullet_bar(value, benchmark, *, vmax=None, title="Metric", label="",
         _svg_open(w, h, title),
         f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
         f'<text x="{pl-10}" y="{cy+4:.1f}" text-anchor="end" '
-        f'fill="{PALETTE["text_secondary"]}" font-size="12">{_esc(label)}</text>',
+        f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}">{_esc(label)}</text>',
         f'<rect x="{pl}" y="{cy-barh/2:.1f}" width="{xs(hi)-pl:.1f}" '
         f'height="{barh}" fill="{PALETTE["hairline"]}" rx="3"/>',
         f'<rect x="{pl}" y="{cy-barh/2:.1f}" width="{max(0,xs(value)-pl):.1f}" '
@@ -1016,7 +1110,7 @@ def bullet_bar(value, benchmark, *, vmax=None, title="Metric", label="",
         )
     body.append(
         f'<text x="{w-pr+8}" y="{cy+4:.1f}" fill="{PALETTE["ink"]}" '
-        f'font-size="12" font-variant-numeric="tabular-nums">'
+        f'font-size="{FS_AXIS}" font-variant-numeric="tabular-nums">'
         f'{_fmt(round(value,1))}{_esc(unit)}</text>'
     )
     body.append("</svg>")
@@ -1038,7 +1132,8 @@ def _rolling_mean(vals: Sequence[float], window: int) -> list[float]:
 
 
 def energy_management(round_data: dict, *, title: str = "Energy Management",
-                      speed_smooth: int = 5, w: int = 980, h: int = 600) -> str:
+                      speed_smooth: int = 5, w: int = CHART_W,
+                      h: int = 620) -> str:
     """Stacked dual-panel altitude + ground-speed chart for one round (RPT-018).
 
     Ports the approved ``energy_management_v3`` prototype. A single shared x-axis
@@ -1142,7 +1237,7 @@ def energy_management(round_data: dict, *, title: str = "Energy Management",
         y = sy_alt(a)
         body.append(f'<line x1="{px0}" y1="{y:.1f}" x2="{px1}" y2="{y:.1f}" '
                     f'stroke="{hair}" stroke-width="1"/>'
-                    f'<text x="{px0-8}" y="{y+3.5:.1f}" text-anchor="end" font-size="11" '
+                    f'<text x="{px0-8}" y="{y+3.5:.1f}" text-anchor="end" font-size="{FS_TICK}" '
                     f'fill="{grey}">{_fmt(a)}</text>')
     # speed horizontal gridlines + labels
     for sv in _nice_ticks(0, spd_hi, 3):
@@ -1151,7 +1246,7 @@ def energy_management(round_data: dict, *, title: str = "Energy Management",
         y = sy_spd(sv)
         body.append(f'<line x1="{px0}" y1="{y:.1f}" x2="{px1}" y2="{y:.1f}" '
                     f'stroke="{hair}" stroke-width="1"/>'
-                    f'<text x="{px0-8}" y="{y+3.5:.1f}" text-anchor="end" font-size="11" '
+                    f'<text x="{px0-8}" y="{y+3.5:.1f}" text-anchor="end" font-size="{FS_TICK}" '
                     f'fill="{grey}">{_fmt(sv)}</text>')
     # panel left axes + shared baseline
     for y0, y1 in ((alt_y0, alt_y1), (spd_y0, spd_y1)):
@@ -1162,16 +1257,16 @@ def energy_management(round_data: dict, *, title: str = "Energy Management",
     # x tick labels once, under bottom panel + axis title
     for xt in xticks:
         body.append(f'<text x="{sx(xt):.1f}" y="{spd_y1+16:.1f}" text-anchor="middle" '
-                    f'font-size="11" fill="{grey}">{xt:g}</text>')
+                    f'font-size="{FS_TICK}" fill="{grey}">{xt:g}</text>')
     body.append(f'<text x="{(px0+px1)/2:.1f}" y="{h-8}" text-anchor="middle" '
-                f'font-size="12.5" fill="{ink}">Relative flight time (minutes since '
+                f'font-size="{FS_AXIS}" fill="{ink}">Relative flight time (minutes since '
                 f'scored start-line crossing)</text>')
     # rotated y-axis labels naming each panel
     acy = (alt_y0 + alt_y1) / 2
     scy = (spd_y0 + spd_y1) / 2
-    body.append(f'<text x="16" y="{acy:.1f}" text-anchor="middle" font-size="12.5" '
+    body.append(f'<text x="16" y="{acy:.1f}" text-anchor="middle" font-size="{FS_AXIS}" '
                 f'fill="{ink}" transform="rotate(-90 16 {acy:.1f})">Altitude (m)</text>')
-    body.append(f'<text x="16" y="{scy:.1f}" text-anchor="middle" font-size="12.5" '
+    body.append(f'<text x="16" y="{scy:.1f}" text-anchor="middle" font-size="{FS_AXIS}" '
                 f'fill="{ink}" transform="rotate(-90 16 {scy:.1f})">Ground speed (km/h)</text>')
     # data lines (leader under Bill)
     for sdat, color in ((lead, SERIES["leader"]), (bill, SERIES["bill"])):
@@ -1186,8 +1281,11 @@ def energy_management(round_data: dict, *, title: str = "Energy Management",
     bname = round_data.get("bill", {}).get("name", "Bill Maisey")
     lname = round_data.get("leader", {}).get("name", "Leader")
     entries = [(bname, SERIES["bill"]), (f"{lname} (leader)", SERIES["leader"])]
-    box_w, row_h = 200, 18
-    lgx0 = px1 - box_w - 8
+    # Box sized to the longest pilot name so the legend never runs past the
+    # plot (names vary from round to round).
+    row_h = 20
+    box_w = max(200, max(len(lab) for lab, _ in entries) * FS_AXIS * 0.56 + 56)
+    lgx0 = max(px0 + 8, px1 - box_w - 8)
     lgy0 = alt_y0 + 10
     body.append(f'<rect x="{lgx0:.1f}" y="{lgy0:.1f}" width="{box_w}" '
                 f'height="{row_h*len(entries)+8}" rx="4" fill="{bg}" fill-opacity="0.85" '
@@ -1196,7 +1294,7 @@ def energy_management(round_data: dict, *, title: str = "Energy Management",
         yy = lgy0 + 14 + i * row_h
         body.append(f'<line x1="{lgx0+10:.1f}" y1="{yy:.1f}" x2="{lgx0+30:.1f}" '
                     f'y2="{yy:.1f}" stroke="{color}" stroke-width="3"/>'
-                    f'<text x="{lgx0+38:.1f}" y="{yy+4:.1f}" font-size="12" '
+                    f'<text x="{lgx0+38:.1f}" y="{yy+4:.1f}" font-size="{FS_AXIS}" '
                     f'fill="{ink}">{_esc(label)}</text>')
     body.append("</svg>")
     return "".join(body)
@@ -1256,7 +1354,7 @@ def grouped_bar_rounds(rounds, series, *, title="", ylabel="", unit="",
         body.append(f'<line x1="{pl}" y1="{y:.1f}" x2="{w-pr}" y2="{y:.1f}" '
                     f'stroke="{PALETTE["hairline"]}"/>'
                     f'<text x="{pl-8}" y="{y+4:.1f}" text-anchor="end" '
-                    f'fill="{PALETTE["muted"]}" font-size="11">{_fmt(tv)}</text>')
+                    f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}">{_fmt(tv)}</text>')
     for i, rnd in enumerate(rounds):
         gx = pl + band * i + band * 0.1
         for j, (_, vals, ckey) in enumerate(series):
@@ -1269,11 +1367,11 @@ def grouped_bar_rounds(rounds, series, *, title="", ylabel="", unit="",
                         f'height="{ht:.1f}" fill="{SERIES.get(ckey, PALETTE["field"])}" '
                         f'rx="1"/>')
         body.append(f'<text x="{pl+band*(i+0.5):.1f}" y="{h-pb+15}" text-anchor="middle" '
-                    f'fill="{PALETTE["muted"]}" font-size="10">{_esc(rnd)}</text>')
+                    f'fill="{PALETTE["muted"]}" font-size="{FS_NOTE}">{_esc(rnd)}</text>')
     if ylabel:
         cy = (pt + h - pb) / 2
         body.append(f'<text x="14" y="{cy:.1f}" text-anchor="middle" '
-                    f'fill="{PALETTE["text_secondary"]}" font-size="12" '
+                    f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}" '
                     f'transform="rotate(-90 14 {cy:.1f})">{_esc(ylabel)}</text>')
     labels = [(lab, SERIES.get(ck, PALETTE["field"])) for lab, _, ck in series]
     body.append(_legend(labels, w))
@@ -1334,7 +1432,7 @@ def conditions_strip(values, *, labels=None, title="Conditions",
                         f'height="{ch:.1f}" rx="2" fill="none" '
                         f'stroke="{PALETTE["hairline"]}"/>')
         body.append(f'<text x="{x+cellw/2:.1f}" y="{h-8}" text-anchor="middle" '
-                    f'fill="{PALETTE["muted"]}" font-size="10">{_esc(labels[i])}</text>')
+                    f'fill="{PALETTE["muted"]}" font-size="{FS_NOTE}">{_esc(labels[i])}</text>')
     body.append("</svg>")
     return "".join(body)
 
@@ -1379,14 +1477,14 @@ def rank_strip(ranks, *, group_sizes=None, labels=None,
             body.append(f'<rect x="{x+1:.1f}" y="{top}" width="{cellw-2:.1f}" '
                         f'height="{ch:.1f}" rx="2" fill="{col}"/>')
             body.append(f'<text x="{x+cellw/2:.1f}" y="{top+ch/2+4:.1f}" '
-                        f'text-anchor="middle" fill="{PALETTE["ink"]}" font-size="10" '
+                        f'text-anchor="middle" fill="{PALETTE["ink"]}" font-size="{FS_NOTE}" '
                         f'font-weight="600">{int(r)}</text>')
         else:
             body.append(f'<rect x="{x+1:.1f}" y="{top}" width="{cellw-2:.1f}" '
                         f'height="{ch:.1f}" rx="2" fill="none" '
                         f'stroke="{PALETTE["hairline"]}"/>')
         body.append(f'<text x="{x+cellw/2:.1f}" y="{h-8}" text-anchor="middle" '
-                    f'fill="{PALETTE["muted"]}" font-size="10">{_esc(labels[i])}</text>')
+                    f'fill="{PALETTE["muted"]}" font-size="{FS_NOTE}">{_esc(labels[i])}</text>')
     body.append("</svg>")
     return "".join(body)
 
@@ -1410,7 +1508,7 @@ def _caption_block(caption: str, x: float, y: float, width: float) -> str:
     """Render a wrapped, top-ruled caption block at ``(x, y)`` (SVG text)."""
     if not caption:
         return ""
-    lines = _wrap_text(caption, max_chars=int(width / 6.0))
+    lines = _wrap_text(caption, max_chars=int(width / (FS_TICK * 0.56)))
     parts = [
         f'<line x1="{x:.1f}" y1="{y-10:.1f}" x2="{x+width:.1f}" y2="{y-10:.1f}" '
         f'stroke="{PALETTE["hairline"]}" stroke-width="1"/>'
@@ -1418,7 +1516,7 @@ def _caption_block(caption: str, x: float, y: float, width: float) -> str:
     for i, line in enumerate(lines):
         parts.append(
             f'<text x="{x:.1f}" y="{y + i*14:.1f}" fill="{PALETTE["muted"]}" '
-            f'font-size="11">{_esc(line)}</text>'
+            f'font-size="{FS_TICK}">{_esc(line)}</text>'
         )
     return "".join(parts)
 
@@ -1471,7 +1569,7 @@ def distance_from_course_density(density, *,
             f"Bill's same-air group winner. Median distance: Bill "
             f"{bill['median']:g} m, winner {lead['median']:g} m."
         )
-    cap_lines = _wrap_text(caption, int((w - pr - pl) / 6.0)) if caption else []
+    cap_lines = _wrap_text(caption, int((w - pr - pl) / (FS_TICK * 0.56))) if caption else []
     if h is None:
         h = int(yb + 62 + len(cap_lines) * 14 + 6)
     ymin, ymax = 1e-5, 0.35            # 0.001 % .. 35 %
@@ -1500,7 +1598,7 @@ def distance_from_course_density(density, *,
         )
         body.append(
             f'<text x="{pl-8}" y="{y+4:.1f}" text-anchor="end" '
-            f'fill="{PALETTE["muted"]}" font-size="11" '
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}" '
             f'font-variant-numeric="tabular-nums">{tv*100:g}%</text>'
         )
     # x ticks
@@ -1512,7 +1610,7 @@ def distance_from_course_density(density, *,
         )
         body.append(
             f'<text x="{x:.1f}" y="{yb+19:.1f}" text-anchor="middle" '
-            f'fill="{PALETTE["muted"]}" font-size="11" '
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}" '
             f'font-variant-numeric="tabular-nums">{int(tv)}</text>'
         )
     # axis frame (left + baseline) in ink
@@ -1524,13 +1622,13 @@ def distance_from_course_density(density, *,
     cy = (pt + yb) / 2
     body.append(
         f'<text x="18" y="{cy:.1f}" text-anchor="middle" '
-        f'fill="{PALETTE["text_secondary"]}" font-size="12" '
+        f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}" '
         f'transform="rotate(-90 18 {cy:.1f})">Share of flight time (log)</text>'
     )
     # x-axis title
     body.append(
         f'<text x="{(pl+w-pr)/2:.1f}" y="{yb+40:.1f}" text-anchor="middle" '
-        f'fill="{PALETTE["text_secondary"]}" font-size="12">{_esc(xlabel)}</text>'
+        f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}">{_esc(xlabel)}</text>'
     )
     # unfilled, floored density lines
     for rec, color in ((bill, SERIES["bill"]), (lead, SERIES["leader"])):
@@ -1585,7 +1683,7 @@ def turn_radius_density(density, *,
             f"winner. Median radius: Bill {bill['median']:g} m, winner "
             f"{lead['median']:g} m."
         )
-    cap_lines = _wrap_text(caption, int((w - pr - pl) / 6.0)) if caption else []
+    cap_lines = _wrap_text(caption, int((w - pr - pl) / (FS_TICK * 0.56))) if caption else []
     if h is None:
         h = int(yb + 62 + len(cap_lines) * 14 + 6)
     peak = max(max(bill["frac"], default=0), max(lead["frac"], default=0))
@@ -1607,7 +1705,7 @@ def turn_radius_density(density, *,
         )
         body.append(
             f'<text x="{pl-8}" y="{y+4:.1f}" text-anchor="end" '
-            f'fill="{PALETTE["muted"]}" font-size="11" '
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}" '
             f'font-variant-numeric="tabular-nums">{tv*100:g}%</text>'
         )
     # x ticks
@@ -1619,7 +1717,7 @@ def turn_radius_density(density, *,
         )
         body.append(
             f'<text x="{x:.1f}" y="{yb+19:.1f}" text-anchor="middle" '
-            f'fill="{PALETTE["muted"]}" font-size="11" '
+            f'fill="{PALETTE["muted"]}" font-size="{FS_TICK}" '
             f'font-variant-numeric="tabular-nums">{int(tv)}</text>'
         )
     # axis frame
@@ -1630,12 +1728,12 @@ def turn_radius_density(density, *,
     cy = (pt + yb) / 2
     body.append(
         f'<text x="18" y="{cy:.1f}" text-anchor="middle" '
-        f'fill="{PALETTE["text_secondary"]}" font-size="12" '
+        f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}" '
         f'transform="rotate(-90 18 {cy:.1f})">Share of circling time</text>'
     )
     body.append(
         f'<text x="{(pl+w-pr)/2:.1f}" y="{yb+40:.1f}" text-anchor="middle" '
-        f'fill="{PALETTE["text_secondary"]}" font-size="12">{_esc(xlabel)}</text>'
+        f'fill="{PALETTE["text_secondary"]}" font-size="{FS_AXIS}">{_esc(xlabel)}</text>'
     )
     # unfilled density lines
     for rec, color in ((bill, SERIES["bill"]), (lead, SERIES["leader"])):
@@ -1656,7 +1754,7 @@ def turn_radius_density(density, *,
         )
         body.append(
             f'<text x="{x+dx:.1f}" y="{ly:.1f}" text-anchor="{anchor}" '
-            f'font-size="10.5" fill="{color}">median {med:g} m</text>'
+            f'font-size="{FS_NOTE}" fill="{color}">median {med:g} m</text>'
         )
     body.append(_caption_block(caption, pl, yb + 62, w - pr - pl))
     body.append("</svg>")
