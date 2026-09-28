@@ -17,6 +17,7 @@ from __future__ import annotations
 import csv
 import json
 import math
+import statistics
 from datetime import datetime
 from pathlib import Path
 
@@ -605,6 +606,237 @@ def group_scores(group_id: int) -> list[int]:
                     reverse=True,
                 )
     return []
+
+
+# --- Trajectory pooling: distance-from-course & thermalling turn radius -----
+# The 14 distance (triangle) rounds: every round except the three speed sprints
+# (4, 10, 16), which are point-to-point runs with no triangle outline to
+# measure against. Bill flew all 14 and each is pooled equally at the point
+# level (~1 Hz samples => time-weighted).
+DISTANCE_ROUNDS = [1, 2, 3, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17]
+
+
+def _seg_distance(px: float, py: float, ax: float, ay: float,
+                  bx: float, by: float) -> float:
+    """Return the distance from point ``(px, py)`` to segment ``a-b`` (metres).
+
+    Distances are computed in the flat local metre grid from :func:`projector`.
+    """
+    dx, dy = bx - ax, by - ay
+    l2 = dx * dx + dy * dy
+    if l2 == 0:
+        return math.hypot(px - ax, py - ay)
+    t = ((px - ax) * dx + (py - ay) * dy) / l2
+    t = max(0.0, min(1.0, t))
+    cx, cy = ax + t * dx, ay + t * dy
+    return math.hypot(px - cx, py - cy)
+
+
+def _dist_from_course(x: float, y: float,
+                      turnpoints: list[tuple[float, float]]) -> float:
+    """Return the straight-line distance from ``(x, y)`` to the course outline.
+
+    The outline is the closed three-leg triangle through the three turnpoints;
+    the value is the minimum distance to any of the three legs (metres).
+    """
+    a, b, c = turnpoints
+    return min(
+        _seg_distance(x, y, a[0], a[1], b[0], b[1]),
+        _seg_distance(x, y, b[0], b[1], c[0], c[1]),
+        _seg_distance(x, y, c[0], c[1], a[0], a[1]),
+    )
+
+
+def _wrap180(deg: float) -> float:
+    """Wrap a signed angle in degrees into the range ``(-180, 180]``."""
+    return (deg + 180.0) % 360.0 - 180.0
+
+
+def _histogram(values: list[float], edges: list[float]) -> list[int]:
+    """Count ``values`` into the half-open bins defined by ``edges``.
+
+    A value at or beyond the last edge falls into the final bin (so a long tail
+    is not silently dropped).
+    """
+    counts = [0] * (len(edges) - 1)
+    for v in values:
+        for i in range(len(edges) - 1):
+            if edges[i] <= v < edges[i + 1]:
+                counts[i] += 1
+                break
+        else:
+            if v >= edges[-1]:
+                counts[-1] += 1
+    return counts
+
+
+def _density(values: list[float], edges: list[float],
+             *, median_values: list[float] | None = None) -> dict:
+    """Return a density record ``{frac, n, median}`` for ``values`` over ``edges``.
+
+    ``frac`` is each bin's share of the total (sums to ~1); ``median`` is taken
+    over ``median_values`` when given (e.g. a wider sane set than the display
+    window), else over ``values``.
+    """
+    counts = _histogram(values, edges)
+    total = sum(counts) or 1
+    med_src = median_values if median_values is not None else values
+    return {
+        "frac": [c / total for c in counts],
+        "n": len(med_src),
+        "median": round(statistics.median(med_src), 1) if med_src else None,
+    }
+
+
+def pooled_distance_from_course(rounds: list[int] | None = None, *,
+                                bin_width_m: int = 20,
+                                max_m: int = 600) -> dict:
+    """Pool the distance-from-course-outline distribution across distance rounds.
+
+    For every ~1 Hz track point of Bill and of that round's same-air winner, the
+    straight-line distance to the nearest of the three triangle legs is measured
+    in the shared local metre grid (:func:`projector` + :func:`course_geometry`).
+    Because samples are ~1 Hz, each bin's share is a share of *flight time*.
+
+    Args:
+        rounds: round numbers to pool (default :data:`DISTANCE_ROUNDS`).
+        bin_width_m: histogram bin width in metres (default 20).
+        max_m: last bin edge / display ceiling in metres (default 600). The
+            median is computed over the full uncapped sample.
+
+    Returns:
+        dict: ``edges`` (bin edges, m) and ``bill``/``leader`` records, each
+        ``{frac: list[float], n: int, median: float}`` where ``frac`` is the
+        share of flight time per bin and ``median`` is in metres.
+    """
+    rounds = rounds if rounds is not None else DISTANCE_ROUNDS
+    edges = list(range(0, max_m + bin_width_m, bin_width_m))
+    vals: dict[str, list[float]] = {"bill": [], "leader": []}
+    for n in rounds:
+        r = load_round(n)
+        turnpoints = course_geometry(r["task"])["turnpoints"]
+        proj = projector(r["task"]["start_lat"], r["task"]["start_lon"])
+        bill_rows, lead_rows = full_tracks_for_round(n, clip_to_last_tpc=True)
+        for role, rows in (("bill", bill_rows), ("leader", lead_rows)):
+            for row in rows:
+                x, y = proj(row[TRACK_LAT], row[TRACK_LON])
+                vals[role].append(_dist_from_course(x, y, turnpoints))
+    return {
+        "edges": edges,
+        "bill": _density(vals["bill"], edges),
+        "leader": _density(vals["leader"], edges),
+    }
+
+
+def _sustained_climb_radii(rows: list[list], proj, *,
+                           min_duration_s: float = 12.0,
+                           min_turn_deg: float = 270.0,
+                           min_gain_m: float = 2.0) -> list[float]:
+    """Return per-point turn radii ``r = v / omega`` inside sustained climbs.
+
+    A sustained climb is a continuous run of circling (smoothed bearing rate
+    above a threshold) lasting at least ``min_duration_s``, sweeping at least
+    ``min_turn_deg`` of net turn and with a net height gain of at least
+    ``min_gain_m`` — the same thermal-circling detector the phase decomposition
+    uses. Within each such run, ``r`` is the ground speed (m/s) divided by the
+    angular rate (rad/s) at each point.
+
+    Args:
+        rows: run-relative track rows (``[t, lat, lon, alt, vario, gs_kmh]``).
+        proj: the shared ``(lat, lon) -> (x, y)`` metre-grid projector.
+        min_duration_s: minimum run length in seconds.
+        min_turn_deg: minimum absolute net turn over the run, in degrees.
+        min_gain_m: minimum net altitude gain over the run, in metres.
+
+    Returns:
+        list[float]: turn radii in metres, one per qualifying point.
+    """
+    n = len(rows)
+    if n < 2:
+        return []
+    xy = [proj(row[TRACK_LAT], row[TRACK_LON]) for row in rows]
+    course_bearing: list[float | None] = [None] * n
+    for i in range(n - 1):
+        dx = xy[i + 1][0] - xy[i][0]
+        dy = xy[i + 1][1] - xy[i][1]
+        if dx or dy:
+            course_bearing[i] = math.degrees(math.atan2(dx, dy)) % 360.0
+        else:
+            course_bearing[i] = course_bearing[i - 1] if i else 0.0
+    course_bearing[-1] = course_bearing[-2]
+    bearing_rate = [0.0] * n
+    for i in range(1, n):
+        dt = rows[i][TRACK_T] - rows[i - 1][TRACK_T]
+        if dt > 0 and course_bearing[i] is not None and course_bearing[i - 1] is not None:
+            bearing_rate[i] = _wrap180(course_bearing[i] - course_bearing[i - 1]) / dt
+    gs_ms = [rows[i][TRACK_GS] / 3.6 for i in range(n)]
+    absbr = [abs(b) for b in bearing_rate]
+    smooth = []
+    for i in range(n):
+        lo, hi = max(0, i - 1), min(n, i + 2)
+        smooth.append(sum(absbr[lo:hi]) / (hi - lo))
+    turn_threshold = 7.0  # deg/s: a wing genuinely circling, not weaving
+    radii: list[float] = []
+    i = 0
+    while i < n:
+        if smooth[i] > turn_threshold:
+            j = i
+            cum = 0.0
+            while j < n and smooth[j] > turn_threshold:
+                if j > i:
+                    cum += bearing_rate[j] * (rows[j][TRACK_T] - rows[j - 1][TRACK_T])
+                j += 1
+            lo, hi = i, j - 1
+            dur = rows[hi][TRACK_T] - rows[lo][TRACK_T]
+            gain = rows[hi][TRACK_ALT] - rows[lo][TRACK_ALT]
+            if dur >= min_duration_s and abs(cum) >= min_turn_deg and gain >= min_gain_m:
+                for k in range(lo, hi + 1):
+                    omega = abs(bearing_rate[k]) * math.pi / 180.0
+                    if omega > 0.05 and gs_ms[k] > 3:
+                        radii.append(gs_ms[k] / omega)
+            i = j
+        else:
+            i += 1
+    return radii
+
+
+def pooled_turn_radius(rounds: list[int] | None = None, *,
+                       bin_width_m: int = 5, max_m: int = 100,
+                       sane_max_m: int = 200) -> dict:
+    """Pool the thermalling turn-radius distribution across distance rounds.
+
+    For Bill and each round's same-air winner, per-point turn radii inside
+    detected sustained climbs (:func:`_sustained_climb_radii`) are pooled over
+    the distance rounds. The density is taken over the display window
+    ``(3, max_m)`` m; each pilot's median is taken over the wider sane set
+    ``(3, sane_max_m)`` m so a few wide arcs still count.
+
+    Args:
+        rounds: round numbers to pool (default :data:`DISTANCE_ROUNDS`).
+        bin_width_m: histogram bin width in metres (default 5).
+        max_m: last bin edge / display ceiling in metres (default 100).
+        sane_max_m: upper bound (m) for the median sample (default 200).
+
+    Returns:
+        dict: ``edges`` (bin edges, m) and ``bill``/``leader`` records, each
+        ``{frac: list[float], n: int, median: float}`` where ``frac`` is the
+        share of circling time per bin and ``median`` is in metres.
+    """
+    rounds = rounds if rounds is not None else DISTANCE_ROUNDS
+    edges = list(range(0, max_m + bin_width_m, bin_width_m))
+    radii: dict[str, list[float]] = {"bill": [], "leader": []}
+    for n in rounds:
+        r = load_round(n)
+        proj = projector(r["task"]["start_lat"], r["task"]["start_lon"])
+        bill_rows, lead_rows = full_tracks_for_round(n, clip_to_last_tpc=True)
+        for role, rows in (("bill", bill_rows), ("leader", lead_rows)):
+            radii[role].extend(_sustained_climb_radii(rows, proj))
+    out: dict = {"edges": edges}
+    for role in ("bill", "leader"):
+        disp = [x for x in radii[role] if 3 < x < max_m]
+        sane = [x for x in radii[role] if 3 < x < sane_max_m]
+        out[role] = _density(disp, edges, median_values=sane)
+    return out
 
 
 def build_context() -> dict:

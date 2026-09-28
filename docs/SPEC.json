@@ -328,13 +328,46 @@
     {
       "id": "RPT-022",
       "category": "content",
-      "description": "Overview (Analysis) gains a 'Performance summary' section at the top: all-rounds grouped bar charts with three bars per round - round winner (blue), overall event winner (grey), Bill (green) - one chart each for points/score, laps, average speed, and entry speed (plus entry altitude and a conditions strip e.g. solar radiation aligned beneath, so performance reads against lift). Keeps the existing Overview plots/insights below it Each Overview insight leads with a 2-3 word BOLD title, then the explanatory text, then its plot (text BEFORE the plot, not after).",
+      "description": "Overview is organised as an 'Overall Read' lead paragraph (before the sections) + a section index/links near the top, then FOUR Title-Case thematic sections. Within each section insights run top-down general->specific, each as Title -> Insight text -> Visual (+grounding/citations) -> recommendation. SECTIONS: (1) Headline Result: number cards (rank 22/38, total, gap, landings) + Within-Group Rank + Gap Breakdown (waterfall) + Where The Ground Is Lost (phase-lever ranking) + Consistency: Floor vs Ceiling + Progression Across The Week + a Landings strength callout. (2) Scoring, Laps & Speed: Score Per Round -> Laps Per Round -> Cruise Speed -> Field Position & Laps/Speed Scatter -> Speed Gaps. (3) Start Energy: Entry Speed -> Entry Altitude -> Airframe/Equipment note (RPT-025). (4) Conditions, Trajectory & Climbing: Conditions Dependence (Spearman explained in plain English) -> Trajectory Trends (RPT-023) -> Thermal Strength/Weather -> Climb Geometry -> Climb Rate -> Thermalling Turn Radius (RPT-024) -> the Round 12 ground-track embedded as a worked example (leader off-path excursions + tighter turns vs Bill). DROP the 'Conditions Link' insight; the old Performance-Summary grouped bars move into these thematic homes.",
       "roadmap": "v1.0",
       "steps": [
         "Build a grouped-bar all-rounds chart component (winner/overall-winner/Bill) and render it for score, laps, avg speed, entry speed, entry altitude; add a conditions strip",
         "Test: Performance summary renders the grouped-bar charts across all rounds with the three series, above the existing Overview content"
       ],
       "passes": true
+    },
+    {
+      "id": "RPT-023",
+      "category": "content",
+      "description": "Overview 'Trajectory Trends' insight: distance-from-course density, Bill vs round winner, pooled over the 14 distance rounds, LOG-frequency y-axis ONLY (drop the linear panel). Plain-English lead: most flight time is spent lapping on the course line (hence the log y-axis to expose rare far excursions); the winner is bimodal - tightest to the course most of the time yet ranges much further and longer when chasing lift; Bill sits in a moderate mid-band. Extend the log y-axis floor (0.1/0.01/0.001% ...) with a floor so Bill's green line ALWAYS stays above the x-axis (handle zero bins). Unfilled line per pilot; Bill green / winner blue.",
+      "roadmap": "v1.1",
+      "steps": [
+        "Add a distance-from-course log-density chart (point-to-nearest-triangle-leg) + the data helper",
+        "Test: chart renders log-y with both pilots' lines above the axis floor; captioned; plain-English lead present"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-024",
+      "category": "content",
+      "description": "Overview 'Thermalling Turn Radius' insight: turn-radius density during sustained climbs, Bill vs round winner, pooled over distance rounds (Bill median ~38 m vs winner ~29 m, ~30% wider), unfilled lines + median markers; ties to the climb-quality lever.",
+      "roadmap": "v1.1",
+      "steps": [
+        "Add a turn-radius density chart (r=v/omega during sustained climbs)",
+        "Test: chart renders both curves + median markers; captioned"
+      ],
+      "passes": false
+    },
+    {
+      "id": "RPT-025",
+      "category": "content",
+      "description": "Overview 'Start Energy' section carries an airframe/equipment note: Bill flies a Pike Paradigm; the top field is a mix (Pike Paradigm, Phantom, SkyTouch, Apollo) and the event winner also flies a Pike Paradigm - so no clear airframe advantage; the gap is technique not kit. If real online grounding on the airframes' speed/turn/L-D (glide slope) is found, cite it; otherwise note the different airframes and their general potential effects on speed, turns and glide ratio, clearly framed as general aerodynamics not a measured claim. Source data analysis/pilot_equipment.csv (self-entered model names; trust the family).",
+      "roadmap": "v1.1",
+      "steps": [
+        "Add the airframe note (researched or general) to the Start Energy section",
+        "Test: Start Energy names the airframes + the technique-not-kit framing; any performance claim is cited or clearly general"
+      ],
+      "passes": false
     },
     {
       "id": "DOC-001",

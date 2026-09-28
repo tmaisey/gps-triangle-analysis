@@ -1389,3 +1389,275 @@ def rank_strip(ranks, *, group_sizes=None, labels=None,
                     f'fill="{PALETTE["muted"]}" font-size="10">{_esc(labels[i])}</text>')
     body.append("</svg>")
     return "".join(body)
+
+
+# --- (m) Trajectory density charts (RPT-023 / RPT-024) ----------------------
+def _wrap_text(text: str, max_chars: int) -> list[str]:
+    """Greedily wrap ``text`` to lines of at most ``max_chars`` characters."""
+    words, lines, cur = text.split(), [], ""
+    for word in words:
+        if cur and len(cur) + 1 + len(word) > max_chars:
+            lines.append(cur)
+            cur = word
+        else:
+            cur = f"{cur} {word}".strip()
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def _caption_block(caption: str, x: float, y: float, width: float) -> str:
+    """Render a wrapped, top-ruled caption block at ``(x, y)`` (SVG text)."""
+    if not caption:
+        return ""
+    lines = _wrap_text(caption, max_chars=int(width / 6.0))
+    parts = [
+        f'<line x1="{x:.1f}" y1="{y-10:.1f}" x2="{x+width:.1f}" y2="{y-10:.1f}" '
+        f'stroke="{PALETTE["hairline"]}" stroke-width="1"/>'
+    ]
+    for i, line in enumerate(lines):
+        parts.append(
+            f'<text x="{x:.1f}" y="{y + i*14:.1f}" fill="{PALETTE["muted"]}" '
+            f'font-size="11">{_esc(line)}</text>'
+        )
+    return "".join(parts)
+
+
+def distance_from_course_density(density, *,
+                                 title="Time spent away from the course",
+                                 xlabel="Distance from the course triangle (m)",
+                                 caption=None, w=_W, h=None) -> str:
+    """Log-frequency density of distance from the course triangle (RPT-023).
+
+    Renders a single **log-frequency** panel (no linear panel) of how each
+    pilot's flight time is distributed by straight-line distance from the
+    three-leg course outline, Bill vs the same-air round winner, pooled over the
+    14 distance rounds. The log y-axis is floored across five decades
+    (10 % / 1 % / 0.1 % / 0.01 % / 0.001 %) and every near-zero bin is floored to
+    a value strictly above the axis baseline, so **both** density lines — and
+    Bill's green line in particular — always sit above the x-axis and never
+    touch or cross it. Lines are unfilled.
+
+    Args:
+        density: dict from :func:`data.pooled_distance_from_course` — keys
+            ``edges`` (bin edges, m) and ``bill``/``leader`` records each with
+            ``frac`` (share of flight time per bin), ``n`` and ``median`` (m).
+        title: accessible chart title.
+        xlabel: x-axis label.
+        caption: caption text; a source/method caption is built from the data
+            when omitted. Pass ``""`` to suppress.
+        w, h: SVG viewBox size.
+
+    Returns:
+        str: inline SVG (placeholder if the density is empty).
+    """
+    if not density or not density.get("edges"):
+        return _placeholder(title)
+    edges = density["edges"]
+    mids = [(edges[i] + edges[i + 1]) / 2 for i in range(len(edges) - 1)]
+    bill, lead = density["bill"], density["leader"]
+
+    pl, pr, pt = 64, 24, 44
+    yb = pt + 252                      # plot baseline (x-axis)
+    xmax = float(edges[-1])
+    if caption is None:
+        caption = (
+            f"Pooled ~1 Hz track points across the 14 distance rounds "
+            f"(Bill {bill['n']:,} pts, winner {lead['n']:,} pts); one point per "
+            f"second, so the curve is time-weighted. Distance-from-course = "
+            f"straight-line distance in the local metre grid to the nearest of "
+            f"the three triangle legs. Log frequency; unfilled 20 m bins, with "
+            f"near-zero bins floored so both lines stay above the axis. Winner = "
+            f"Bill's same-air group winner. Median distance: Bill "
+            f"{bill['median']:g} m, winner {lead['median']:g} m."
+        )
+    cap_lines = _wrap_text(caption, int((w - pr - pl) / 6.0)) if caption else []
+    if h is None:
+        h = int(yb + 62 + len(cap_lines) * 14 + 6)
+    ymin, ymax = 1e-5, 0.35            # 0.001 % .. 35 %
+    floor = 1.6e-5                     # keep every point above the axis baseline
+    yticks = [0.1, 0.01, 1e-3, 1e-4, 1e-5]   # 10 % 1 % 0.1 % 0.01 % 0.001 %
+    xticks = [t for t in (0, 100, 200, 300, 400, 500, 600) if t <= xmax]
+
+    xs = _scaler(0.0, xmax, pl, w - pr)
+    lymin, lymax = math.log10(ymin), math.log10(ymax)
+    ys_log = _scaler(lymin, lymax, yb, pt)
+
+    def ys(frac: float) -> float:
+        return ys_log(math.log10(max(frac, floor)))
+
+    body = [
+        _svg_open(w, h, title),
+        f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
+        _legend([("Bill", SERIES["bill"]), ("Round winner", SERIES["leader"])], w, y=22),
+    ]
+    # y gridlines + percentage labels
+    for tv in yticks:
+        y = ys_log(math.log10(tv))
+        body.append(
+            f'<line x1="{pl}" y1="{y:.1f}" x2="{w-pr}" y2="{y:.1f}" '
+            f'stroke="{PALETTE["hairline"]}" stroke-width="1"/>'
+        )
+        body.append(
+            f'<text x="{pl-8}" y="{y+4:.1f}" text-anchor="end" '
+            f'fill="{PALETTE["muted"]}" font-size="11" '
+            f'font-variant-numeric="tabular-nums">{tv*100:g}%</text>'
+        )
+    # x ticks
+    for tv in xticks:
+        x = xs(tv)
+        body.append(
+            f'<line x1="{x:.1f}" y1="{yb}" x2="{x:.1f}" y2="{yb+5}" '
+            f'stroke="{PALETTE["text_secondary"]}" stroke-width="1"/>'
+        )
+        body.append(
+            f'<text x="{x:.1f}" y="{yb+19:.1f}" text-anchor="middle" '
+            f'fill="{PALETTE["muted"]}" font-size="11" '
+            f'font-variant-numeric="tabular-nums">{int(tv)}</text>'
+        )
+    # axis frame (left + baseline) in ink
+    body.append(f'<line x1="{pl}" y1="{pt}" x2="{pl}" y2="{yb}" '
+                f'stroke="{PALETTE["ink"]}" stroke-width="1.5"/>')
+    body.append(f'<line x1="{pl}" y1="{yb}" x2="{w-pr}" y2="{yb}" '
+                f'stroke="{PALETTE["ink"]}" stroke-width="1.5"/>')
+    # y-axis title
+    cy = (pt + yb) / 2
+    body.append(
+        f'<text x="18" y="{cy:.1f}" text-anchor="middle" '
+        f'fill="{PALETTE["text_secondary"]}" font-size="12" '
+        f'transform="rotate(-90 18 {cy:.1f})">Share of flight time (log)</text>'
+    )
+    # x-axis title
+    body.append(
+        f'<text x="{(pl+w-pr)/2:.1f}" y="{yb+40:.1f}" text-anchor="middle" '
+        f'fill="{PALETTE["text_secondary"]}" font-size="12">{_esc(xlabel)}</text>'
+    )
+    # unfilled, floored density lines
+    for rec, color in ((bill, SERIES["bill"]), (lead, SERIES["leader"])):
+        pts = [(xs(m), ys(f)) for m, f in zip(mids, rec["frac"])]
+        body.append(_polyline(pts, color, width=2.4))
+    body.append(_caption_block(caption, pl, yb + 62, w - pr - pl))
+    body.append("</svg>")
+    return "".join(body)
+
+
+def turn_radius_density(density, *,
+                        title="Thermalling turn-radius distribution",
+                        xlabel="Thermalling turn radius (m)",
+                        caption=None, w=_W, h=None) -> str:
+    """Turn-radius density in sustained climbs, Bill vs winner (RPT-024).
+
+    Unfilled density lines of per-point turn radius ``r = v / omega`` inside
+    detected sustained climbs (>= 12 s, >= 270 deg of turn, net height gain),
+    pooled over the 14 distance rounds, with a dashed vertical marker at each
+    pilot's median.
+
+    Args:
+        density: dict from :func:`data.pooled_turn_radius` — keys ``edges``
+            (bin edges, m) and ``bill``/``leader`` records each with ``frac``
+            (share of circling time per bin), ``n`` and ``median`` (m).
+        title: accessible chart title.
+        xlabel: x-axis label.
+        caption: caption text; a source/method caption is built from the data
+            when omitted. Pass ``""`` to suppress.
+        w, h: SVG viewBox size.
+
+    Returns:
+        str: inline SVG (placeholder if the density is empty).
+    """
+    if not density or not density.get("edges"):
+        return _placeholder(title)
+    edges = density["edges"]
+    mids = [(edges[i] + edges[i + 1]) / 2 for i in range(len(edges) - 1)]
+    bill, lead = density["bill"], density["leader"]
+
+    pl, pr, pt = 64, 24, 44
+    yb = pt + 252
+    xmax = float(edges[-1])
+    if caption is None:
+        caption = (
+            f"Per-point turn radius r = v / omega (ground speed / bearing rate) "
+            f"during detected sustained climbs (>= 12 s, >= 270 deg of turn, net "
+            f"height gain), pooled over the 14 distance rounds "
+            f"(Bill {bill['n']:,} vs winner {lead['n']:,} circling samples). "
+            f"Unfilled densities over 5 m bins; dashed lines mark each pilot's "
+            f"median. Display window 0-100 m. Winner = Bill's same-air group "
+            f"winner. Median radius: Bill {bill['median']:g} m, winner "
+            f"{lead['median']:g} m."
+        )
+    cap_lines = _wrap_text(caption, int((w - pr - pl) / 6.0)) if caption else []
+    if h is None:
+        h = int(yb + 62 + len(cap_lines) * 14 + 6)
+    peak = max(max(bill["frac"], default=0), max(lead["frac"], default=0))
+    ymax = max(peak * 1.15, 1e-6)
+    xs = _scaler(0.0, xmax, pl, w - pr)
+    ys = _scaler(0.0, ymax, yb, pt)
+
+    body = [
+        _svg_open(w, h, title),
+        f'<rect x="0" y="0" width="{w}" height="{h}" fill="{PALETTE["background"]}"/>',
+        _legend([("Bill", SERIES["bill"]), ("Round winner", SERIES["leader"])], w, y=22),
+    ]
+    # y gridlines + percentage labels
+    for tv in _nice_ticks(0.0, ymax, 5):
+        y = ys(tv)
+        body.append(
+            f'<line x1="{pl}" y1="{y:.1f}" x2="{w-pr}" y2="{y:.1f}" '
+            f'stroke="{PALETTE["hairline"]}" stroke-width="1"/>'
+        )
+        body.append(
+            f'<text x="{pl-8}" y="{y+4:.1f}" text-anchor="end" '
+            f'fill="{PALETTE["muted"]}" font-size="11" '
+            f'font-variant-numeric="tabular-nums">{tv*100:g}%</text>'
+        )
+    # x ticks
+    for tv in (t for t in (0, 20, 40, 60, 80, 100) if t <= xmax):
+        x = xs(tv)
+        body.append(
+            f'<line x1="{x:.1f}" y1="{yb}" x2="{x:.1f}" y2="{yb+5}" '
+            f'stroke="{PALETTE["text_secondary"]}" stroke-width="1"/>'
+        )
+        body.append(
+            f'<text x="{x:.1f}" y="{yb+19:.1f}" text-anchor="middle" '
+            f'fill="{PALETTE["muted"]}" font-size="11" '
+            f'font-variant-numeric="tabular-nums">{int(tv)}</text>'
+        )
+    # axis frame
+    body.append(f'<line x1="{pl}" y1="{pt}" x2="{pl}" y2="{yb}" '
+                f'stroke="{PALETTE["ink"]}" stroke-width="1.5"/>')
+    body.append(f'<line x1="{pl}" y1="{yb}" x2="{w-pr}" y2="{yb}" '
+                f'stroke="{PALETTE["ink"]}" stroke-width="1.5"/>')
+    cy = (pt + yb) / 2
+    body.append(
+        f'<text x="18" y="{cy:.1f}" text-anchor="middle" '
+        f'fill="{PALETTE["text_secondary"]}" font-size="12" '
+        f'transform="rotate(-90 18 {cy:.1f})">Share of circling time</text>'
+    )
+    body.append(
+        f'<text x="{(pl+w-pr)/2:.1f}" y="{yb+40:.1f}" text-anchor="middle" '
+        f'fill="{PALETTE["text_secondary"]}" font-size="12">{_esc(xlabel)}</text>'
+    )
+    # unfilled density lines
+    for rec, color in ((bill, SERIES["bill"]), (lead, SERIES["leader"])):
+        pts = [(xs(m), ys(f)) for m, f in zip(mids, rec["frac"])]
+        body.append(_polyline(pts, color, width=2.4))
+    # dashed median markers
+    markers = [
+        (lead["median"], SERIES["leader"], "end", -4, pt + 14),
+        (bill["median"], SERIES["bill"], "start", 4, pt + 30),
+    ]
+    for med, color, anchor, dx, ly in markers:
+        if med is None or med > xmax:
+            continue
+        x = xs(med)
+        body.append(
+            f'<line x1="{x:.1f}" y1="{pt}" x2="{x:.1f}" y2="{yb}" stroke="{color}" '
+            f'stroke-width="1.3" stroke-dasharray="4 3" opacity="0.85"/>'
+        )
+        body.append(
+            f'<text x="{x+dx:.1f}" y="{ly:.1f}" text-anchor="{anchor}" '
+            f'font-size="10.5" fill="{color}">median {med:g} m</text>'
+        )
+    body.append(_caption_block(caption, pl, yb + 62, w - pr - pl))
+    body.append("</svg>")
+    return "".join(body)
