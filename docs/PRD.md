@@ -2,9 +2,9 @@
 
 Product requirements and plan. Captures intent ahead of the build so the deliverable and its scope are agreed before construction.
 
-*Status: the four-page report is **built, reviewed and fixed** — `report/gps-triangle-world-masters-oschatz-2026.html` (Home / Analysis / Recommendations / Innovations). The build-review has run (six Opus reviewers; reports in `reviews/260928T0239-*.md`, consolidated proposal in `reviews/260928T0239-consolidated.md`); the user approved it with amendments and three parallel fix agents applied the changes red→green (tests 82 → 247), followed by a Playwright re-run and a Tier 1 re-review. The **Methodology page (RPT-010) was descoped by the user on 2026-09-28**. Remaining: the repo README (DOC-001). Last updated 2026-09-28.*
+*Status: the four-page report is **built, reviewed and fixed** — `report/gps-triangle-world-masters-oschatz-2026.html` (Home / Analysis / Recommendations / Innovations). The build-review has run (six Opus reviewers; reports in `reviews/260928T0239-*.md`, consolidated proposal in `reviews/260928T0239-consolidated.md`); the user approved it with amendments and three parallel fix agents applied the changes red→green (tests 82 → 247), followed by a Playwright re-run and a Tier 1 re-review. The **Methodology page (RPT-010) was descoped by the user on 2026-09-28**. The repo README (DOC-001) is written; all 33 spec items pass (253 tests). Last updated 2026-09-28.*
 
-> **Next step:** write the repo `README.md` (DOC-001) — the last deliverable.*
+> **Next step:** user acceptance of the report and README. Open decision: the multi-start phase-window correction (§10).*
 
 ## 1. Vision
 
