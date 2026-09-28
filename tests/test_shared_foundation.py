@@ -167,9 +167,10 @@ def test_legality_consideration_is_inline_bold_not_heading():
 
 def test_fonts_inlined_no_remote_link():
     """Fonts are embedded as base64 woff2 @font-face and there is no remote font
-    link (RPT-019)."""
+    link (RPT-019). Four faces: three Spectral weights plus one variable Source
+    Sans 3 spanning 400-700 (the per-weight files were byte-identical copies)."""
     face = design.font_face_css()
-    assert face.count("@font-face") == 8
+    assert face.count("@font-face") == 4
     assert "data:font/woff2;base64," in face
     html = assemble.build_html()
     assert "fonts.googleapis.com" not in html

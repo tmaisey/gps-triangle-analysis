@@ -29,6 +29,9 @@ PALETTE: dict[str, str] = {
     "primary_dark": "#046A38", # dark green accent for emphasis
     "leader": "#00A3E0",       # same-air leader / benchmark (teal-blue)
     "leader_light": "#62B5E5",
+    # Amber marks the dominant loss component in the gap-decomposition
+    # waterfalls (the one bar the reader is meant to act on). It is the only
+    # semantic use left after the build review; it is never decorative.
     "attention": "#ED8B00",    # loss / attention (amber)
     "field": "#D0D0CE",        # field / other pilots (neutral)
 }
@@ -61,15 +64,18 @@ GOOGLE_FONTS_LINK = ""
 FONTS_DIR = Path(__file__).resolve().parent / "assets" / "fonts"
 
 # filename stem -> (family, css weight, css style). Latin subset only.
+#
+# Source Sans 3 is shipped once: the cached file is a *variable* woff2, so one
+# ``font-weight: 400 700`` face covers every weight the report uses (the four
+# per-weight files Google Fonts serves are byte-identical copies of it, ~86 KB
+# of duplicate payload before base64). Spectral is a static family, so its
+# three used weights are separate files; the italic is not used anywhere and is
+# not embedded.
 _FONT_FACES = [
-    ("Spectral-400", "Spectral", 400, "normal"),
-    ("Spectral-500", "Spectral", 500, "normal"),
-    ("Spectral-600", "Spectral", 600, "normal"),
-    ("Spectral-400i", "Spectral", 400, "italic"),
-    ("SourceSans3-400", "Source Sans 3", 400, "normal"),
-    ("SourceSans3-500", "Source Sans 3", 500, "normal"),
-    ("SourceSans3-600", "Source Sans 3", 600, "normal"),
-    ("SourceSans3-700", "Source Sans 3", 700, "normal"),
+    ("Spectral-400", "Spectral", "400", "normal"),
+    ("Spectral-500", "Spectral", "500", "normal"),
+    ("Spectral-600", "Spectral", "600", "normal"),
+    ("SourceSans3-400", "Source Sans 3", "400 700", "normal"),
 ]
 
 
@@ -77,7 +83,8 @@ def font_face_css() -> str:
     """Return ``@font-face`` rules with the woff2 fonts embedded as data URIs.
 
     Reads the cached Latin-subset woff2 files under :data:`FONTS_DIR`, base64-
-    encodes each and emits one ``@font-face`` rule per used weight/style, with
+    encodes each and emits one ``@font-face`` rule per embedded file (Source
+    Sans 3 as a single variable face spanning ``400 700``), with
     ``font-display: swap`` and a system fallback in the family stacks. This makes
     the single-file report render with the intended typefaces offline, with no
     remote network dependency (RPT-019 / ADR-001). Missing files are skipped so
@@ -138,8 +145,16 @@ def css() -> str:
 
 * {{ box-sizing: border-box; }}
 
-/* Anchor targets clear the 60px sticky top nav when scrolled to. */
-.section, .summary, figure, h2, h3 {{ scroll-margin-top: 76px; }}
+/* Anchor targets clear the 60px sticky top nav when scrolled to. Keyed on
+   [id] so every anchor target is covered, including bare wrapper divs. */
+[id] {{ scroll-margin-top: 76px; }}
+
+/* A deliberate focus ring for the keyboard path (nav, xrefs, collapsibles). */
+:focus-visible {{
+  outline: 2px solid var(--primary-dark);
+  outline-offset: 2px;
+  border-radius: 3px;
+}}
 
 html, body {{
   margin: 0;
@@ -169,6 +184,19 @@ h3 {{ font-size: 1.2rem; margin-top: 1.3em; }}
 p {{ margin: 0 0 1em; color: var(--ink); }}
 a {{ color: var(--primary-dark); text-decoration: none; }}
 a:hover {{ text-decoration: underline; }}
+/* Cross-page references read and behave as links (the routing JS intercepts
+   the click, so the href is the keyboard/affordance contract). */
+a.xref {{ cursor: pointer; color: var(--primary-dark); }}
+a.xref:hover {{ text-decoration: underline; }}
+
+/* Shown only when scripting is unavailable (the Home page still renders). */
+.noscript-note {{
+  max-width: var(--maxw);
+  margin: 1.2rem auto 0;
+  padding: 0 var(--gutter);
+  color: var(--text-2);
+  font-size: 0.95rem;
+}}
 
 .num {{ font-variant-numeric: tabular-nums; }}
 
@@ -263,6 +291,7 @@ a:hover {{ text-decoration: underline; }}
   font-size: 0.8rem;
   color: var(--muted);
   margin-left: 0.75rem;
+  white-space: nowrap;
 }}
 .section-body {{ overflow: hidden; }}
 .section.collapsed .section-body {{ display: none; }}
@@ -288,6 +317,10 @@ a:hover {{ text-decoration: underline; }}
 /* ---- Figures ----------------------------------------------------------- */
 figure {{ margin: 1.4rem 0; }}
 figure svg {{ max-width: 100%; height: auto; display: block; }}
+/* Chart holder. Inert at laptop/desktop widths: it adds no box, no scrollbar
+   and no layout of its own. The mobile rules at the foot of this sheet turn it
+   into a horizontal scroller so chart labels stay legible on a phone. */
+.fig-scroll {{ max-width: 100%; }}
 figcaption {{
   color: var(--text-2);
   font-size: 0.88rem;
@@ -386,7 +419,7 @@ figcaption {{
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }}
-.dash svg {{ height: auto; }}
+.dash svg {{ max-width: 100%; height: auto; }}
 @media (max-width: 760px) {{
   .dash {{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 24px; }}
 }}
@@ -411,5 +444,26 @@ figcaption {{
   .topnav-links.open {{ display: flex; }}
   .topnav-links a {{ padding: 0.7rem 0; }}
   .topnav-title {{ font-size: 1rem; white-space: normal; }}
+
+  /* Section controls move under the heading instead of sharing its row, where
+     the toggle and the back-to-top link used to overlap each other and the
+     heading at phone widths. */
+  .section-head {{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+  }}
+  .section-head h2, .section-head h3 {{ margin: 0.7em 0 0.1em; }}
+  .section-head > span {{ display: block; margin-bottom: 0.6em; }}
+  .back-to-top {{ margin-left: 1rem; }}
+
+  /* Charts keep a minimum drawing width and scroll horizontally inside their
+     own box, so axis labels stay legible instead of shrinking to ~5px. */
+  .fig-scroll {{
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }}
+  .fig-scroll > svg {{ min-width: 600px; }}
 }}
 """

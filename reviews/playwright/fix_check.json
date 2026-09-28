@@ -1,0 +1,487 @@
+{
+  "console_errors": [],
+  "page_errors": [],
+  "desktop": {
+    "hash_after_nav": "",
+    "overview_charts": [
+      {
+        "label": "Bill's within-group finishing rank by round",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 12,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Gap to the winner, by task type",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Clean-lap time deficit vs the same-air leader",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Distance-round scores, with the two low rounds marked",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Round 17 cumulative laps - Bill vs the same-air leader",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Across the week: normalised score vs raw laps",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Round score by round (normalised to 1000)",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 12,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Laps completed by distance round",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 12,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Average task speed by distance round",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 12,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Grinder vs sprinter - the distance-round field",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Speeds: Bill vs same-air leader",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Start-gate entry speed by round",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 12,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Start-gate entry altitude by round",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 12,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Relative standing vs thermal strength",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Time spent away from the course",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Solar radiation by round (thermal-strength proxy)",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 12,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Climb geometry: Bill vs leader",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Climb rate: Bill vs leader",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Thermalling turn-radius distribution",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 12,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Round 12 ground track - Bill vs the same-air leader",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      }
+    ],
+    "overview_overflow": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440
+    },
+    "round12_charts": [
+      {
+        "label": "Energy Management",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Round 12 ground track and course",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      },
+      {
+        "label": "Round 12 cumulative laps - Bill vs leader",
+        "renderedW": 1008,
+        "viewBoxW": 1008,
+        "scale": 1,
+        "minFontPx": 13,
+        "holderScrolls": false,
+        "holderOverflowX": "visible"
+      }
+    ],
+    "round12_overflow": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440
+    },
+    "round12_head_overlap": [],
+    "keyboard": {
+      "focusable": true,
+      "collapsedAfterEnter": true,
+      "ariaAfterEnter": "false",
+      "restored": true,
+      "ariaRestored": "true"
+    },
+    "nav_hrefs": [
+      "#page-home",
+      "#page-analysis",
+      "#page-recommendations",
+      "#page-innovations"
+    ],
+    "xref": {
+      "activePage": "page-recommendations",
+      "hash": "",
+      "targetVisible": true
+    }
+  },
+  "mobile": {
+    "burger_aria": "true",
+    "hash_after_nav": "",
+    "overview_charts": [
+      {
+        "label": "Bill's within-group finishing rank by round",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.14,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Gap to the winner, by task type",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Clean-lap time deficit vs the same-air leader",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Distance-round scores, with the two low rounds marked",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Round 17 cumulative laps - Bill vs the same-air leader",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Across the week: normalised score vs raw laps",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Round score by round (normalised to 1000)",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.14,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Laps completed by distance round",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.14,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Average task speed by distance round",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.14,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Grinder vs sprinter - the distance-round field",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Speeds: Bill vs same-air leader",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Start-gate entry speed by round",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.14,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Start-gate entry altitude by round",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.14,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Relative standing vs thermal strength",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Time spent away from the course",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Solar radiation by round (thermal-strength proxy)",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.14,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Climb geometry: Bill vs leader",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Climb rate: Bill vs leader",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Thermalling turn-radius distribution",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.14,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Round 12 ground track - Bill vs the same-air leader",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      }
+    ],
+    "overview_overflow": {
+      "scrollWidth": 390,
+      "clientWidth": 390
+    },
+    "round12_charts": [
+      {
+        "label": "Energy Management",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Round 12 ground track and course",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      },
+      {
+        "label": "Round 12 cumulative laps - Bill vs leader",
+        "renderedW": 600,
+        "viewBoxW": 1008,
+        "scale": 0.595,
+        "minFontPx": 7.74,
+        "holderScrolls": true,
+        "holderOverflowX": "auto"
+      }
+    ],
+    "round12_overflow": {
+      "scrollWidth": 390,
+      "clientWidth": 390
+    },
+    "round12_head_overlap": [],
+    "keyboard": {
+      "focusable": true,
+      "collapsedAfterEnter": true,
+      "ariaAfterEnter": "false",
+      "restored": true,
+      "ariaRestored": "true"
+    },
+    "nav_hrefs": [
+      "#page-home",
+      "#page-analysis",
+      "#page-recommendations",
+      "#page-innovations"
+    ],
+    "xref": {
+      "activePage": "page-recommendations",
+      "hash": "",
+      "targetVisible": true
+    }
+  }
+}

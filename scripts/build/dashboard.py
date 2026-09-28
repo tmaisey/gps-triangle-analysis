@@ -21,7 +21,13 @@ from __future__ import annotations
 import html
 import math
 
+from . import components as C
 from .design import PALETTE
+
+# The public results page for the whole event (the dashboard's data source).
+_EVENT_URL = (
+    "https://www.rcmodelspot.com/Ranking/f772fc7c-c4c5-406d-9c21-f4e76044ddb7"
+)
 
 # Component palette (mirrors the v6 prototype tokens).
 BILL = PALETTE["primary"]
@@ -46,7 +52,8 @@ def _fmt(v, dec=1) -> str:
 
 
 # --- Individual components --------------------------------------------------
-def bullet(bill, leader, domain_max, *, dec=1, w=138, th=196) -> str:
+def bullet(bill, leader, domain_max, *, dec=1, w=138, th=196,
+           label="Value", unit="", cap_note="cap") -> str:
     """Vertical bullet plot: Bill's value against the leader and a domain ceiling.
 
     The grey track's top edge is the domain maximum — the regs cap where one
@@ -62,6 +69,10 @@ def bullet(bill, leader, domain_max, *, dec=1, w=138, th=196) -> str:
         dec: decimal places for the value readouts.
         w: SVG width.
         th: track height in px.
+        label: what the metric is, for the accessible name (e.g. 'Entry speed').
+        unit: the unit both values are in (e.g. 'km/h').
+        cap_note: how to describe ``domain_max`` in the accessible name
+            (e.g. 'regs cap' or 'chart ceiling').
 
     Returns:
         str: inline SVG.
@@ -76,7 +87,10 @@ def bullet(bill, leader, domain_max, *, dec=1, w=138, th=196) -> str:
 
     by = y(bill)
     ly = y(leader)
-    parts = [_open(w, bottom + 8, "bullet")]
+    unit_txt = f" {unit}" if unit else ""
+    aria = (f"{label}: Bill {_fmt(bill, dec)}{unit_txt} versus leader "
+            f"{_fmt(leader, dec)}{unit_txt}, {cap_note} {_fmt(dm, 0)}{unit_txt}")
+    parts = [_open(w, bottom + 8, aria)]
     parts.append(f'<rect x="{track_x}" y="{top}" width="{track_w}" height="{th}" '
                  f'rx="4" fill="{TRACK}"/>')
     parts.append(f'<rect x="{track_x}" y="{by:.1f}" width="{track_w}" '
@@ -113,7 +127,7 @@ def violin(scores, bill_score, *, w=138, th=196) -> str:
     half_w = 30
     scores = [s for s in (scores or []) if s is not None]
     if not scores:
-        return _open(w, bottom + 8, "violin") + "</svg>"
+        return _open(w, bottom + 8, "Group score density: no group scores") + "</svg>"
     dmin, dmax = min(scores), 1000
     span = (dmax - dmin) or 1
 
@@ -138,7 +152,9 @@ def violin(scores, bill_score, *, w=138, th=196) -> str:
     right = "".join(
         f"L{cx + dens[i]/dmaxv*half_w:.2f} {ys[i]:.2f} " for i in range(n - 1, -1, -1)
     )
-    parts = [_open(w, bottom + 8, "violin")]
+    aria = (f"Group score density: Bill {int(bill_score)} against a winning "
+            f"1000, lowest in group {int(dmin)}, {len(scores)} pilots")
+    parts = [_open(w, bottom + 8, aria)]
     parts.append(f'<path d="{left}{right}Z" fill="{FIELD}" opacity="0.9"/>')
     win_y = y(1000)
     by = y(bill_score)
@@ -172,7 +188,7 @@ def laps_bars(bill, leader, *, w=112, h=132) -> str:
     mx = max(bill, leader, 1)
     bar_max = base - top_pad
     x0 = (w - (bw * 2 + gap)) / 2
-    parts = [_open(w, h, "laps")]
+    parts = [_open(w, h, f"Laps: Bill {int(bill)} versus leader {int(leader)}")]
 
     def draw(x, val, col):
         hh = (val / mx) * bar_max
@@ -196,19 +212,23 @@ def _compass_point(deg) -> str:
     return _COMPASS_16[round((deg % 360) / 22.5) % 16]
 
 
-def wind_card(dir_deg, *, s=118) -> str:
+def wind_card(dir_deg, *, s=118, speed_kmh=None) -> str:
     """Compass card with an arrow pointing the way the wind blows (inward).
 
     Args:
         dir_deg: bearing the wind blows FROM (degrees).
         s: square SVG side length.
+        speed_kmh: optional wind speed, included in the accessible name.
 
     Returns:
         str: inline SVG.
     """
     cx = cy = s / 2
     r = 40
-    parts = [_open(s, s, "wind")]
+    aria = f"Wind from {_compass_point(dir_deg)} {int(round(dir_deg)):03d} degrees"
+    if isinstance(speed_kmh, (int, float)):
+        aria += f" at {_fmt(speed_kmh, 1)} km/h"
+    parts = [_open(s, s, aria)]
     parts.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" '
                  f'stroke="{HAIR}" stroke-width="1.4"/>')
     for i, lab in enumerate(["N", "E", "S", "W"]):
@@ -235,13 +255,14 @@ def wind_card(dir_deg, *, s=118) -> str:
     return "".join(parts)
 
 
-def solar_bar(rad, rad_min, rad_max, *, w=70, h=150) -> str:
+def solar_bar(rad, rad_min, rad_max, *, w=90, h=150) -> str:
     """Solar-radiation colour bar, height & colour normalised across all rounds.
 
     The bar height is proportional to the round's solar radiation normalised over
     all 17 rounds (a small bar still shows at the minimum); the solid fill
     interpolates deep red (at the event maximum) to pastel yellow (at the
-    minimum). No scale or labels — it is a relative lift proxy.
+    minimum). The value is printed beside the bar so the block is decodable on
+    its own; the colour remains a relative lift proxy.
 
     Args:
         rad: this round's shortwave radiation.
@@ -263,18 +284,37 @@ def solar_bar(rad, rad_min, rad_max, *, w=70, h=150) -> str:
     col = f"rgb({lerp(y_el[0], r_el[0])},{lerp(y_el[1], r_el[1])},{lerp(y_el[2], r_el[2])})"
     base, min_h, max_h, bw = 138, 16, 118, 44
     hh = min_h + norm * (max_h - min_h)
-    parts = [_open(w, h, "solar")]
-    parts.append(f'<rect x="{(w-bw)/2:.1f}" y="{base-hh:.1f}" width="{bw}" '
+    aria = (f"Solar radiation {_fmt(rad, 0)} watts per square metre, "
+            f"{norm*100:.0f}% of the event range "
+            f"({_fmt(rad_min, 0)} to {_fmt(rad_max, 0)})")
+    parts = [_open(w, h, aria)]
+    parts.append(f'<rect x="4" y="{base-hh:.1f}" width="{bw}" '
                  f'height="{hh:.1f}" rx="4" fill="{col}"/>')
+    parts.append(f'<text x="{4+bw+8}" y="{base-hh+13:.1f}" fill="{INK}" '
+                 f'font-size="13" font-weight="700">{_fmt(rad, 0)}</text>')
+    parts.append(f'<text x="{4+bw+8}" y="{base-hh+27:.1f}" fill="{SEC}" '
+                 f'font-size="10">W/m²</text>')
     parts.append("</svg>")
     return "".join(parts)
 
 
 def _open(w, h, label) -> str:
-    """Open an accessible SVG element."""
+    """Open an accessible SVG element.
+
+    Args:
+        w: viewBox width.
+        h: viewBox height.
+        label: the accessible name. Each tile passes a sentence carrying its own
+            values ("Entry speed: Bill 71 km/h versus leader 95 km/h, regs cap
+            120 km/h"), so a screen reader announces the reading rather than the
+            chart type.
+
+    Returns:
+        str: the opening ``<svg>`` tag.
+    """
     return (f'<svg viewBox="0 0 {w:.0f} {h:.0f}" width="{w:.0f}" height="{h:.0f}" '
-            f'role="img" aria-label="{label}" xmlns="http://www.w3.org/2000/svg" '
-            f'font-family="inherit">')
+            f'role="img" aria-label="{_esc(label)}" '
+            f'xmlns="http://www.w3.org/2000/svg" font-family="inherit">')
 
 
 # --- Number card (clean big number, no accent bar) -------------------------
@@ -329,8 +369,9 @@ def dashboard(round_data: dict) -> str:
             :func:`data.load_round`).
 
     Returns:
-        str: an HTML ``<div class="dash-wrap">`` fragment. The styling classes
-        are defined in :func:`design.css`.
+        str: a captioned ``<figure>`` wrapping the ``<div class="dash-wrap">``
+        grid, so the dashboard is one captioned figure like every other visual
+        in the report. The styling classes are defined in :func:`design.css`.
     """
     from . import data as D
 
@@ -356,20 +397,24 @@ def dashboard(round_data: dict) -> str:
               cap="Field score density. Winner 1000, Bill over the top."),
         _cell("Entry speed", bullet(b["entry_speed_kmh"], lead["entry_speed_kmh"],
                                     round_data["task"].get("max_entry_speed_kmh", 120),
-                                    dec=1),
+                                    dec=1, label="Entry speed", unit="km/h",
+                                    cap_note="regs cap"),
               cap="km/h at gate. Track top = 120 regs cap."),
         _cell("Entry altitude", bullet(b["entry_alt_m"], lead["entry_alt_m"],
                                        round_data["task"].get("max_entry_alt_m", 400),
-                                       dec=0),
+                                       dec=0, label="Entry altitude", unit="m",
+                                       cap_note="regs cap"),
               cap="m at gate. Track top = 400 regs cap."),
         _cell("Single-lap speed" if is_speed else "Average speed",
-              bullet(b["speed_kmh"], lead["speed_kmh"], avg_ceiling, dec=1),
+              bullet(b["speed_kmh"], lead["speed_kmh"], avg_ceiling, dec=1,
+                     label="Single-lap speed" if is_speed else "Average speed",
+                     unit="km/h", cap_note="chart ceiling"),
               cap=("km/h over the single run. No regs cap." if is_speed
                    else "km/h over task. No regs cap.")),
     ]
     # --- row 2 ---
     wind_body = (
-        wind_card(wind.get("dir_deg", 0))
+        wind_card(wind.get("dir_deg", 0), speed_kmh=wind.get("speed_kmh"))
         + f'<div class="dash-sub"><span style="font-size:15px">'
           f'{_fmt(wind.get("speed_kmh", 0), 1)}</span> km/h</div>'
         + f'<div class="dash-sub">{_compass_point(wind.get("dir_deg", 0))} '
@@ -385,9 +430,22 @@ def dashboard(round_data: dict) -> str:
               sub="Relative to all 17 rounds · lift proxy"),
     ]
     grid = ("".join(row1) + '<div class="dash-divider"></div>' + "".join(row2))
-    return (
+    wrap = (
         '<div class="dash-wrap">'
         + _round_key(leader_name)
         + f'<div class="dash">{grid}</div>'
         + "</div>"
     )
+    caption = (
+        f"Round {n} at a glance: Bill (green) against his same-air round leader "
+        f"{leader_name} (blue), with the regs limits and the rest of the group "
+        f"in grey. Top row - group score density, entry speed and entry altitude "
+        f"against their regulation caps, and "
+        f"{'single-lap' if is_speed else 'average'} speed. Bottom row - laps, "
+        f"{'field' if is_speed else 'within-group'} rank, the wind the round was "
+        f"flown in, and solar radiation as a lift proxy relative to the other 16 "
+        f"rounds. Each panel carries its own values."
+    )
+    return C.figure(wrap, caption, fig_id=f"r{n}-fig-dashboard",
+                    source=(_EVENT_URL, "event results (rcmodelspot)"),
+                    scroll=False)

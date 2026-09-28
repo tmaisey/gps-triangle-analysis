@@ -12,9 +12,16 @@ lives in :mod:`assemble`.
 
 from __future__ import annotations
 
+import contextlib
 import html
 
 from .design import GOOGLE_FONTS_LINK, css
+
+# Default heading level for :func:`collapsible`. Pages call ``collapsible``
+# without a level; :func:`heading_level` lets the assembler declare the
+# surrounding context (e.g. round views already own an ``<h2>`` title, so their
+# subsections must be ``<h3>``) without every page having to pass it.
+_DEFAULT_HEADING_LEVEL = 2
 
 # The four top-level pages (id, label). Order is fixed and load-bearing:
 # tests assert exactly these four nav links.
@@ -31,6 +38,31 @@ TITLE_TEXT = "GPS Triangle World Masters, Oschatz 2026"
 def esc(text: str) -> str:
     """HTML-escape ``text`` for safe inclusion in markup."""
     return html.escape(str(text), quote=True)
+
+
+@contextlib.contextmanager
+def heading_level(level: int):
+    """Set the default heading level used by :func:`collapsible` in this block.
+
+    Page modules build their sections with :func:`collapsible` and do not know
+    what encloses them. The assembler wraps a render call in this context to
+    declare the depth — for example the per-round views, which emit their own
+    ``<h2>`` round title, so every section inside them is an ``<h3>``. An
+    explicit ``level=`` argument on :func:`collapsible` still wins.
+
+    Args:
+        level: heading level (2 or 3) for sections rendered inside the block.
+
+    Yields:
+        None: for use as a ``with`` block.
+    """
+    global _DEFAULT_HEADING_LEVEL
+    previous = _DEFAULT_HEADING_LEVEL
+    _DEFAULT_HEADING_LEVEL = level
+    try:
+        yield
+    finally:
+        _DEFAULT_HEADING_LEVEL = previous
 
 
 def head(title: str = TITLE_TEXT) -> str:
@@ -57,37 +89,44 @@ def topnav() -> str:
     """Return the sticky top navigation bar.
 
     Left: the plain-text report title (no logo/emoji). Right: always-visible
-    links for the four pages, plus a burger toggle shown at <=720px. The
-    links carry ``data-nav`` attributes the routing JS binds to.
+    links for the four pages, plus a burger toggle shown at <=720px. Each link
+    carries a real ``href="#page-..."`` so it is in the tab order and works
+    without scripting; the delegated routing handler intercepts the click (and
+    the keyboard activation) via the ``data-nav`` attribute.
 
     Returns:
         str: the ``<nav>`` fragment.
     """
     links = "".join(
-        f'<a data-nav="{pid}" onclick="showPage(\'{pid}\')">{esc(label)}</a>'
+        f'<a data-nav="{pid}" href="#page-{pid}">{esc(label)}</a>'
         for pid, label in NAV_PAGES
     )
     return (
         '<nav class="topnav"><div class="topnav-inner">'
         f'<span class="topnav-title">{esc(TITLE_TEXT)}</span>'
-        '<button class="burger" aria-label="Menu" '
-        'onclick="toggleBurger()">Menu</button>'
+        '<button type="button" class="burger" aria-label="Menu" '
+        'aria-expanded="false" aria-controls="topnav-links" '
+        'onclick="toggleBurger(this)">Menu</button>'
         f'<div class="topnav-links" id="topnav-links">{links}</div>'
         "</div></nav>"
     )
 
 
-def page_wrap(page_id: str, inner: str) -> str:
+def page_wrap(page_id: str, inner: str, *, active: bool = False) -> str:
     """Wrap a page's content in its routing container.
 
     Args:
         page_id: one of the NAV_PAGES ids (``home``/``analysis``/...).
         inner: the page's inner HTML.
+        active: mark this page visible in the static markup. The assembler sets
+            it on Home so the file is not blank when scripting is unavailable;
+            the routing JS is idempotent over it.
 
     Returns:
         str: a ``<section class="page" id="page-...">`` wrapper.
     """
-    return f'<section class="page" id="page-{esc(page_id)}">{inner}</section>'
+    cls = "page active" if active else "page"
+    return f'<section class="{cls}" id="page-{esc(page_id)}">{inner}</section>'
 
 
 def summary(intro: str, bullets: list[tuple[str, str]], *,
@@ -117,26 +156,29 @@ def summary(intro: str, bullets: list[tuple[str, str]], *,
 
 
 def collapsible(section_id: str, heading: str, body: str, *,
-                level: int = 2, top_id: str = "top",
+                level: int | None = None, top_id: str = "top",
                 collapsed: bool = False) -> str:
     """Return a collapsible section with a back-to-top control.
 
-    The header is clickable to toggle the body; a small back-to-top link jumps
-    to the page's summary. Sections carry ``data-section`` so the
-    expand/collapse-all controls can target them.
+    The header toggles the body on click and on Enter/Space: it carries
+    ``role="button"``, ``tabindex="0"`` and an ``aria-expanded`` state the app
+    JS keeps in sync, so the section is fully operable from the keyboard. A
+    small back-to-top link jumps to the page's summary. Sections carry
+    ``data-section`` so the expand/collapse-all controls can target them.
 
     Args:
         section_id: stable anchor id for the section (summary bullets link here).
         heading: section heading text.
         body: the section's inner HTML.
-        level: heading level (2 or 3).
+        level: heading level (2 or 3). Defaults to the level declared by the
+            enclosing :func:`heading_level` block (2 at the top level).
         top_id: anchor id to scroll back to (the page summary).
         collapsed: whether the section starts collapsed.
 
     Returns:
         str: a ``<div class="section">`` fragment.
     """
-    tag = f"h{level}"
+    tag = f"h{level if level is not None else _DEFAULT_HEADING_LEVEL}"
     # All sections start EXPANDED on load for every page (user preference); the
     # `collapsed` argument is retained for call compatibility but no longer sets
     # the initial state. Expand all / Collapse all still toggle at runtime.
@@ -147,7 +189,8 @@ def collapsible(section_id: str, heading: str, body: str, *,
     toggle_label = "Collapse"
     return (
         f'<div class="{cls}" data-section id="{esc(section_id)}">'
-        '<div class="section-head" onclick="toggleSection(this)">'
+        '<div class="section-head" role="button" tabindex="0" '
+        'aria-expanded="true" onclick="toggleSection(this)">'
         f"<{tag}>{esc(heading)}</{tag}>"
         "<span>"
         f'<span class="section-toggle">{toggle_label}</span>'
@@ -176,7 +219,8 @@ def expand_collapse_controls() -> str:
 
 
 def figure(svg: str, caption: str, *, fig_id: str | None = None,
-           source: tuple[str, str] | list[tuple[str, str]] | None = None) -> str:
+           source: tuple[str, str] | list[tuple[str, str]] | None = None,
+           scroll: bool = True) -> str:
     """Wrap an inline-SVG chart in a captioned ``<figure>``.
 
     Every figure in the report is captioned (DSN-001), so ``caption`` must be
@@ -196,6 +240,10 @@ def figure(svg: str, caption: str, *, fig_id: str | None = None,
         fig_id: optional element id for anchoring.
         source: an optional ``(url, text)`` pair, or a list of them, appended to
             the caption as ``Source: <a>...</a>`` external links.
+        scroll: wrap the figure body in the ``.fig-scroll`` holder, which keeps
+            a minimum chart width and scrolls horizontally below the mobile
+            breakpoint (and is inert above it). Pass ``False`` for content that
+            reflows on its own, such as the per-round dashboard grid.
 
     Returns:
         str: a ``<figure>`` with a non-empty ``<figcaption>``.
@@ -210,7 +258,8 @@ def figure(svg: str, caption: str, *, fig_id: str | None = None,
         if links:
             cap = f"{cap} Source: {links}."
     idattr = f' id="{esc(fig_id)}"' if fig_id else ""
-    return f"<figure{idattr}>{svg}<figcaption>{cap}</figcaption></figure>"
+    body = f'<div class="fig-scroll">{svg}</div>' if scroll else svg
+    return f"<figure{idattr}>{body}<figcaption>{cap}</figcaption></figure>"
 
 
 def stat_tile(value: str, label: str, sub: str = "") -> str:
