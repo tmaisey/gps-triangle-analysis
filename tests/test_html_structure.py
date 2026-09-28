@@ -15,7 +15,7 @@ import re
 import pytest
 from bs4 import BeautifulSoup
 
-from scripts.build import assemble
+from scripts.build import assemble, links
 
 # Broad emoji ranges (pictographs, symbols, dingbats, flags, misc).
 EMOJI_RE = re.compile(
@@ -52,9 +52,17 @@ def test_exactly_four_topnav_links(soup):
 
 
 def test_title_text_present(soup):
-    """The report title text appears in the nav bar (RPT-017 retitle)."""
+    """The report title reads the same in the nav bar, <title> and the Home h1.
+
+    RPT-017 names all three surfaces explicitly, so all three are asserted.
+    """
     assert "GPS Triangle World Masters, Oschatz 2026" in soup.select_one(
         ".topnav-title").get_text()
+    assert soup.select_one("title").get_text(strip=True) == \
+        "GPS Triangle World Masters, Oschatz 2026"
+    h1 = soup.select_one("#page-home h1")
+    assert h1 is not None and h1.get_text(strip=True) == \
+        "GPS Triangle World Masters, Oschatz 2026"
 
 
 def test_home_is_default_page(soup):
@@ -156,17 +164,111 @@ def test_no_old_title_and_legality_wording(html):
     assert "Legality Consideration" in html
 
 
-def test_regs_section_references_are_linked(html):
-    """Every 'section 2.7' regs mention sits inside a gps-triangle.net link
-    (RPT-016) - no bare unlinked regs reference remains."""
-    for m in re.finditer(r"section 2\.7", html):
+#: Prose phrases that are regulations references and must therefore be
+#: hyperlinked to gps-triangle.net (RPT-016). Adjectival compounds
+#: ("rules-legal"), the class name in the event subtitle ("Sport class") and
+#: in-SVG chart furniture ("Regs limit / Other pilots") are deliberately out of
+#: scope - they are not citations.
+REGS_PHRASES = [
+    r"section 2\.7",
+    r"Sport-class regulations",
+    r"Sport-class rules",
+]
+
+
+@pytest.mark.parametrize("phrase", REGS_PHRASES)
+def test_regs_references_are_linked(html, phrase):
+    """Every regs reference in prose sits inside a gps-triangle.net link.
+
+    RPT-016 requires section-specific mentions to point at the Sport-class regs
+    PDF and general mentions at the regulations index; both live on
+    gps-triangle.net. A bare, unlinked regs reference fails here.
+    """
+    found = list(re.finditer(phrase, html))
+    assert found, f"regs phrase never appears: {phrase}"
+    # Assertions compare short extracts, never the whole 2.8 MB document: a
+    # failing membership test on a megabyte string makes pytest's assertion
+    # explainer crawl.
+    unlinked = []
+    for m in found:
         start = html.rfind("<a ", 0, m.start())
         end = html.find("</a>", m.start())
-        assert start != -1 and end != -1, "regs mention not inside an anchor"
-        seg = html[start:end]
-        href = re.search(r'href="([^"]+)"', seg)
-        assert href and "gps-triangle.net" in href.group(1), \
-            f"regs 'section 2.7' not linked to gps-triangle.net: {seg[:80]}"
+        if start == -1 or end == -1:
+            unlinked.append(html[max(0, m.start() - 60):m.end() + 20])
+            continue
+        href = re.search(r'href="([^"]+)"', html[start:end])
+        if not href or "gps-triangle.net" not in href.group(1):
+            unlinked.append(html[start:start + 100])
+    assert not unlinked, f"{phrase} not linked to gps-triangle.net: {unlinked}"
+
+
+def test_external_links_are_allowlisted(soup):
+    """Every external href is a URL from the verified allowlist (RPT-008).
+
+    The spec's own test step is "every external link resolves". Resolution is
+    checked by hand when a constant is added to :mod:`scripts.build.links`; this
+    test holds the build to that allowlist so no unverified URL can ship. It
+    performs no network access.
+    """
+    external = {a["href"] for a in soup.select("a[href]")
+                if a["href"].startswith("http")}
+    assert external, "no external grounding links at all"
+    unknown = external - links.ALLOWED_EXTERNAL_URLS
+    assert not unknown, f"external links outside the verified allowlist: {unknown}"
+
+
+def test_no_dead_legacy_regs_urls(html):
+    """The two 404 WordPress-style gps-triangle.net paths never reappear."""
+    dead = [p for p in ("gps-triangle/regulations-documents", "wp-content/uploads")
+            if p in html]
+    assert not dead, f"dead regs URL fragments still emitted: {dead}"
+
+
+#: Short words that stay lower-case mid-title under the report's heading
+#: convention (the one the h2s already follow, e.g. "Cumulative Laps vs
+#: Leader", "What to Train from This Round").
+SMALL_WORDS = {
+    "a", "an", "and", "as", "at", "but", "by", "for", "from", "in", "into",
+    "nor", "of", "on", "or", "per", "the", "to", "up", "via", "vs", "with",
+}
+
+
+def _title_case_offenders(title: str) -> list[str]:
+    """Return the words in ``title`` that break the heading-case convention.
+
+    A small word is allowed a capital only when it opens the title or follows a
+    colon (the start of a subtitle).
+
+    Args:
+        title: the heading or lead-in title text, without its trailing stop.
+
+    Returns:
+        list[str]: offending words, empty when the title is conventional.
+    """
+    words = title.split()
+    bad = []
+    for i, word in enumerate(words):
+        if i == 0 or words[i - 1].endswith(":"):
+            continue
+        if word.lower() in SMALL_WORDS and word != word.lower():
+            bad.append(word)
+    return bad
+
+
+def test_headings_and_lead_ins_share_one_title_case_convention(soup):
+    """Headings and insight lead-in titles follow the same Title-Case rule.
+
+    The ``<h1>``/``<h2>`` titles already lower-case articles, short
+    prepositions and "vs" mid-title; the insight lead-ins must match, so the
+    document does not carry two competing conventions (DSN-001 tone).
+    """
+    titles = [h.get_text(" ", strip=True) for h in soup.select("h1, h2")]
+    titles += [s.get_text(" ", strip=True).rstrip(".")
+               for s in soup.select("p.pee-point > strong")]
+    assert titles, "no titles found"
+    offenders = {t: _title_case_offenders(t) for t in titles
+                 if _title_case_offenders(t)}
+    assert not offenders, f"title-case offenders: {offenders}"
 
 
 def test_no_css_gradients(html):
