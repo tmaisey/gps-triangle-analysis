@@ -345,7 +345,7 @@
         "Add a distance-from-course log-density chart (point-to-nearest-triangle-leg) + the data helper",
         "Test: chart renders log-y with both pilots' lines above the axis floor; captioned; plain-English lead present"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-024",
@@ -356,7 +356,7 @@
         "Add a turn-radius density chart (r=v/omega during sustained climbs)",
         "Test: chart renders both curves + median markers; captioned"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-025",
@@ -367,7 +367,7 @@
         "Add the airframe note (researched or general) to the Start Energy section",
         "Test: Start Energy names the airframes + the technique-not-kit framing; any performance claim is cited or clearly general"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "DOC-001",

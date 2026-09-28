@@ -27,7 +27,7 @@ Standing decisions that constrain how the report is built. Kept lightweight (sim
 
 ## ADR-004 — Multi-page client-side app in one file
 **Status:** accepted
-**Decision:** JS-toggled pages within the single file: Home / Analysis / Recommendations / Innovations for the initial product, plus a **Methodology** page added in a later phase (five total). Recommendations are one canonical set, surfaced **inline in Analysis** and **consolidated by theme** on the Recommendations page via shared anchor ids; Analysis and Recommendations cross-link to Innovations points.
+**Decision:** JS-toggled pages within the single file: Home / Analysis / Recommendations / Innovations for the initial product, plus a **Methodology** page added in a later phase (five total). Recommendations are one canonical set, surfaced **inline in Analysis** and **consolidated by theme** on the Recommendations page via shared anchor ids; Analysis and Recommendations cross-link to Innovations points. The Analysis **Overview** is organised into four Title-Case thematic sections — **Headline Result**, **Scoring, Laps & Speed**, **Start Energy**, **Conditions, Trajectory & Climbing** — under an "Overall Read" lead paragraph (RPT-022; replaces the old single Performance-Summary umbrella).
 **Rationale:** Organises dense content and keeps evidence, action, and future ideas navigable and in context — while staying one file.
 **Rejected:** multiple files (breaks single-send); one long scroll page (poor navigability).
 **Refs:** SPEC RPT-002, RPT-005, RPT-006, RPT-009.
@@ -52,3 +52,10 @@ Standing decisions that constrain how the report is built. Kept lightweight (sim
 **Rationale:** SVG/CSS layout correctness is not reliably caught by DOM-structure tests; a rendered visual pass catches overflow, clipping, and broken charts a human would otherwise have to find.
 **Rejected:** relying only on BeautifulSoup structure tests (no rendering); manual-only visual QA (slower, later).
 **Refs:** SPEC QA-001; AGENTS.md build-review workflow.
+
+## ADR-008 — Course geometry from the .rct header (right-isosceles)
+**Status:** accepted
+**Decision:** Per heat, parse the `.rct` `T:` header (start, axis, `length`) and build the three turnpoints as `start + radius` at bearings `{axis, axis+180, axis-90}`, with the apex at `axis-90` (a fixed venue side, pointing away from the ground/safety zones) and `radius = length = 350 m`. The course is a **right-isosceles** triangle: the 700 m hypotenuse (base) runs along the axis with the start at its midpoint, the two legs are `radius·√2` (~495 m), and the perimeter is ~1690 m — the regs lap. Course and GPS tracks share **one** equirectangular projection (cos(lat) longitude, identical for both), validated against the flown corners (pilots round just outside the turnpoints).
+**Rationale:** The `.rct` `RectZones` are ground/safety zones, not turnpoints; only the header defines the course, and `length` is the **radius / half-base**, not the leg. Confirmed by the frame/geometry tests and the 1690 m perimeter matching the Sport-class regs lap.
+**Rejected:** equilateral 350 m legs (2× too small and the wrong shape); fitting the triangle to the flown tracks (circular — the course is the reference the tracks are judged against, not derived from them).
+**Refs:** SPEC RPT-011; `scripts/build/data.py` `course_geometry`.

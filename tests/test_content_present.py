@@ -62,23 +62,37 @@ def test_each_round_has_dashboard_energy_and_track(soup, n):
     assert view.select_one(f"#r{n}-fig-track") is not None, f"round {n} no track fig"
 
 
-def test_overview_performance_summary_first_with_figures(soup):
-    """The Overview leads with the Performance summary (ov-summary) BEFORE the
-    headline (ov-headline), carrying the grouped-bar, conditions and rank
-    figures (RPT-022)."""
+def test_overview_four_thematic_sections_with_trajectory_figures(soup):
+    """The Overview is organised into the four Title-Case thematic sections in
+    order (Headline Result / Scoring, Laps & Speed / Start Energy / Conditions,
+    Trajectory & Climbing), led by an 'Overall Read' paragraph above the first
+    section, and carries the three new trajectory figures with captions
+    (RPT-022/023/024)."""
     view = soup.select_one("#view-overview")
     assert view is not None
-    summary = view.select_one("#ov-summary")
-    headline = view.select_one("#ov-headline")
-    assert summary is not None and headline is not None
-    # ov-summary appears before ov-headline in document order.
+    # The four thematic sections exist and appear in this exact DOM order.
     section_ids = [s.get("id") for s in view.select(".section")]
-    assert section_ids.index("ov-summary") < section_ids.index("ov-headline")
-    # Grouped-bar charts (score/laps/speed/entry) + conditions strip + rank strip.
-    for fid in ("ov-fig-sum-score", "ov-fig-sum-laps", "ov-fig-sum-speed",
-                "ov-fig-sum-entryspd", "ov-fig-sum-entryalt",
-                "ov-fig-sum-solar", "ov-fig-sum-rank"):
-        assert summary.select_one(f"#{fid}") is not None, f"missing {fid}"
+    assert section_ids == ["ov-headline", "ov-scoring",
+                           "ov-start-energy", "ov-conditions"], section_ids
+    # The 'Overall Read' lead paragraph precedes the first section (ov-headline).
+    lead = view.find(lambda t: t.name == "p"
+                     and "pee-point" in (t.get("class") or [])
+                     and "Overall Read" in t.get_text())
+    assert lead is not None, "no 'Overall Read' lead paragraph"
+    headline = view.select_one("#ov-headline")
+    assert headline is not None
+    ordered = view.find_all(True)
+    assert ordered.index(lead) < ordered.index(headline), \
+        "'Overall Read' must appear before the first section"
+    # The three new Overview trajectory figures are present, are <figure>s, and
+    # each carries a non-empty caption.
+    for fid in ("ov-fig-trajectory", "ov-fig-turn-radius", "ov-fig-r12-track"):
+        fig = view.select_one(f"#{fid}")
+        assert fig is not None, f"missing {fid}"
+        assert fig.name == "figure", f"{fid} is not a <figure>"
+        cap = fig.find("figcaption")
+        assert cap is not None and cap.get_text(strip=True), \
+            f"{fid} has no non-empty caption"
 
 
 def test_analysis_is_insight_first_no_pee_labels(soup):
