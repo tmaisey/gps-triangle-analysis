@@ -3,9 +3,11 @@
 The Overview is the default view of the Analysis page. It opens with a short
 verdict summary and anchor-linked bullets, then leads with an all-rounds
 performance summary and walks the coaching argument in six collapsible
-Point-Evidence-Explain sections, each figure drawn from live ``ctx`` data and
-captioned, each claim backed by an on-page chart and/or a source link, and each
-lever cross-linked to its recommendation.
+Point-Evidence-Explain sections. Every figure is introduced by a short
+bold-titled lead-in that states the reading BEFORE the plot (so the
+explanation never trails the chart it describes), is drawn from live ``ctx``
+data and captioned, is backed by an on-page chart and/or a source link, and
+cross-links each lever to its recommendation.
 
 Anchor / id scheme (section ids; summary bullets link to these):
     ov-top          summary block / back-to-top target
@@ -68,14 +70,27 @@ def _xref(page: str, anchor: str, text: str) -> str:
     )
 
 
-def _point(text: str) -> str:
-    """Render the Point line of a Point-Evidence-Explain block."""
-    return f'<p class="pee-point"><strong>Point.</strong> {text}</p>'
-
-
 def _explain(text: str) -> str:
     """Render the Explain line of a Point-Evidence-Explain block."""
     return f'<p class="pee-explain"><strong>What to do.</strong> {text}</p>'
+
+
+def _lead(title: str, text: str) -> str:
+    """Render an insight lead-in: a short bold title, then the explanation.
+
+    The bold 2-3 word title and its explanatory sentence(s) sit ABOVE the
+    figure they introduce, so the reader meets the reading before the plot
+    rather than after it. ``text`` may contain trusted inline HTML (cross-page
+    ``xref`` links and external source links).
+
+    Args:
+        title: a short (2-3 word) label; a trailing full stop is added.
+        text: the explanatory sentence(s); inline HTML allowed.
+
+    Returns:
+        str: a ``<p class="pee-point">`` lead-in fragment.
+    """
+    return f'<p class="pee-point"><strong>{C.esc(title)}.</strong> {text}</p>'
 
 
 _ROUNDS = list(range(1, 18))
@@ -148,10 +163,8 @@ def _perf_summary(ctx: dict) -> str:
         ylabel="Score",
     )
     score_cap = (
-        "Every round's normalised score (1000 = the round winner in that group). "
-        "Blue is Bill's same-air round winner, grey the event winner Florian "
-        "Griese in his own group, green Bill. Bill trails the round-winning pace "
-        "in most distance rounds; Griese is not always top of his group either."
+        "Normalised round score across all 17 rounds; 1000 = the round winner "
+        "within each group."
     )
 
     # Laps and cruise speed are the distance-task currency; the three speed
@@ -166,10 +179,8 @@ def _perf_summary(ctx: dict) -> str:
         ylabel="Laps",
     )
     laps_cap = (
-        "Laps in the 14 distance rounds (speed sprints omitted - one lap each). "
-        "Laps decide the distance score; Bill's bars sit below the round winner "
-        "almost everywhere, and the gap widens on weak-lift days (see the strip "
-        "below). The winner's blank at Round 9 is his own bombout."
+        "Laps in the 14 distance rounds; the three speed sprints (one lap each) "
+        "are omitted."
     )
 
     speed = charts.grouped_bar_rounds(
@@ -181,9 +192,8 @@ def _perf_summary(ctx: dict) -> str:
         ylabel="km/h",
     )
     speed_cap = (
-        "Average task speed over the distance rounds (km/h; speed sprints "
-        "omitted). Pace drives laps, and Bill's cruise speed runs consistently "
-        "below the round winner's - the dominant lever the sections below unpack."
+        "Average task speed over the 14 distance rounds (km/h); speed sprints "
+        "omitted."
     )
 
     # Entry speed / altitude: only Bill and the same-air round winner were
@@ -197,10 +207,7 @@ def _perf_summary(ctx: dict) -> str:
         ylabel="km/h",
     )
     entry_spd_cap = (
-        "Speed crossing the start gate each round (120 km/h cap). Bill routinely "
-        "enters slower than the round winner, leaving free opening-lap energy on "
-        "the table. The event winner is omitted - only Bill and each round's "
-        "same-air winner were track-analysed for entry telemetry."
+        "Speed crossing the start gate each round (120 km/h cap)."
     )
 
     entry_alt = charts.grouped_bar_rounds(
@@ -211,9 +218,7 @@ def _perf_summary(ctx: dict) -> str:
         ylabel="metres",
     )
     entry_alt_cap = (
-        "Height at the start gate each round (400 m cap). Bill and the round "
-        "winner both start near the ceiling; entry altitude is not a lever. Event "
-        "winner omitted for the same telemetry reason as entry speed."
+        "Height at the start gate each round (400 m cap)."
     )
 
     # Conditions and Bill's within-group standing, aligned column-for-column.
@@ -224,9 +229,7 @@ def _perf_summary(ctx: dict) -> str:
     )
     solar_cap = (
         "Solar radiation per round, normalised across the week (pastel yellow = "
-        "weakest lift, deep red = strongest) - the usable thermal-strength proxy. "
-        "Read the laps chart against this: Bill's gap to the round winner grows "
-        "as the strip pales."
+        "weakest lift, deep red = strongest)."
     )
     ranks = charts.rank_strip(
         [m.get((r, "BILL"), {}).get("rank") for r in _ROUNDS],
@@ -236,11 +239,11 @@ def _perf_summary(ctx: dict) -> str:
     )
     ranks_cap = (
         "Bill's finishing position within his own group each round (1 = group "
-        "winner; darker green = higher). His best relative rounds line up with "
-        "the strongest lift above."
+        "winner; darker green = higher)."
     )
 
-    point = _point(
+    point = _lead(
+        "The overall read",
         "Across all 17 rounds Bill (green) sits below his same-air "
         "<strong>round winner</strong> (blue) on score, laps and cruise speed, "
         "while matching everyone at the start gate. The gap tracks the day's "
@@ -260,16 +263,52 @@ def _perf_summary(ctx: dict) -> str:
     )
     return (
         point
+        + _lead(
+            "Score per round",
+            "Every round's normalised score - his same-air round winner (blue), "
+            "event winner Florian Griese (grey) and Bill (green). Bill trails the "
+            "round-winning pace in most distance rounds, and Griese is not always "
+            "top of his own group either.")
         + C.figure(score, score_cap, fig_id="ov-fig-sum-score",
                    source=(_EVENT_URL, "event results (rcmodelspot)"))
+        + _lead(
+            "Laps per round",
+            "Laps decide the distance score, and Bill's bars sit below the round "
+            "winner almost everywhere - the gap widening on weak-lift days (read "
+            "against the thermal strip below). The winner's blank at Round 9 is "
+            "his own bombout.")
         + C.figure(laps, laps_cap, fig_id="ov-fig-sum-laps",
                    source=(_EVENT_URL, "event results (rcmodelspot)"))
+        + _lead(
+            "Cruise speed",
+            "Pace drives laps, and Bill's average task speed runs consistently "
+            "below the round winner's - the dominant lever the sections below "
+            "unpack.")
         + C.figure(speed, speed_cap, fig_id="ov-fig-sum-speed",
                    source=(_EVENT_URL, "event results (rcmodelspot)"))
+        + _lead(
+            "Entry speed",
+            "Bill routinely crosses the start gate slower than the round winner, "
+            "leaving free opening-lap energy on the table. Only Bill and each "
+            "round's same-air winner were track-analysed, so the event winner is "
+            "absent here.")
         + C.figure(entry_spd, entry_spd_cap, fig_id="ov-fig-sum-entryspd")
+        + _lead(
+            "Entry altitude",
+            "Bill and the round winner both start near the ceiling, so entry "
+            "altitude is not a lever. Event winner omitted for the same telemetry "
+            "reason as entry speed.")
         + C.figure(entry_alt, entry_alt_cap, fig_id="ov-fig-sum-entryalt")
+        + _lead(
+            "Thermal strength",
+            "The usable thermal-strength proxy. Read the laps chart against this "
+            "strip: Bill's gap to the round winner grows as the lift pales.")
         + C.figure(solar, solar_cap, fig_id="ov-fig-sum-solar",
                    source=(_WEATHER_URL, "Open-Meteo ERA5 (weather)"))
+        + _lead(
+            "Within-group rank",
+            "Bill's best relative rounds line up with the strongest lift shown "
+            "above.")
         + C.figure(ranks, ranks_cap, fig_id="ov-fig-sum-rank",
                    source=(_EVENT_URL, "event results (rcmodelspot)"))
         + explain
@@ -302,13 +341,18 @@ def _headline(ctx: dict) -> str:
         xlabel="Points behind the winner",
     )
     cap = (
+        "Gap to the winner by task type (points behind), each pilot's worst "
+        "round dropped."
+    )
+    gap_lead = _lead(
+        "Gap breakdown",
         "Where the 2,887-point gap to the winner comes from, with each pilot's "
         "worst round dropped: about 76% is the distance task and 24% the one-lap "
-        "speed sprint; landings and penalties add nothing."
-    )
-    fig = C.figure(waterfall, cap, fig_id="ov-fig-gap")
+        "speed sprint, while landings and penalties add nothing.")
+    fig = gap_lead + C.figure(waterfall, cap, fig_id="ov-fig-gap")
 
-    point = _point(
+    point = _lead(
+        "The result",
         "Bill finished <strong>22nd of 38</strong> on 12,562 points, 2,887 "
         "behind winner Florian Griese. Almost the entire gap is the distance "
         "task; his landings and rule compliance were faultless all week."
@@ -339,6 +383,10 @@ def _levers(ctx: dict) -> str:
         xlabel="Seconds slower per clean lap",
     )
     deficit_cap = (
+        "Clean-lap time deficit vs the same-air leader, split into straight glide "
+        "and turns/lines (seconds slower per lap)."
+    )
+    deficit_lead = (
         f"Bill's clean lap is about {dec['mean_lap_deficit_s']:.0f} s slower than "
         f"his same-air leader's. {dec['straight_share_pct']:.0f}% of that is the "
         f"straight glide between thermals; only {dec['turn_share_pct']:.0f}% is "
@@ -348,6 +396,10 @@ def _levers(ctx: dict) -> str:
     # (2) Field context: grinder vs sprinter.
     scatter_svg, bill_idx = _field_scatter()
     scatter_cap = (
+        "Average task speed vs average laps over the 14 distance rounds; Bill "
+        "highlighted."
+    )
+    scatter_lead = (
         "Every pilot's average task speed against average laps over the 14 "
         "distance rounds; Bill (green) sits low-left - fewer laps because the "
         "average pace is slower. Laps decide the score, and pace drives laps."
@@ -362,6 +414,10 @@ def _levers(ctx: dict) -> str:
         ylabel="km/h",
     )
     speeds_cap = (
+        "Clean-lap cruise and start-gate entry speed, Bill vs the same-air "
+        "leader (km/h)."
+    )
+    speeds_lead = (
         f"Clean-lap cruise {straight['bill_cruise_kmh']:.1f} vs "
         f"{straight['leader_cruise_kmh']:.1f} km/h "
         f"(~{straight['cruise_gap_pct']:.0f}% slower). At the start gate Bill "
@@ -386,7 +442,14 @@ def _levers(ctx: dict) -> str:
         title="Climb rate: Bill vs leader",
         ylabel="m/s",
     )
-    climb_cap = (
+    climb_geom_cap = (
+        "Height gained per thermal and median circle radius, Bill vs the leader "
+        "(metres)."
+    )
+    climb_rate_cap = (
+        "Mean and best climb rate, Bill vs the same-air leader (m/s)."
+    )
+    climb_lead = (
         f"Bill banks {climbs['bill_gain_m_per_climb']:.0f} m per thermal against "
         f"the leader's {climbs['leader_gain_m_per_climb']:.0f} m (~35% less), in "
         f"wider circles ({climbs['bill_median_radius_m']:.0f} vs "
@@ -399,7 +462,8 @@ def _levers(ctx: dict) -> str:
         "over-thermalling; weak climbs make him land early on poor-lift days."
     )
 
-    point = _point(
+    point = _lead(
+        "Lever order",
         "In cost order the levers are <strong>cruise speed &rarr; climb quality "
         "&rarr; entry speed &rarr; turns</strong>. Cruise pace dominates; turns "
         "are already close to a strength."
@@ -419,14 +483,18 @@ def _levers(ctx: dict) -> str:
     )
     return (
         point
+        + _lead("Where time goes", deficit_lead)
         + C.figure(deficit_wf, deficit_cap, fig_id="ov-fig-deficit")
+        + _lead("Field position", scatter_lead)
         + C.figure(scatter_svg, scatter_cap, fig_id="ov-fig-field",
                    source=(_EVENT_URL, "event results (rcmodelspot)"))
+        + _lead("Speed gaps", speeds_lead)
         + C.figure(speeds, speeds_cap, fig_id="ov-fig-speeds")
-        + C.figure(climb_geom, climb_cap, fig_id="ov-fig-climb-geom")
-        + C.figure(climb_rate, "Climb rate, mean and best, Bill vs the same-air "
-                   "leader (m/s) - the same climb-quality gap in vertical speed.",
-                   fig_id="ov-fig-climb-rate")
+        + _lead("Climb geometry", climb_lead)
+        + C.figure(climb_geom, climb_geom_cap, fig_id="ov-fig-climb-geom")
+        + _lead("Climb rate", "The same climb-quality gap seen in vertical "
+                "speed - mean and best climb, Bill vs the same-air leader.")
+        + C.figure(climb_rate, climb_rate_cap, fig_id="ov-fig-climb-rate")
         + explain
     )
 
@@ -476,11 +544,16 @@ def _conditions(ctx: dict) -> str:
         title="Relative standing vs thermal strength",
     )
     cap = (
+        "Within-group normalised score vs solar radiation (thermal-strength "
+        "proxy) across the rounds."
+    )
+    cond_lead = _lead(
+        "Conditions link",
         "Each round's within-group normalised score against solar radiation, the "
         "usable thermal-strength proxy (CAPE was unavailable). Score rises with "
-        "radiation."
-    )
-    point = _point(
+        "radiation.")
+    point = _lead(
+        "Lift, not wind",
         "Wind shows <strong>no association</strong> with Bill's relative "
         "standing, but <strong>thermal strength does</strong>: his normalised "
         "score tracks solar radiation (Spearman &rho; &asymp; +0.61) and his lap "
@@ -496,7 +569,7 @@ def _conditions(ctx: dict) -> str:
         f"{_link(_WEATHER_URL, 'Open-Meteo ERA5')}, flights from the "
         f"{_link(_EVENT_URL, 'event results')}."
     )
-    return point + C.figure(
+    return point + cond_lead + C.figure(
         svg, cap, fig_id="ov-fig-conditions",
         source=(_WEATHER_URL, "Open-Meteo ERA5 (weather)"),
     ) + explain
@@ -514,11 +587,16 @@ def _progression(ctx: dict) -> str:
         title="Across the week: normalised score vs raw laps",
     )
     cap = (
+        "Distance rounds in time order: within-group normalised score (solid) "
+        "vs raw laps (dashed)."
+    )
+    prog_lead = _lead(
+        "Skill vs air",
         "The 14 distance rounds in time order. The solid line is the within-group "
         "normalised score (conditions controlled, a skill proxy); the dashed line "
-        "is raw laps (conditions and skill together)."
-    )
-    point = _point(
+        "is raw laps (conditions and skill together).")
+    point = _lead(
+        "No clear trend",
         "Splitting conditions from skill, there is <strong>no clear week-long "
         "practice trend</strong>. Both series swing round to round with the air; "
         "his two strongest normalised results (Rounds 7 and 17) are a first-day "
@@ -531,7 +609,7 @@ def _progression(ctx: dict) -> str:
         "signal is weak either way. Per-round scores: "
         f"{_link(_EVENT_URL, 'event results (rcmodelspot)')}."
     )
-    return point + C.figure(
+    return point + prog_lead + C.figure(
         svg, cap, fig_id="ov-fig-progression",
         source=(_EVENT_URL, "event results (rcmodelspot)"),
     ) + explain
@@ -566,9 +644,13 @@ def _consistency(ctx: dict) -> str:
         xlabel="Round score (normalised to 1000)",
     )
     strip_cap = (
-        "The 14 distance-round scores on one scale; the lower row isolates the two "
-        "bombouts (R12 = 418, dropped; R9 = 581). These sit far below the median "
-        f"of {score_med:.0f}."
+        "Distance-round scores (normalised to 1000), with the two low rounds "
+        "marked on a lower row."
+    )
+    strip_lead = (
+        "The 14 distance-round scores on one scale; the lower row isolates the "
+        "two bombouts (R12 = 418, dropped; R9 = 581). These sit far below the "
+        f"median of {score_med:.0f}."
     )
 
     r17 = load_round(17)
@@ -579,12 +661,16 @@ def _consistency(ctx: dict) -> str:
         title="Round 17 cumulative laps - Bill vs the same-air leader",
     )
     ceiling_cap = (
+        "Round 17 cumulative laps, Bill vs the same-air leader."
+    )
+    ceiling_lead = (
         f"Round 17: Bill (green) tracks the same-air leader "
-        f"{C.esc(r17['leader']['name'])} (teal) lap-for-lap to a near-perfect 999. "
-        "When lift is good the top-end pace is already there."
+        f"{C.esc(r17['leader']['name'])} (teal) lap-for-lap to a near-perfect "
+        "999. When lift is good the top-end pace is already there."
     )
 
-    point = _point(
+    point = _lead(
+        "Floor, not ceiling",
         "The score is dragged down by a few weak-lift rounds, not by the good "
         "ones falling short. The two bombouts sit far below the median; his best "
         "rounds nearly match the leader."
@@ -600,8 +686,10 @@ def _consistency(ctx: dict) -> str:
     return (
         point
         + tiles
+        + _lead("Downside cost", strip_lead)
         + C.figure(strip, strip_cap, fig_id="ov-fig-consistency",
                    source=(_EVENT_URL, "event results (rcmodelspot)"))
+        + _lead("The ceiling", ceiling_lead)
         + C.figure(ceiling, ceiling_cap, fig_id="ov-fig-ceiling")
         + explain
     )

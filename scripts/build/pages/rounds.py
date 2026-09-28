@@ -28,7 +28,7 @@ dropdown keep working):
 from __future__ import annotations
 
 from .. import charts, components as C, dashboard
-from ..data import TRACK_ALT
+from ..data import TRACK_ALT, TRACK_T
 
 # The public results page for the whole event (same-air benchmark source).
 EVENT_URL = (
@@ -47,6 +47,15 @@ def _mmss(seconds: float | None) -> str:
         return ""
     s = int(round(seconds))
     return f"{s // 60}:{s % 60:02d}"
+
+
+def _ord(n: int) -> str:
+    """Format an integer rank as an English ordinal (1 -> '1st', 2 -> '2nd')."""
+    if 10 <= n % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suffix}"
 
 
 def _xref(anchor: str, text: str) -> str:
@@ -87,6 +96,96 @@ def _alt_stats(track: list) -> dict:
     }
 
 
+def _energy_pattern(r: dict) -> dict | None:
+    """Return Bill-vs-leader mean-altitude deltas for the two halves of a flight.
+
+    Uses the same clipped full-resolution traces the Energy-Management chart
+    plots (each ending at the pilot's last turn-point crossing, falling back to
+    the embedded compact track if the replay is unavailable), and compares mean
+    GPS altitude over the first and second half of the window in which *both*
+    pilots are still flying - so the caller can describe *who held more energy
+    when* (e.g. led early then faded) without an early landing skewing it.
+
+    Args:
+        r: the round dataset dict.
+
+    Returns:
+        dict with ``d1``/``d2`` (Bill-minus-leader mean altitude, m, over the
+        first/second half of the shared window). ``None`` if unavailable.
+    """
+    n = r["round"]
+    try:
+        bt, lt = charts_data_full_tracks(n)
+    except Exception:
+        bt, lt = [], []
+    if not bt:
+        bt = r["bill"]["track"]
+    if not lt:
+        lt = r["leader"]["track"]
+    if not bt or not lt:
+        return None
+    lo = max(bt[0][TRACK_T], lt[0][TRACK_T])
+    hi = min(bt[-1][TRACK_T], lt[-1][TRACK_T])
+    if hi <= lo:
+        return None
+    cut = (lo + hi) / 2
+
+    def mean_alt(track: list, a: float, b: float) -> float | None:
+        vals = [row[TRACK_ALT] for row in track if a <= row[TRACK_T] < b]
+        return sum(vals) / len(vals) if vals else None
+
+    bf, bs = mean_alt(bt, lo, cut), mean_alt(bt, cut, hi + 1)
+    lf, ls = mean_alt(lt, lo, cut), mean_alt(lt, cut, hi + 1)
+    if None in (bf, bs, lf, ls):
+        return None
+    return {"d1": bf - lf, "d2": bs - ls}
+
+
+def charts_data_full_tracks(n: int) -> tuple[list, list]:
+    """Return the round's clipped full-res (Bill, leader) tracks (chart source)."""
+    from .. import data as D
+
+    return D.full_tracks_for_round(n, clip_to_last_tpc=True)
+
+
+def _laps_pattern(r: dict) -> dict:
+    """Return where the lap deficit against the leader accumulated.
+
+    Splits the combined lap-completion span at its midpoint and counts each
+    pilot's laps in the first and second half, so the caller can say whether Bill
+    kept pace then fell away, fell behind early, or bled the gap steadily.
+
+    Args:
+        r: the round dataset dict.
+
+    Returns:
+        dict with ``def1``/``def2`` (leader-minus-Bill laps in the first/second
+        half) and ``gap`` (total lap deficit).
+    """
+    bo, lo = r["bill"]["lap_offsets_s"], r["leader"]["lap_offsets_s"]
+    gap = len(lo) - len(bo)
+    if not bo or not lo:
+        return {"def1": 0, "def2": gap, "gap": gap}
+    mid = (min(bo[0], lo[0]) + max(bo[-1], lo[-1])) / 2
+    bf = sum(1 for t in bo if t <= mid)
+    lf = sum(1 for t in lo if t <= mid)
+    return {"def1": lf - bf, "def2": (len(lo) - lf) - (len(bo) - bf), "gap": gap}
+
+
+def _metrics_for(n: int, ctx: dict) -> dict:
+    """Return ``{'BILL': row, 'leader': row}`` from ``ctx['metrics']`` for round n.
+
+    The metrics CSV keys rounds as bare integers (1-17), so both the integer and
+    the ``R0N`` spellings are accepted defensively.
+    """
+    keys = {n, f"R{n:02d}", str(n)}
+    out: dict = {}
+    for row in ctx.get("metrics", []):
+        if row.get("round") in keys and row.get("role") in ("BILL", "leader"):
+            out[row["role"]] = row
+    return out
+
+
 def _dominant_lever(r: dict) -> str:
     """Classify the round's dominant improvement lever.
 
@@ -105,32 +204,207 @@ def _dominant_lever(r: dict) -> str:
 
 
 # --- Section builders --------------------------------------------------------
-def _dash_section(r: dict) -> str:
+def _round_conditions(n: int, ctx: dict) -> dict:
+    """Return this round's lift/wind context from the shared weather data.
+
+    Reads ``ctx['weather']`` (per-flight rows) and normalises the round's
+    shortwave radiation across all 17 rounds into a lift band ('strong' /
+    'moderate' / 'weak'), flagging the event extremes.
+
+    Args:
+        n: round number (1-17).
+        ctx: the shared build context (uses ``ctx['weather']``).
+
+    Returns:
+        dict with ``band`` (str), ``extreme`` (a trailing clause or ``''``) and
+        ``wind`` (km/h float or ``None``).
+    """
+    weather = {row.get("round"): row for row in ctx.get("weather", [])}
+    row = weather.get(f"R{n:02d}", {})
+    rad = row.get("shortwave_radiation")
+    wind = row.get("wind_speed_kmh")
+    rads = [
+        w["shortwave_radiation"]
+        for w in weather.values()
+        if isinstance(w.get("shortwave_radiation"), (int, float))
+    ]
+    band, extreme = "moderate", ""
+    if rads and isinstance(rad, (int, float)):
+        lo, hi = min(rads), max(rads)
+        norm = (rad - lo) / ((hi - lo) or 1)
+        band = "strong" if norm >= 0.66 else "weak" if norm < 0.33 else "moderate"
+        if rad == hi:
+            extreme = " - the strongest lift window of all 17 rounds"
+        elif rad == lo:
+            extreme = " - the weakest lift window of all 17 rounds"
+    return {"band": band, "extreme": extreme, "wind": wind}
+
+
+def _dash_insights(r: dict, n: int, ctx: dict) -> str:
+    """Return 3-5 sentences of round-specific key insights (the dashboard lead).
+
+    Generated from the round's own numbers rather than a template: laps vs the
+    same-air leader, whether the gap was cruise pace or staying aloft (from the
+    speed delta), the entry-speed energy left against the 120 km/h cap, the lift
+    band + wind, and where the biggest single loss fell. Near-wins read as
+    toe-to-toe, the bombout as a thermal-connection failure, and the three
+    sprints as the isolated one-lap dash.
+
+    Args:
+        r: the round dataset dict (bill/leader/biggest_loss/task).
+        n: round number (1-17).
+        ctx: shared build context (for ``ctx['weather']``).
+
+    Returns:
+        str: an HTML ``<p>`` of key insights, grounded in the {event_link}.
+    """
+    b, l = r["bill"], r["leader"]
+    lead = C.esc(l.get("name", "the leader"))
+    is_speed = r["task_type"] == "speedrun"
+    cond = _round_conditions(n, ctx)
+    band, extreme, wind = cond["band"], cond["extreme"], cond["wind"]
+    wind_txt = (f"{wind:.0f} km/h wind"
+                if isinstance(wind, (int, float)) else "the day's wind")
+    loss = r["biggest_loss"]
+    note = C.esc((loss.get("note") or "").strip())
+    gate_gap = l["entry_speed_kmh"] - b["entry_speed_kmh"]
+    s: list[str] = []
+
+    if is_speed:
+        delta = l["speed_kmh"] - b["speed_kmh"]
+        alt_below, lead_below = 400 - b["entry_alt_m"], 400 - l["entry_alt_m"]
+        s.append(
+            f"Round {n} is the one-lap speed dash - a separate flat-out task "
+            f"scored across all 38 pilots, not the group's endurance race."
+        )
+        s.append(
+            f"Bill clocked {b['speed_kmh']:.1f} km/h on the single lap to run "
+            f"leader {lead}'s {l['speed_kmh']:.1f} km/h - a {delta:.1f} km/h "
+            f"shortfall for {_ord(b['rank'])} of {r['group_size']} and "
+            f"{b['score']} points."
+        )
+        if alt_below - lead_below > 15:
+            s.append(
+                f"He crossed the start about {alt_below:.0f} m under the 400 m "
+                f"ceiling while {lead} banked nearly the full height "
+                f"({l['entry_alt_m']:.0f} m), so the leader had more stored "
+                f"energy to trade for speed."
+            )
+        else:
+            s.append(
+                f"Both entered near the 400 m ceiling ({b['entry_alt_m']:.0f} m "
+                f"to {l['entry_alt_m']:.0f} m), so the margin is carried speed "
+                f"rather than entry height."
+            )
+        s.append(
+            "With no lift to work, the whole gap is top-end cruise and a "
+            "full-energy entry - the same speed lever as the distance rounds, "
+            "isolated to one run."
+        )
+    elif n in _NEAR_WINS:
+        s.append(
+            f"Round {n} is one of Bill's near-wins: he went toe-to-toe with "
+            f"{lead}, matching {b['laps']} laps for {b['score']} of a possible "
+            f"1000 and {_ord(b['rank'])} of {r['group_size']}."
+        )
+        s.append(
+            f"His cruise held level too - {b['speed_kmh']:.1f} km/h to the "
+            f"winner's {l['speed_kmh']:.1f} - so the round came down to margins, "
+            f"not pace, over {band} lift{extreme} in {wind_txt}."
+        )
+        if gate_gap > 8:
+            s.append(
+                f"The one visible slack is the gate: he entered at "
+                f"{b['entry_speed_kmh']:.1f} km/h to {lead}'s "
+                f"{l['entry_speed_kmh']:.1f}, well under the 120 km/h cap - free "
+                f"opening-lap energy left on the table."
+            )
+        if note:
+            s.append(f"Even the biggest single loss was slight: {note}")
+    elif n == _WORST:
+        delta = l["speed_kmh"] - b["speed_kmh"]
+        s.append(
+            f"Round {n} was Bill's worst of the week: only {b['laps']} laps to "
+            f"{lead}'s {l['laps']} for {b['score']} of 1000 and "
+            f"{_ord(b['rank'])} of {r['group_size']}."
+        )
+        s.append(
+            f"This was a thermal-connection failure, not the conditions - lift "
+            f"was {band}{extreme} - and once he sank out his average fell to "
+            f"{b['speed_kmh']:.1f} km/h against {lead}'s {l['speed_kmh']:.1f}."
+        )
+        s.append(
+            f"The damage is concentrated in one window "
+            f"({_mmss(loss['start_s'])}-{_mmss(loss['end_s'])}): {note}"
+        )
+        s.append(
+            "A single failed re-centre, not a string of slow laps, cost the "
+            "flight."
+        )
+    else:
+        lap_gap = l["laps"] - b["laps"]
+        speed_delta = b["speed_kmh"] - l["speed_kmh"]
+        s.append(
+            f"Bill completed {b['laps']} laps to {lead}'s {l['laps']} - "
+            f"{lap_gap} short - for {b['score']} of a possible 1000 and "
+            f"{_ord(b['rank'])} of {r['group_size']} in the group."
+        )
+        if speed_delta >= -1.0:
+            s.append(
+                f"The gap was not pace: he actually cruised at "
+                f"{b['speed_kmh']:.1f} km/h to {lead}'s {l['speed_kmh']:.1f}, so "
+                f"it was staying aloft that cost him - fewer, lower climbs left "
+                f"him {lap_gap} laps down, not slower ones."
+            )
+        else:
+            s.append(
+                f"The gap was cruise pace: {b['speed_kmh']:.1f} km/h to "
+                f"{lead}'s {l['speed_kmh']:.1f} ({abs(speed_delta):.1f} km/h "
+                f"slower), a deficit that compounds over the window into the "
+                f"{lap_gap}-lap shortfall."
+            )
+        if band == "weak":
+            s.append(
+                f"It was a weak-lift window{extreme} in {wind_txt} - the "
+                f"scarce-height conditions where Bill fades relatively."
+            )
+        else:
+            s.append(f"Lift was {band}{extreme}, with {wind_txt}.")
+        if gate_gap > 10:
+            s.append(
+                f"He also left energy at the gate, crossing at "
+                f"{b['entry_speed_kmh']:.1f} km/h to {lead}'s "
+                f"{l['entry_speed_kmh']:.1f} and well under the 120 km/h cap."
+            )
+        if note:
+            s.append(
+                f"The steepest divergence came at "
+                f"{_mmss(loss['start_s'])}-{_mmss(loss['end_s'])}: {note}"
+            )
+
+    body = " ".join(s)
+    return f"<p>{body} Figures reconcile to the {_event_link()}.</p>"
+
+
+def _dash_section(r: dict, n: int, ctx: dict) -> str:
     """Return the 'Visual overview of performance' body (RPT-021 dashboard).
 
-    A short lead-in on how to read the dashboard, then the dashboard fragment
-    inserted directly (it carries its own colour key and per-cell captions, so
-    it is not wrapped in a ``<figure>``).
+    Round-specific key insights (:func:`_dash_insights`, generated from the
+    round's own numbers) as the lead-in, then the dashboard fragment inserted
+    directly (it carries its own colour key and per-cell captions, so it is not
+    wrapped in a ``<figure>``). The old boilerplate description of how to read
+    the panel is dropped - the dashboard speaks for itself.
     """
-    is_speed = r["task_type"] == "speedrun"
-    lead = C.esc(r["leader"].get("name", "the leader"))
-    speed_label = "single-lap speed" if is_speed else "average speed"
-    intro = (
-        f"<p>At-a-glance panel for this round. The top row reads left to right: "
-        f"the group's score density (winner at 1000, Bill's score marked over "
-        f"the field), then entry speed and entry altitude against the Sport-"
-        f"class caps (120 km/h, 400 m), then {speed_label}. The bottom row "
-        f"carries laps, within-group rank, the wind at the flight window and a "
-        f"solar-radiation bar normalised across all 17 rounds as a lift proxy. "
-        f"Green is Bill, blue is the round leader ({lead}), grey is the regs "
-        f"cap or the rest of the field. Figures reconcile to the "
-        f"{_event_link()}.</p>"
-    )
-    return intro + dashboard.dashboard(r)
+    return _dash_insights(r, n, ctx) + dashboard.dashboard(r)
 
 
 def _energy_section(r: dict, n: int, *, is_speed: bool) -> str:
-    """Return the Energy Management dual-panel figure + PEE (RPT-018)."""
+    """Return the Energy Management figure + a data-derived insight (RPT-018).
+
+    The prose opens with the actual energy story for this round - who held more
+    height in the first half versus the second, computed from the two altitude
+    traces - rather than a description of the panels.
+    """
     b, l = r["bill"], r["leader"]
     lead = C.esc(l.get("name", "the leader"))
     bs, ls = _alt_stats(b["track"]), _alt_stats(l["track"])
@@ -155,35 +429,115 @@ def _energy_section(r: dict, n: int, *, is_speed: bool) -> str:
         source=(EVENT_URL, "event results"),
     )
     if is_speed:
-        pee = (
-            f"<p><strong>Point.</strong> The sprint is won on how much speed the "
-            f"height buys, not on staying aloft. <strong>Evidence.</strong> Both "
-            f"traces bleed altitude for pace across the one lap; Bill averaged "
-            f"{b['speed_kmh']:.1f} km/h to {lead}'s {l['speed_kmh']:.1f} km/h on "
-            f"the speed panel. <strong>Explain.</strong> A cleaner high-energy "
-            f"entry and a faster glide line convert more of the same start "
-            f"height into lap speed - the same cruise lever as the distance "
-            f"rounds, isolated to one run.</p>"
+        insight = (
+            f"Off much the same start height, Bill turned less of it into pace "
+            f"than {lead} - {b['speed_kmh']:.1f} km/h to {l['speed_kmh']:.1f} "
+            f"km/h over the single lap. Both traces bleed altitude for speed "
+            f"through the lap, but his ground-speed line sits below the leader's "
+            f"from the first straight. A cleaner high-energy entry and a faster "
+            f"glide line would convert the same height into more lap speed - the "
+            f"cruise lever isolated to one run."
         )
     else:
-        pee = (
-            f"<p><strong>Point.</strong> The altitude panel shows how the energy "
-            f"budget was spent; the speed panel shows the cruise line between "
-            f"climbs. <strong>Evidence.</strong> Bill recovers about "
-            f"{bs.get('total_climb', 0):.0f} m of climb against the leader's "
-            f"{ls.get('total_climb', 0):.0f} m, working off a floor near "
-            f"{bs.get('low', 0):.0f} m, while his speed trace sits below the "
-            f"leader's between thermals. <strong>Explain.</strong> Less height "
-            f"banked per climb plus a slower cruise drains the glide budget "
-            f"sooner, and the lap count follows.</p>"
+        p = _energy_pattern(r)
+        d1 = p["d1"] if p else 0.0
+        d2 = p["d2"] if p else 0.0
+        th = 8.0
+
+        def _state(d: float) -> str:
+            return "above" if d >= th else "below" if d <= -th else "level"
+
+        early, late = _state(d1), _state(d2)
+        e1, e2 = abs(d1), abs(d2)
+        if early == "above" and late == "below":
+            s1 = (
+                f"Bill managed his energy well through the first half, holding "
+                f"about {e1:.0f} m more height on average than {lead}, then lost "
+                f"that edge in the latter half to sit roughly {e2:.0f} m below "
+                f"him."
+            )
+        elif early == "level" and late == "below":
+            s1 = (
+                f"Bill stayed with {lead} on height early (within {e1:.0f} m on "
+                f"average), then bled energy away in the latter half to fall "
+                f"about {e2:.0f} m below him."
+            )
+        elif early == "below" and late == "below":
+            widening = " - and the gap widened" if e2 > e1 + 20 else ""
+            s1 = (
+                f"Bill flew lower than {lead} for essentially the whole flight, "
+                f"averaging about {e1:.0f} m down early and {e2:.0f} m down "
+                f"late{widening}."
+            )
+        elif early == "above" and late == "above":
+            s1 = (
+                f"Bill held more height than {lead} across the whole flight, "
+                f"averaging about {e1:.0f} m higher early and {e2:.0f} m higher "
+                f"late, so energy was not where this round was lost."
+            )
+        elif early == "below" and late == "above":
+            s1 = (
+                f"Bill started lower than {lead} - about {e1:.0f} m down early - "
+                f"then out-climbed him in the back half to average roughly "
+                f"{e2:.0f} m higher."
+            )
+        elif early == "above" and late == "level":
+            s1 = (
+                f"Bill led {lead} on height early by about {e1:.0f} m, then the "
+                f"leader clawed back to level by the finish."
+            )
+        elif early == "below" and late == "level":
+            s1 = (
+                f"Bill flew about {e1:.0f} m below {lead} early, then recovered "
+                f"to roughly level height through the back half."
+            )
+        elif early == "level" and late == "above":
+            s1 = (
+                f"Bill matched {lead} on height early, then out-climbed him late "
+                f"to average about {e2:.0f} m higher."
+            )
+        else:
+            s1 = (
+                f"Bill and {lead} tracked each other closely on height, staying "
+                f"within a few metres on average through both halves of the "
+                f"flight."
+            )
+        insight = (
+            f"{s1} Across the task he banked about {bs.get('total_climb', 0):.0f} "
+            f"m of climb to the leader's {ls.get('total_climb', 0):.0f} m, "
+            f"working off a low near {bs.get('low', 0):.0f} m, while his speed "
+            f"trace runs below the leader's between thermals. Less height in hand "
+            f"forces earlier, slower glides, and the lap count follows."
         )
-    return fig + pee
+    return f"<p>{insight}</p>" + fig
 
 
-def _track_section(r: dict, n: int, *, is_speed: bool) -> str:
-    """Return the ground-track & course figure + PEE (RPT-011)."""
+def _track_section(r: dict, n: int, ctx: dict, *, is_speed: bool) -> str:
+    """Return the ground-track & course figure + a data-derived insight (RPT-011).
+
+    The prose opens with the round's actual line/turn story against the leader -
+    line-length efficiency and turn radius from the per-round metrics - rather
+    than a description of the overlay.
+    """
     task = r["task"]
     leg = task.get("leg_length_m", "")
+    lead = C.esc(r["leader"].get("name", "the leader"))
+    mt = _metrics_for(n, ctx)
+    bm, lm = mt.get("BILL", {}), mt.get("leader", {})
+    eff = bm.get("line_eff_ratio_bill_vs_leader")
+    btr, ltr = bm.get("turn_radius_m"), lm.get("turn_radius_m")
+
+    def _turn_clause() -> str:
+        if not isinstance(btr, (int, float)) or not isinstance(ltr, (int, float)):
+            return ""
+        if btr > ltr * 1.1:
+            return (f" His turn circles ran wider too, averaging {btr:.0f} m to "
+                    f"{lead}'s {ltr:.0f} m.")
+        if btr < ltr * 0.9:
+            return (f" His corners were actually tighter than {lead}'s "
+                    f"({btr:.0f} m to {ltr:.0f} m radius).")
+        return f" Turn radii were comparable ({btr:.0f} m to {ltr:.0f} m)."
+
     if is_speed:
         caption = (
             f"Ground track & course: the bold triangle is the factual {leg} m-leg "
@@ -192,14 +546,12 @@ def _track_section(r: dict, n: int, *, is_speed: bool) -> str:
             f"scale bottom-left, wind vector in the right margin. On the sprint "
             f"the lines stay tight to the course - no thermalling."
         )
-        pee = (
-            f"<p><strong>Point.</strong> On the sprint the only line that matters "
-            f"is the racing line through the turnpoints. "
-            f"<strong>Evidence.</strong> Both traces hug the course triangle with "
-            f"no off-course loops; the corner arcs and start-line crossing sit on "
-            f"the plotted course. <strong>Explain.</strong> With no lift to hunt, "
-            f"tighter corners and a straighter run between turnpoints are the only "
-            f"time on offer - it comes down to carried speed.</p>"
+        insight = (
+            f"With no lift to hunt, both lines stay pinned to the course, so the "
+            f"sprint turns on how much speed each carried through the corners."
+            f"{_turn_clause()} Tighter corners and a straighter run between "
+            f"turnpoints are the only time on offer - it comes down to carried "
+            f"speed."
         )
     else:
         caption = (
@@ -210,17 +562,37 @@ def _track_section(r: dict, n: int, *, is_speed: bool) -> str:
             f"thermalling circles. North arrow top-right, 100 m scale bottom-"
             f"left, wind vector in the right margin."
         )
-        pee = (
-            f"<p><strong>Point.</strong> The traces show where each pilot left "
-            f"the course to climb and how tightly they cornered. "
-            f"<strong>Evidence.</strong> Bill's thermalling loops sit off the "
-            f"course line while his turnpoint arcs run close to the leader's. "
-            f"<strong>Explain.</strong> Turnpoint technique is near a strength; "
-            f"the loops, not the corners, are where the height - and the time - "
-            f"go, so wider, slower circles cost most.</p>"
+        if isinstance(eff, (int, float)) and eff >= 1.15:
+            s1 = (
+                f"Bill flew a markedly longer line than {lead} - about "
+                f"{eff:.2f}x the ground distance over the same course - the extra "
+                f"length is off-course loops spent searching for and working "
+                f"lift."
+            )
+        elif isinstance(eff, (int, float)) and eff >= 1.05:
+            s1 = (
+                f"Bill covered a little more ground than {lead} for the same "
+                f"laps (line ratio {eff:.2f}), his thermalling loops adding "
+                f"distance the leader's tighter line avoided."
+            )
+        elif isinstance(eff, (int, float)):
+            s1 = (
+                f"Bill's racing line was about as efficient as {lead}'s (line "
+                f"ratio {eff:.2f}), so the ground track was not where this round "
+                f"was lost."
+            )
+        else:
+            s1 = (
+                f"Bill's thermalling loops sit off the course line while his "
+                f"turnpoint arcs run close to {lead}'s."
+            )
+        insight = (
+            f"{s1}{_turn_clause()} Turnpoint technique is near a strength; the "
+            f"loops, not the corners, are where the height - and the time - go, "
+            f"so wider, slower circles cost most."
         )
     fig = C.figure(charts.ground_track(r), caption, fig_id=f"r{n}-fig-track")
-    return fig + pee
+    return f"<p>{insight}</p>" + fig
 
 
 def _laps_section(r: dict, n: int, *, is_speed: bool) -> str:
@@ -248,27 +620,48 @@ def _laps_section(r: dict, n: int, *, is_speed: bool) -> str:
         source=(EVENT_URL, "event results"),
     )
     if is_speed:
-        pee = (
-            f"<p><strong>Point.</strong> There is no lap count to build on a "
-            f"sprint - it is decided on the single lap. "
-            f"<strong>Evidence.</strong> Bill ran {b['speed_kmh']:.1f} km/h to "
-            f"{lead}'s {l['speed_kmh']:.1f} km/h for {b['score']} points and "
-            f"{b['rank']}th of {r['group_size']} on the {_event_link()}. "
-            f"<strong>Explain.</strong> The sprint reward is raw pace and a "
-            f"full-energy entry, not endurance, so the lever is top-end cruise "
-            f"speed rather than lasting the distance.</p>"
+        insight = (
+            f"There is no lap count to build on the sprint - the result is one "
+            f"flat-out lap, and Bill's ran {b['speed_kmh']:.1f} km/h to {lead}'s "
+            f"{l['speed_kmh']:.1f} km/h. That was worth {b['score']} points and "
+            f"{_ord(b['rank'])} of {r['group_size']} on the {_event_link()}. The "
+            f"reward is raw pace and a full-energy entry, not endurance, so the "
+            f"lever is top-end cruise speed rather than lasting the distance."
+        )
+    elif lap_gap == 0:
+        insight = (
+            f"Bill matched {lead} lap-for-lap the whole way, the two step lines "
+            f"staying locked together to {b['laps']} laps each. Their cruise was "
+            f"level too, {b['speed_kmh']:.1f} km/h to {l['speed_kmh']:.1f}. On a "
+            f"round this close the result turns on fractions - clean turns and a "
+            f"tidy landing - rather than lap count."
         )
     else:
-        pee = (
-            f"<p><strong>Point.</strong> The gap opens gradually, not in one "
-            f"blow-up. <strong>Evidence.</strong> The leader's step line pulls "
-            f"steadily clear, reaching {l['laps']} laps at {l['speed_kmh']:.1f} "
-            f"km/h while Bill holds {b['speed_kmh']:.1f} km/h for {b['laps']}. "
-            f"<strong>Explain.</strong> A slower average lap - mostly slower "
-            f"cruise between thermals - compounds over the task into the "
-            f"{lap_gap}-lap shortfall.</p>"
+        p = _laps_pattern(r)
+        if p["def2"] > p["def1"]:
+            s1 = (
+                f"Bill kept pace with {lead} through the first half, then fell "
+                f"away in the back half where most of the {lap_gap}-lap gap "
+                f"opened."
+            )
+        elif p["def1"] > p["def2"]:
+            s1 = (
+                f"Bill fell behind {lead} early - most of the {lap_gap}-lap gap "
+                f"was already open by mid-flight - then roughly held the "
+                f"leader's pace to the finish."
+            )
+        else:
+            s1 = (
+                f"The {lap_gap}-lap gap to {lead} opened steadily across the "
+                f"task rather than in a single collapse."
+            )
+        insight = (
+            f"{s1} He held {b['speed_kmh']:.1f} km/h to the leader's "
+            f"{l['speed_kmh']:.1f} while that step line pulled clear to "
+            f"{l['laps']} laps. A slower average lap - mostly slower cruise "
+            f"between thermals - is what compounds into the shortfall."
         )
-    return fig + pee
+    return f"<p>{insight}</p>" + fig
 
 
 def _loss_section(r: dict, *, is_speed: bool) -> str:
@@ -343,23 +736,24 @@ def _reco(r: dict, n: int) -> str:
     )
 
 
-def _sections(r: dict, n: int) -> list[tuple]:
+def _sections(r: dict, n: int, ctx: dict) -> list[tuple]:
     """Build the ordered (suffix, heading, body, collapsed) sections for a round.
 
     Shared across triangle and speed rounds; the ``is_speed`` flag switches the
     framing of the Energy Management, ground-track, laps and loss sections. The
-    dashboard opens the view and replaces the old per-round metrics strip and
-    'Bill vs leader' header (RPT-021).
+    dashboard opens the view (with round-specific key insights as its lead-in)
+    and replaces the old per-round metrics strip and 'Bill vs leader' header
+    (RPT-021).
     """
     is_speed = r["task_type"] == "speedrun"
     return [
-        ("dash", "Visual overview of performance", _dash_section(r), False),
+        ("dash", "Visual overview of performance", _dash_section(r, n, ctx), False),
         ("energy", "Energy Management",
          _energy_section(r, n, is_speed=is_speed), False),
-        ("track", "Ground track & course",
-         _track_section(r, n, is_speed=is_speed), False),
+        ("track", "Ground Track & Course",
+         _track_section(r, n, ctx, is_speed=is_speed), False),
         ("laps",
-         "Single-lap speed task" if is_speed else "Cumulative laps vs leader",
+         "Single-Lap Speed Task" if is_speed else "Cumulative Laps vs Leader",
          _laps_section(r, n, is_speed=is_speed), True),
         ("loss", "Where the time went" if is_speed else "Biggest-loss segment",
          _loss_section(r, is_speed=is_speed), True),
@@ -385,7 +779,7 @@ def render_round(entry: dict, ctx: dict) -> str:
     b, l = r["bill"], r["leader"]
     lead = C.esc(l.get("name", "the leader"))
 
-    sections = _sections(r, n)
+    sections = _sections(r, n, ctx)
 
     if r["task_type"] == "speedrun":
         intro = (

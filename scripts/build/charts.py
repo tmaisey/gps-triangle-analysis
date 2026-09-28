@@ -409,15 +409,17 @@ def _ground_track_course(round_data: dict, *, wind: dict | None = None,
     grey = PALETTE["text_secondary"]
     grid = "#EEF0F1"
 
-    # --- layout (ports v5): frame encloses data area + reserved wind band ----
-    frame = {"x": 52, "y": 56, "w": w - 52 - 24, "h": h - 56 - 40}
-    wind_band = 138
+    # --- layout: the frame encloses the data area with a uniform margin band on
+    # all four sides, wide enough to hold the wind glyph + label wherever the
+    # wind's source bearing places it on the clockface (RPT-012). The glyph sits
+    # in that margin — outside the trace box, inside the frame — on whichever
+    # side the source points, so it is never pinned to one edge.
+    frame = {"x": 40, "y": 52, "w": w - 40 - 28, "h": h - 52 - 40}
+    wind_margin = 104
     data_box = {
-        "x": frame["x"] + 16, "y": frame["y"] + 16,
-        "w": frame["w"] - 16 - wind_band, "h": frame["h"] - 32,
+        "x": frame["x"] + wind_margin, "y": frame["y"] + wind_margin,
+        "w": frame["w"] - 2 * wind_margin, "h": frame["h"] - 2 * wind_margin,
     }
-    band_l = data_box["x"] + data_box["w"]
-    band_r = frame["x"] + frame["w"]
 
     allx = [p[0] for p in bill_pts + lead_pts + course_pts]
     ally = [p[1] for p in bill_pts + lead_pts + course_pts]
@@ -453,9 +455,7 @@ def _ground_track_course(round_data: dict, *, wind: dict | None = None,
                     f'x2="{data_box["x"]+data_box["w"]:.1f}" y2="{Y(gy):.1f}" '
                     f'stroke="{grid}" stroke-width="1"/>')
         gy += 100
-    # divider + outer frame (encloses data area and wind band)
-    body.append(f'<line x1="{band_l:.1f}" y1="{frame["y"]:.1f}" x2="{band_l:.1f}" '
-                f'y2="{frame["y"]+frame["h"]:.1f}" stroke="{grid}" stroke-width="1"/>')
+    # outer frame (encloses the data area and the wind margin band)
     body.append(f'<rect x="{frame["x"]:.1f}" y="{frame["y"]:.1f}" width="{frame["w"]:.1f}" '
                 f'height="{frame["h"]:.1f}" fill="none" stroke="{PALETTE["hairline"]}" '
                 f'stroke-width="1.2"/>')
@@ -526,64 +526,95 @@ def _ground_track_course(round_data: dict, *, wind: dict | None = None,
                     f'fill="{ink}" font-weight="600">{_esc(lab)}</text>')
         lx += widths[i] + item_gap
 
-    # wind vector inside the reserved band, pointing inward, with knots label
+    # wind glyph placed at the clockface angle of the source bearing, pointing
+    # inward (the way the wind blows), with a knots label
     if wind and wind.get("dir_deg") is not None:
-        body.append(_wind_vector_in_band(wind, band_l, band_r, data_box, grey))
+        body.append(_wind_vector_clockface(wind, data_box, frame, grey))
 
     body.append("</svg>")
     return "".join(body)
 
 
-def _wind_vector_in_band(wind: dict, band_l: float, band_r: float,
-                         data_box: dict, grey: str) -> str:
-    """Draw the wind arrow inside the framed right band, pointing inward.
+def _wind_vector_clockface(wind: dict, data_box: dict, frame: dict,
+                           grey: str) -> str:
+    """Draw the wind glyph in the margin at the clockface angle of the source.
 
-    The arrow head sits at the band's inner edge at the clockface height where
-    the wind's source bearing exits the data area; the tail runs out toward the
-    band's outer edge. A compass + degrees + km/h + knots label sits above it.
-    Ported from the v5 prototype.
+    The glyph sits on the ray leaving the data-area centre toward the wind
+    *source* bearing, measured clockwise from screen-up (N = top, E = right,
+    S = bottom, W = left): ``x = cx + R·sin θ``, ``y = cy − R·cos θ``. So a
+    westerly wind (source ~270°) lands to the LEFT of the traces, an easterly
+    (~90°) to the RIGHT, a northerly (~0/360°) at the TOP, a southerly (~180°)
+    at the BOTTOM. The glyph lives in the framed margin — OUTSIDE the trace box
+    but INSIDE the outer frame — and the arrow points INWARD (toward the centre),
+    i.e. the direction the wind blows. A grey compass/degrees/speed label sits
+    beside it, offset off the shaft and clamped to stay within the frame, so it
+    never clips the frame nor collides with the (in-box) North marker, scale bar
+    or legend.
+
+    Args:
+        wind: wind dict (``dir_deg`` source bearing, ``speed_kmh``, ``speed_kn``).
+        data_box: the trace box rect (``x``/``y``/``w``/``h``).
+        frame: the outer frame rect the glyph+label must stay inside.
+        grey: stroke/fill colour for the glyph and label.
+
+    Returns:
+        str: SVG fragment for the arrow and its label.
     """
     deg = float(wind["dir_deg"])
-    src = math.radians(deg)
-    ux, uy = math.sin(src), -math.cos(src)  # outward (source) dir, screen up = N
-    inx, iny = -ux, -uy                     # inward (down-wind) dir
-    pcx = data_box["x"] + data_box["w"] / 2
-    pcy = data_box["y"] + data_box["h"] / 2
-    # height where bearing exits the data-area right edge (guard near-vertical)
-    if abs(ux) < 1e-3:
-        ey = pcy
-    else:
-        tt = (data_box["x"] + data_box["w"] - pcx) / ux
-        ey = pcy + uy * tt
-        ey = max(data_box["y"] + 24, min(data_box["y"] + data_box["h"] - 24, ey))
-    hx, hy = band_l + 14, ey
-    span = (band_r - 16) - hx
-    lw = span / (-inx) if abs(inx) > 1e-3 else span
-    tx, ty = hx - inx * lw, hy - iny * lw
+    th = math.radians(deg)
+    # placement unit vector: centre -> glyph, clockwise from screen-up (N).
+    ux, uy = math.sin(th), -math.cos(th)
+    cx = data_box["x"] + data_box["w"] / 2
+    cy = data_box["y"] + data_box["h"] / 2
+    hw, hh = data_box["w"] / 2, data_box["h"] / 2
+    # ray/box intersection: distance from the centre to the trace-box edge.
+    tx_e = hw / abs(ux) if abs(ux) > 1e-6 else float("inf")
+    ty_e = hh / abs(uy) if abs(uy) > 1e-6 else float("inf")
+    t_edge = min(tx_e, ty_e)
+    ex, ey = cx + ux * t_edge, cy + uy * t_edge  # exit point on the box edge
+    gap_in, shaft = 8.0, 40.0
+    hx, hy = ex + ux * gap_in, ey + uy * gap_in       # arrow head (inner tip)
+    tx2, ty2 = hx + ux * shaft, hy + uy * shaft       # arrow tail (outer end)
+    inx, iny = -ux, -uy                               # inward = the way wind blows
     perpx, perpy = -iny, inx
     parts = [
-        f'<line x1="{tx:.1f}" y1="{ty:.1f}" x2="{hx:.1f}" y2="{hy:.1f}" '
+        f'<line x1="{tx2:.1f}" y1="{ty2:.1f}" x2="{hx:.1f}" y2="{hy:.1f}" '
         f'stroke="{grey}" stroke-width="3"/>',
-        f'<polygon points="{hx+inx*2:.1f},{hy+iny*2:.1f} '
-        f'{hx-inx*11+perpx*6:.1f},{hy-iny*11+perpy*6:.1f} '
-        f'{hx-inx*11-perpx*6:.1f},{hy-iny*11-perpy*6:.1f}" fill="{grey}"/>',
+        f'<polygon points="{hx+inx*12:.1f},{hy+iny*12:.1f} '
+        f'{hx+perpx*6:.1f},{hy+perpy*6:.1f} '
+        f'{hx-perpx*6:.1f},{hy-perpy*6:.1f}" fill="{grey}"/>',
     ]
-    lxr = band_r - 8
-    lyr = min(ty, hy) - 44
+    # label: three short grey lines, offset off the shaft so text never sits on
+    # the arrow, then clamped so the whole block stays inside the frame.
     kmh = wind.get("speed_kmh")
     kn = wind.get("speed_kn")
-    speed_txt = ""
+    lines = ["WIND", f"{_compass_point(deg)} {int(round(deg)):03d}°"]
     if isinstance(kmh, (int, float)):
-        speed_txt = f"{kmh:.1f} km/h"
+        spd = f"{kmh:.1f} km/h"
         if isinstance(kn, (int, float)):
-            speed_txt += f" · {kn:.1f} kn"
-    parts.append(f'<text x="{lxr:.1f}" y="{lyr:.1f}" font-size="12.5" fill="{grey}" '
-                 f'font-weight="700" text-anchor="end">WIND</text>')
-    parts.append(f'<text x="{lxr:.1f}" y="{lyr+16:.1f}" font-size="12" fill="{grey}" '
-                 f'text-anchor="end">{_compass_point(deg)} {int(round(deg)):03d}°</text>')
-    if speed_txt:
-        parts.append(f'<text x="{lxr:.1f}" y="{lyr+31:.1f}" font-size="12" fill="{grey}" '
-                     f'text-anchor="end">{speed_txt}</text>')
+            spd += f" · {kn:.1f} kn"
+        lines.append(spd)
+    line_h = 15.0
+    block_h = line_h * len(lines)
+    if abs(ux) >= abs(uy):
+        # horizontal-ish arrow (glyph left/right): stack the label above the tail
+        lcx, lcy = tx2, ty2 - block_h - 8
+    else:
+        # vertical-ish arrow (glyph top/bottom): label beyond the tail
+        lcx = tx2
+        lcy = ty2 + 8 if uy > 0 else ty2 - block_h - 8
+    half_w = max(len(s) for s in lines) * 3.4 + 6
+    lcx = min(max(lcx, frame["x"] + half_w + 6),
+              frame["x"] + frame["w"] - half_w - 6)
+    lcy = min(max(lcy, frame["y"] + 4),
+              frame["y"] + frame["h"] - block_h - 4)
+    weights = ("700", "400", "400")
+    for i, s in enumerate(lines):
+        parts.append(
+            f'<text x="{lcx:.1f}" y="{lcy + 12 + i * line_h:.1f}" font-size="12" '
+            f'fill="{grey}" text-anchor="middle" '
+            f'font-weight="{weights[i] if i < len(weights) else "400"}">'
+            f'{_esc(s)}</text>')
     return "".join(parts)
 
 
@@ -1048,7 +1079,15 @@ def energy_management(round_data: dict, *, title: str = "Energy Management",
     bill = _series_from_rows(bill_rows, TRACK_T, TRACK_ALT, TRACK_GS, speed_smooth)
     lead = _series_from_rows(lead_rows, TRACK_T, TRACK_ALT, TRACK_GS, speed_smooth)
 
-    x_max = 30.0  # full working window in minutes
+    # Distance rounds keep the fixed 0-30 min shared window; speed runs are
+    # ~1-min flights, so fit the x-axis to the actual flight duration and use the
+    # full plot width instead of squashing them into the far left (RPT-018).
+    is_speed = round_data.get("task_type") == "speedrun"
+    if is_speed:
+        all_mins = bill["mins"] + lead["mins"]
+        x_max = max(all_mins) if all_mins else 1.0
+    else:
+        x_max = 30.0  # full working window in minutes
     all_alt = bill["alt"] + lead["alt"]
     all_spd = bill["spd"] + lead["spd"]
     if not all_alt:
@@ -1087,13 +1126,9 @@ def energy_management(round_data: dict, *, title: str = "Energy Management",
         f'<text x="{px0}" y="26" font-size="19" font-weight="600" fill="{ink}">'
         f'{_esc(title)}</text>',
     ]
-    # shared x gridlines across both panels
-    step = 5.0
-    xt = 0.0
-    xticks = []
-    while xt <= x_max + 1e-6:
-        xticks.append(xt)
-        xt += step
+    # shared x gridlines across both panels (5-min ticks over the 30-min window;
+    # readable sub-minute ticks fitted to a speed run's short flight)
+    xticks = [t for t in _nice_ticks(0, x_max, 6) if 0 <= t <= x_max + 1e-6]
     for xt in xticks:
         x = sx(xt)
         body.append(f'<line x1="{x:.1f}" y1="{alt_y0:.1f}" x2="{x:.1f}" y2="{alt_y1:.1f}" '

@@ -81,15 +81,18 @@ def test_overview_performance_summary_first_with_figures(soup):
         assert summary.select_one(f"#{fid}") is not None, f"missing {fid}"
 
 
-def test_point_evidence_explain_preserved(soup):
-    """The Overview and the per-round views keep the Point-Evidence-Explain
-    structure (RPT-003/004): a Point lead-in plus Evidence/what-to-do follow-up."""
+def test_analysis_is_insight_first_no_pee_labels(soup):
+    """Analysis pages are insight-first (RPT-003/004, updated): no literal
+    'Point.'/'Evidence.'/'Explain.' bold labels; the Overview keeps a
+    'What to do.' recommendation cue, and every per-round view carries
+    substantive, quantitative prose."""
     ov = soup.select_one("#view-overview").get_text(" ", strip=True)
-    assert "Point." in ov and "What to do." in ov
-    # Every round carries an explicit Point + Evidence PEE block.
+    assert "Point." not in ov and "Evidence." not in ov and "Explain." not in ov
+    assert "What to do." in ov  # recommendation cue kept
     for n in range(1, 18):
         txt = soup.select_one(f"#view-round-{n}").get_text(" ", strip=True)
-        assert "Point." in txt and "Evidence." in txt, f"round {n} missing PEE"
+        assert "Point." not in txt and "Evidence." not in txt, f"round {n} has a PEE label"
+        assert "km/h" in txt and len(txt) > 400, f"round {n} prose thin/unquantified"
 
 
 def test_every_figure_has_a_nonempty_caption(soup):

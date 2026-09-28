@@ -64,7 +64,7 @@ def _ext(url: str, text: str) -> str:
 def _block(heading: str, items: list[str]) -> str:
     """Return a labelled sub-list (Drills / Further analysis / Resources)."""
     lis = "".join(f"<li>{it}</li>" for it in items)
-    return f"<p class=\"reco-label\">{C.esc(heading)}</p><ul>{lis}</ul>"
+    return f"<p class=\"reco-label\"><strong>{C.esc(heading)}</strong></p><ul>{lis}</ul>"
 
 
 def _cruise() -> str:
@@ -86,7 +86,7 @@ def _cruise() -> str:
         "Cut altitude spent loitering at low value - convert height into "
         "distance while the air is sinking anyway.",
     ])
-    further = _block("Further analysis", [
+    further = _block("Further Analysis", [
         "Per-leg speed against wind direction once a task file with turnpoint "
         "coordinates is available, to separate true cruise pace from "
         "head/tail-wind legs.",
@@ -113,12 +113,12 @@ def _climb() -> str:
         "Commit to weak cores instead of leaving to search; patience before "
         "abandoning lift on poor-lift days.",
     ])
-    further = _block("Further analysis", [
+    further = _block("Further Analysis", [
         "Per-thermal centring traces (drift-corrected) to quantify how much of "
         "the height gap is radius versus core selection.",
     ])
     innov = (
-        "<p class=\"reco-label\">Where technology could help</p>"
+        "<p class=\"reco-label\"><strong>Where Technology Could Help</strong></p>"
         "<p>A better real-time picture of climb rate and where the core sits is "
         "exactly what the "
         f"{_xref('innovations', 'inn-navigator', 'navigator AR HUD')} and "
