@@ -24,7 +24,7 @@
         "hasExpandAll": false,
         "hasCollapseAll": false,
         "summaryPresent": false,
-        "anchorBullets": 0
+        "anchorBullets": 3
       }
     },
     "page:analysis": {
@@ -43,13 +43,19 @@
         "overflow": [],
         "textCollisions": [
           {
-            "label": "Across the week: normalised score vs raw laps",
-            "a": "20",
-            "b": "Laps",
-            "overlapPct": 53
+            "label": "Round 12 ground track - Bill vs the same-air leader",
+            "a": "WIND",
+            "b": "W 262\u00b0",
+            "overlapPct": 25
+          },
+          {
+            "label": "Round 12 ground track - Bill vs the same-air leader",
+            "a": "W 262\u00b0",
+            "b": "16.9 km/h \u00b7 9.1 kn",
+            "overlapPct": 25
           }
         ],
-        "textCollisionCount": 1
+        "textCollisionCount": 2
       },
       "sections": {
         "total": 4,
@@ -60,7 +66,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 8
+        "anchorBullets": 21
       }
     },
     "page:recommendations": {
@@ -89,7 +95,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 10
+        "anchorBullets": 24
       }
     },
     "page:innovations": {
@@ -118,7 +124,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 8
+        "anchorBullets": 10
       }
     },
     "methodology": {
@@ -144,13 +150,19 @@
           "overflow": [],
           "textCollisions": [
             {
-              "label": "Across the week: normalised score vs raw laps",
-              "a": "20",
-              "b": "Laps",
-              "overlapPct": 53
+              "label": "Round 12 ground track - Bill vs the same-air leader",
+              "a": "WIND",
+              "b": "W 262\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 12 ground track - Bill vs the same-air leader",
+              "a": "W 262\u00b0",
+              "b": "16.9 km/h \u00b7 9.1 kn",
+              "overlapPct": 25
             }
           ],
-          "textCollisionCount": 1
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 4,
@@ -161,7 +173,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 8
+          "anchorBullets": 21
         }
       },
       "round-1": {
@@ -179,8 +191,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 1 ground track and course",
+              "a": "WIND",
+              "b": "ENE 072\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 1 ground track and course",
+              "a": "ENE 072\u00b0",
+              "b": "6.4 km/h \u00b7 3.5 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -191,7 +216,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 14
         }
       },
       "round-2": {
@@ -209,8 +234,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 2 ground track and course",
+              "a": "WIND",
+              "b": "ENE 057\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 2 ground track and course",
+              "a": "ENE 057\u00b0",
+              "b": "5.6 km/h \u00b7 3.0 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -221,7 +259,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       },
       "round-3": {
@@ -239,8 +277,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 3 ground track and course",
+              "a": "WIND",
+              "b": "NE 045\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 3 ground track and course",
+              "a": "NE 045\u00b0",
+              "b": "5.1 km/h \u00b7 2.8 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -251,7 +302,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       },
       "round-4": {
@@ -265,12 +316,25 @@
           "offenderCount": 0
         },
         "svg": {
-          "count": 10,
+          "count": 9,
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 4 ground track and course",
+              "a": "WIND",
+              "b": "ESE 115\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 4 ground track and course",
+              "a": "ESE 115\u00b0",
+              "b": "4.2 km/h \u00b7 2.3 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -281,7 +345,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 14
         }
       },
       "round-5": {
@@ -299,8 +363,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 5 ground track and course",
+              "a": "WIND",
+              "b": "NNE 033\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 5 ground track and course",
+              "a": "NNE 033\u00b0",
+              "b": "4.3 km/h \u00b7 2.3 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -311,7 +388,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 14
         }
       },
       "round-6": {
@@ -329,8 +406,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 6 ground track and course",
+              "a": "WIND",
+              "b": "E 099\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 6 ground track and course",
+              "a": "E 099\u00b0",
+              "b": "4.6 km/h \u00b7 2.5 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -341,7 +431,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 14
         }
       },
       "round-7": {
@@ -359,8 +449,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 7 ground track and course",
+              "a": "WIND",
+              "b": "W 260\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 7 ground track and course",
+              "a": "W 260\u00b0",
+              "b": "9.3 km/h \u00b7 5.0 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -371,7 +474,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 14
         }
       },
       "round-8": {
@@ -389,8 +492,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 8 ground track and course",
+              "a": "WIND",
+              "b": "WSW 257\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 8 ground track and course",
+              "a": "WSW 257\u00b0",
+              "b": "6.6 km/h \u00b7 3.6 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -401,7 +517,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       },
       "round-9": {
@@ -419,8 +535,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 9 ground track and course",
+              "a": "WIND",
+              "b": "S 171\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 9 ground track and course",
+              "a": "S 171\u00b0",
+              "b": "4.7 km/h \u00b7 2.5 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -431,7 +560,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       },
       "round-10": {
@@ -445,12 +574,25 @@
           "offenderCount": 0
         },
         "svg": {
-          "count": 10,
+          "count": 9,
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 10 ground track and course",
+              "a": "WIND",
+              "b": "W 281\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 10 ground track and course",
+              "a": "W 281\u00b0",
+              "b": "12.1 km/h \u00b7 6.5 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -461,7 +603,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 14
         }
       },
       "round-11": {
@@ -479,8 +621,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 11 ground track and course",
+              "a": "WIND",
+              "b": "W 272\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 11 ground track and course",
+              "a": "W 272\u00b0",
+              "b": "18.2 km/h \u00b7 9.8 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -491,7 +646,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       },
       "round-12": {
@@ -509,8 +664,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 12 ground track and course",
+              "a": "WIND",
+              "b": "W 262\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 12 ground track and course",
+              "a": "W 262\u00b0",
+              "b": "16.9 km/h \u00b7 9.1 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -521,7 +689,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       },
       "round-13": {
@@ -539,8 +707,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 13 ground track and course",
+              "a": "WIND",
+              "b": "WNW 285\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 13 ground track and course",
+              "a": "WNW 285\u00b0",
+              "b": "10.3 km/h \u00b7 5.6 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -551,7 +732,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       },
       "round-14": {
@@ -569,8 +750,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 14 ground track and course",
+              "a": "WIND",
+              "b": "NW 306\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 14 ground track and course",
+              "a": "NW 306\u00b0",
+              "b": "11.7 km/h \u00b7 6.3 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -581,7 +775,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       },
       "round-15": {
@@ -599,8 +793,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 15 ground track and course",
+              "a": "WIND",
+              "b": "N 003\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 15 ground track and course",
+              "a": "N 003\u00b0",
+              "b": "11.5 km/h \u00b7 6.2 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -611,7 +818,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       },
       "round-16": {
@@ -625,12 +832,25 @@
           "offenderCount": 0
         },
         "svg": {
-          "count": 10,
+          "count": 9,
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 16 ground track and course",
+              "a": "WIND",
+              "b": "ENE 075\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 16 ground track and course",
+              "a": "ENE 075\u00b0",
+              "b": "8.4 km/h \u00b7 4.5 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -641,7 +861,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 14
         }
       },
       "round-17": {
@@ -659,8 +879,21 @@
           "zeroBox": [],
           "hidden": [],
           "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "textCollisions": [
+            {
+              "label": "Round 17 ground track and course",
+              "a": "WIND",
+              "b": "ENE 072\u00b0",
+              "overlapPct": 25
+            },
+            {
+              "label": "Round 17 ground track and course",
+              "a": "ENE 072\u00b0",
+              "b": "8.3 km/h \u00b7 4.5 kn",
+              "overlapPct": 25
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -671,12 +904,12 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 14
         }
       }
     },
     "anchor_test": {
-      "bulletLinks": 4,
+      "bulletLinks": 17,
       "probe": [
         {
           "text": "22nd of 38 (12,562 pts); the gap is almo",
@@ -696,6 +929,11 @@
         {
           "text": "Stronger in strong lift; wider circles a",
           "id": "ov-conditions",
+          "targetExists": true
+        },
+        {
+          "text": "cruise pace between thermals",
+          "id": "rec-cruise",
           "targetExists": true
         }
       ],
@@ -726,7 +964,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 8
+        "anchorBullets": 21
       },
       "afterCollapseAll": {
         "total": 4,
@@ -737,7 +975,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 8
+        "anchorBullets": 21
       },
       "afterExpandAll": {
         "total": 4,
@@ -748,7 +986,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 8
+        "anchorBullets": 21
       },
       "individualToggle": {
         "ok": true,
@@ -766,7 +1004,7 @@
         }
       }
     },
-    "xrefs_total": 50,
+    "xrefs_total": 57,
     "xrefs_missing_target": [],
     "xref_landing_shot": "reviews/playwright/screenshots/xref-analysis-to-recs-1440.png",
     "xref_clicks": [
@@ -818,11 +1056,7 @@
         "Spectral 400 loaded",
         "Spectral 500 unloaded",
         "Spectral 600 loaded",
-        "Spectral 400 unloaded",
-        "Source Sans 3 400 loaded",
-        "Source Sans 3 500 loaded",
-        "Source Sans 3 600 loaded",
-        "Source Sans 3 700 loaded"
+        "Source Sans 3 400 700 loaded"
       ],
       "fontsReady": "loaded"
     }
@@ -862,7 +1096,7 @@
         "hasExpandAll": false,
         "hasCollapseAll": false,
         "summaryPresent": false,
-        "anchorBullets": 0
+        "anchorBullets": 3
       }
     },
     "page:analysis": {
@@ -878,16 +1112,143 @@
         "count": 20,
         "zeroBox": [],
         "hidden": [],
-        "overflow": [],
-        "textCollisions": [
+        "overflow": [
+          {
+            "label": "Bill's within-group finishing rank by round",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Gap to the winner, by task type",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Clean-lap time deficit vs the same-air leader",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Distance-round scores, with the two low rounds marked",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Round 17 cumulative laps - Bill vs the same-air leader",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
           {
             "label": "Across the week: normalised score vs raw laps",
-            "a": "20",
-            "b": "Laps",
-            "overlapPct": 50
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Round score by round (normalised to 1000)",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Laps completed by distance round",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Average task speed by distance round",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Grinder vs sprinter - the distance-round field",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Speeds: Bill vs same-air leader",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Start-gate entry speed by round",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Start-gate entry altitude by round",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Relative standing vs thermal strength",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Time spent away from the course",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Solar radiation by round (thermal-strength proxy)",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Climb geometry: Bill vs leader",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Climb rate: Bill vs leader",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Thermalling turn-radius distribution",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
+          },
+          {
+            "label": "Round 12 ground track - Bill vs the same-air leader",
+            "svgRight": 736,
+            "parentRight": 374,
+            "parentCls": "fig-scroll"
           }
         ],
-        "textCollisionCount": 1
+        "textCollisions": [
+          {
+            "label": "Round 12 ground track - Bill vs the same-air leader",
+            "a": "WIND",
+            "b": "W 262\u00b0",
+            "overlapPct": 23
+          },
+          {
+            "label": "Round 12 ground track - Bill vs the same-air leader",
+            "a": "W 262\u00b0",
+            "b": "16.9 km/h \u00b7 9.1 kn",
+            "overlapPct": 23
+          }
+        ],
+        "textCollisionCount": 2
       },
       "sections": {
         "total": 4,
@@ -898,7 +1259,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 8
+        "anchorBullets": 21
       }
     },
     "page:recommendations": {
@@ -927,7 +1288,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 10
+        "anchorBullets": 24
       }
     },
     "page:innovations": {
@@ -956,7 +1317,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 8
+        "anchorBullets": 10
       }
     },
     "methodology": {
@@ -979,16 +1340,143 @@
           "count": 20,
           "zeroBox": [],
           "hidden": [],
-          "overflow": [],
-          "textCollisions": [
+          "overflow": [
+            {
+              "label": "Bill's within-group finishing rank by round",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Gap to the winner, by task type",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Clean-lap time deficit vs the same-air leader",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Distance-round scores, with the two low rounds marked",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Round 17 cumulative laps - Bill vs the same-air leader",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
             {
               "label": "Across the week: normalised score vs raw laps",
-              "a": "20",
-              "b": "Laps",
-              "overlapPct": 50
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Round score by round (normalised to 1000)",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Laps completed by distance round",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Average task speed by distance round",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Grinder vs sprinter - the distance-round field",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Speeds: Bill vs same-air leader",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Start-gate entry speed by round",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Start-gate entry altitude by round",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Relative standing vs thermal strength",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Time spent away from the course",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Solar radiation by round (thermal-strength proxy)",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Climb geometry: Bill vs leader",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Climb rate: Bill vs leader",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Thermalling turn-radius distribution",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Round 12 ground track - Bill vs the same-air leader",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
             }
           ],
-          "textCollisionCount": 1
+          "textCollisions": [
+            {
+              "label": "Round 12 ground track - Bill vs the same-air leader",
+              "a": "WIND",
+              "b": "W 262\u00b0",
+              "overlapPct": 23
+            },
+            {
+              "label": "Round 12 ground track - Bill vs the same-air leader",
+              "a": "W 262\u00b0",
+              "b": "16.9 km/h \u00b7 9.1 kn",
+              "overlapPct": 23
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 4,
@@ -999,7 +1487,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 8
+          "anchorBullets": 21
         }
       },
       "round-1": {
@@ -1016,9 +1504,41 @@
           "count": 10,
           "zeroBox": [],
           "hidden": [],
-          "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "overflow": [
+            {
+              "label": "Energy Management",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Round 1 ground track and course",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Round 1 cumulative laps - Bill vs leader",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            }
+          ],
+          "textCollisions": [
+            {
+              "label": "Round 1 ground track and course",
+              "a": "WIND",
+              "b": "ENE 072\u00b0",
+              "overlapPct": 23
+            },
+            {
+              "label": "Round 1 ground track and course",
+              "a": "ENE 072\u00b0",
+              "b": "6.4 km/h \u00b7 3.5 kn",
+              "overlapPct": 23
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -1029,7 +1549,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 14
         }
       },
       "round-4": {
@@ -1043,12 +1563,38 @@
           "offenderCount": 0
         },
         "svg": {
-          "count": 10,
+          "count": 9,
           "zeroBox": [],
           "hidden": [],
-          "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "overflow": [
+            {
+              "label": "Energy Management",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Round 4 ground track and course",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            }
+          ],
+          "textCollisions": [
+            {
+              "label": "Round 4 ground track and course",
+              "a": "WIND",
+              "b": "ESE 115\u00b0",
+              "overlapPct": 23
+            },
+            {
+              "label": "Round 4 ground track and course",
+              "a": "ESE 115\u00b0",
+              "b": "4.2 km/h \u00b7 2.3 kn",
+              "overlapPct": 23
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -1059,7 +1605,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 14
         }
       },
       "round-9": {
@@ -1076,9 +1622,41 @@
           "count": 10,
           "zeroBox": [],
           "hidden": [],
-          "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "overflow": [
+            {
+              "label": "Energy Management",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Round 9 ground track and course",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Round 9 cumulative laps - Bill vs leader",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            }
+          ],
+          "textCollisions": [
+            {
+              "label": "Round 9 ground track and course",
+              "a": "WIND",
+              "b": "S 171\u00b0",
+              "overlapPct": 23
+            },
+            {
+              "label": "Round 9 ground track and course",
+              "a": "S 171\u00b0",
+              "b": "4.7 km/h \u00b7 2.5 kn",
+              "overlapPct": 23
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -1089,7 +1667,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       },
       "round-12": {
@@ -1106,9 +1684,41 @@
           "count": 10,
           "zeroBox": [],
           "hidden": [],
-          "overflow": [],
-          "textCollisions": [],
-          "textCollisionCount": 0
+          "overflow": [
+            {
+              "label": "Energy Management",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Round 12 ground track and course",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            },
+            {
+              "label": "Round 12 cumulative laps - Bill vs leader",
+              "svgRight": 736,
+              "parentRight": 374,
+              "parentCls": "fig-scroll"
+            }
+          ],
+          "textCollisions": [
+            {
+              "label": "Round 12 ground track and course",
+              "a": "WIND",
+              "b": "W 262\u00b0",
+              "overlapPct": 23
+            },
+            {
+              "label": "Round 12 ground track and course",
+              "a": "W 262\u00b0",
+              "b": "16.9 km/h \u00b7 9.1 kn",
+              "overlapPct": 23
+            }
+          ],
+          "textCollisionCount": 2
         },
         "sections": {
           "total": 6,
@@ -1119,7 +1729,7 @@
           "hasExpandAll": true,
           "hasCollapseAll": true,
           "summaryPresent": true,
-          "anchorBullets": 12
+          "anchorBullets": 13
         }
       }
     },
@@ -1134,7 +1744,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 8
+        "anchorBullets": 21
       },
       "afterCollapseAll": {
         "total": 4,
@@ -1145,7 +1755,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 8
+        "anchorBullets": 21
       },
       "afterExpandAll": {
         "total": 4,
@@ -1156,7 +1766,7 @@
         "hasExpandAll": true,
         "hasCollapseAll": true,
         "summaryPresent": true,
-        "anchorBullets": 8
+        "anchorBullets": 21
       },
       "individualToggle": {
         "ok": true,
@@ -1174,7 +1784,7 @@
         }
       }
     },
-    "xrefs_total": 50,
+    "xrefs_total": 57,
     "xrefs_missing_target": [],
     "xref_landing_shot": "reviews/playwright/screenshots/xref-analysis-to-recs-390.png",
     "xref_clicks": [
@@ -1226,11 +1836,7 @@
         "Spectral 400 loaded",
         "Spectral 500 unloaded",
         "Spectral 600 loaded",
-        "Spectral 400 unloaded",
-        "Source Sans 3 400 loaded",
-        "Source Sans 3 500 loaded",
-        "Source Sans 3 600 loaded",
-        "Source Sans 3 700 loaded"
+        "Source Sans 3 400 700 loaded"
       ],
       "fontsReady": "loaded"
     }

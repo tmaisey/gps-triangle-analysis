@@ -654,7 +654,7 @@ def _wind_vector_clockface(wind: dict, data_box: dict, frame: dict,
         if isinstance(kn, (int, float)):
             spd += f" · {kn:.1f} kn"
         lines.append(spd)
-    line_h = 15.0
+    line_h = round(FS_AXIS * 1.3, 1)   # leading scales with the label size
     block_h = line_h * len(lines)
     if abs(ux) >= abs(uy):
         # horizontal-ish arrow (glyph left/right): stack the label above the tail
@@ -663,7 +663,7 @@ def _wind_vector_clockface(wind: dict, data_box: dict, frame: dict,
         # vertical-ish arrow (glyph top/bottom): label beyond the tail
         lcx = tx2
         lcy = ty2 + 8 if uy > 0 else ty2 - block_h - 8
-    half_w = max(len(s) for s in lines) * 3.4 + 6
+    half_w = max(len(s) for s in lines) * FS_AXIS * 0.28 + 6
     lcx = min(max(lcx, frame["x"] + half_w + 6),
               frame["x"] + frame["w"] - half_w - 6)
     lcy = min(max(lcy, frame["y"] + 4),
