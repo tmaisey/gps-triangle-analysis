@@ -31,6 +31,7 @@ Standing decisions that constrain how the report is built. Kept lightweight (sim
 **Rationale:** Organises dense content and keeps evidence, action, and future ideas navigable and in context — while staying one file.
 **Rejected:** multiple files (breaks single-send); one long scroll page (poor navigability).
 **Refs:** SPEC RPT-002, RPT-005, RPT-006, RPT-009.
+**Status:** superseded in part — Methodology page descoped 2026-09-28 (user decision); README carries the build narrative. The four-page structure stands.
 
 ## ADR-005 — Bespoke inline-SVG charts, not a charting library
 **Status:** accepted
@@ -40,11 +41,12 @@ Standing decisions that constrain how the report is built. Kept lightweight (sim
 **Refs:** SPEC DSN-001, RPT-003, RPT-004.
 
 ## ADR-006 — Methodology page durations from harness metadata + captured verbatim prompts
-**Status:** accepted
+**Status:** superseded (see below)
 **Decision:** The Methodology narrative sources agent working-durations and token/tool counts from the harness's subagent metadata (exact) and the user's verbatim prompts from a running capture in `docs/METHODOLOGY_LOG.md`. Inter-message human think-time is not instrumented, so it is not fabricated — human interjections are marked positionally, not timed.
 **Rationale:** Durations must be truthful; the only precise timings available are agent run-times. Capturing verbatim prompts as the work happens protects them from later context summarisation.
 **Rejected:** a full OTEL/event trace (overkill, not the intent); estimating human gap-times (would be invented).
 **Refs:** SPEC RPT-010; docs/METHODOLOGY_LOG.md.
+**Status:** superseded — Methodology page descoped 2026-09-28 (user decision); README carries the build narrative.
 
 ## ADR-007 — Visual/UI review via Playwright in the review stage
 **Status:** accepted
@@ -59,3 +61,15 @@ Standing decisions that constrain how the report is built. Kept lightweight (sim
 **Rationale:** The `.rct` `RectZones` are ground/safety zones, not turnpoints; only the header defines the course, and `length` is the **radius / half-base**, not the leg. Confirmed by the frame/geometry tests and the 1690 m perimeter matching the Sport-class regs lap.
 **Rejected:** equilateral 350 m legs (2× too small and the wrong shape); fitting the triangle to the flown tracks (circular — the course is the reference the tracks are judged against, not derived from them).
 **Refs:** SPEC RPT-011; `scripts/build/data.py` `course_geometry`.
+
+## ADR-009 — Build-review fix decisions (2026-09-28)
+**Status:** accepted
+**Decision:** The user's amendments to the consolidated review proposal (`reviews/260928T0239-consolidated.md`) stand as constraints:
+- **Orange accent carries one meaning only** — the dominant-loss component. It is not reused for any other semantic.
+- **Mobile charts scroll, they do not reflow** — below the 720 px breakpoint charts sit in a horizontal scroll container with a 720 px min-width; above it, nothing changes.
+- **No contrast changes** — the reviewers' contrast item was declined; the palette stays as designed.
+- **`h3` only within the existing hierarchy** — new subheadings must nest under an existing `h2`, not introduce a new level or skip one.
+- **Methodology page descoped** — the fifth page is not built; the README carries the build narrative.
+**Rationale:** Keeps the design system legible and single-meaning, avoids re-laying-out charts for small screens (which breaks axis/label geometry), and stops review fixes from widening scope.
+**Rejected:** re-colouring for contrast (palette churn for a marginal gain); responsive chart re-layout (fragile, per-chart work); building the Methodology page (user descoped it).
+**Refs:** `reviews/260928T0239-consolidated.md`; SPEC QA-001, DSN-001; supersedes the Methodology parts of ADR-004 and ADR-006.

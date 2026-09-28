@@ -197,17 +197,6 @@
       "passes": true
     },
     {
-      "id": "RPT-010",
-      "category": "content",
-      "description": "Methodology page (added after the four-page product is accepted): visual narrative of the human+agent build. Top summary paragraph + collapsed-by-default setup panel (Claude Code; CLAUDE.md/AGENTS.md intent-capture heuristics; laptop with Python). Work grouped into high-level steps (Specify/Research/Design/Build/Refinement/Review/Finish); each step expandable from an ask-summary to the verbatim user prompts + a summary of what the agent/subagents did; durations shown at each level (agent working-time exact from harness metadata; user clarifications marked). Adds Methodology to the nav (5th page)",
-      "roadmap": "v1.1",
-      "steps": [
-        "Assemble from docs/METHODOLOGY_LOG.md; render steps as expandable sections with durations; add nav link",
-        "Test: Methodology page present and in nav; setup panel collapsed by default; each step expands to verbatim prompts + agent-action summary; durations rendered; no emojis"
-      ],
-      "passes": false
-    },
-    {
       "id": "QA-001",
       "category": "review",
       "description": "Build-review includes a Playwright (CLI) visual/UI pass: render the file, screenshot pages at desktop and mobile widths, verify layout, charts visible, nav/burger, collapsibles, cross-page links, and no overflow, before the user reviews",
@@ -216,7 +205,7 @@
         "A review subagent drives Playwright to load report/*.html and capture/inspect each page at >=2 viewports",
         "Test: screenshots captured for all pages at desktop + mobile; no horizontal overflow; charts render; nav, burger, and collapsibles operate; findings written to reviews/"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "RPT-011",

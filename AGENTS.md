@@ -21,7 +21,7 @@ The deliverable is **one self-contained HTML file** produced by a deterministic 
 - **Stage 2 — Content (parallel agents):** Overview; per-round views (all 17); recommendations layer + the "art of the possible" tech section. Each builds against the foundation's interfaces.
 - **Stage 3 — Consolidation (single agent):** integrate the modules, run the generator, drive the test suite to green, and align consistency across the whole file (typography, spacing, captions, Point-Evidence-Explain structure, lexical-tic sweep, self-containment).
 
-**Phased delivery.** The four-page product (Home/Analysis/Recommendations/Innovations) is built and reviewed first and accepted by the user. Only then is the **Methodology** page built (from `docs/METHODOLOGY_LOG.md`) and reviewed on its own. The repo **README.md** (DOC-001) is written **last**, after both are accepted.
+**Phased delivery.** The four-page product (Home/Analysis/Recommendations/Innovations) is built, reviewed and accepted by the user. A fifth **Methodology** page was planned but **descoped on 2026-09-28** (user decision) — the build narrative is carried by the README instead. The repo **README.md** (DOC-001) is written **last**, after the reviewed product is accepted.
 
 ## Build-review workflow (mandatory — at the end of the build phase)
 Once the build reaches green, and **before it is considered done**, subagents review it in parallel:
@@ -32,13 +32,15 @@ Once the build reaches green, and **before it is considered done**, subagents re
 - **The orchestrator consolidates** the recommendations and **proposes the improvements to the user for approval BEFORE** any fixing begins.
 - **On approval**, a separate fix subagent applies the agreed changes. Re-review if the changes are substantial.
 
+**Review status (2026-09-28): complete.** Six Opus reviewers (output-quality, Playwright visual/UI, four batched spec reviewers) wrote `reviews/260928T0239-*.md`; the consolidated proposal is `reviews/260928T0239-consolidated.md`. The user approved with amendments (ADR-009); three parallel fix agents applied the changes red→green in worktrees, merged to main (tests 82 → 247), followed by a Playwright re-run and a Tier 1 re-review. QA-001 is satisfied.
+
 ## Doc index / repo map
 | Path | What it holds | When to use / update |
 |---|---|---|
 | `docs/PRD.md` | Intent, scope, deliverable spec, findings, limitations | Read first; update when intent or scope changes |
 | `docs/SPEC.json` | Feature + test backlog with `passes` state | Check before building; flip status through red → green |
 | `docs/ADR.md` | Architecture decision records (standing build constraints) | Read before an architectural choice; add an ADR when one is made |
-| `reviews/` | Build-review reports (`yymmddThhmm-<domain>.md`) | Written at end of build phase; read before proposing fixes |
+| `reviews/` | Build-review reports (`yymmddThhmm-<domain>.md`), the consolidated fix proposal (`-consolidated.md`), and the re-review | Written at end of build phase; read before proposing fixes |
 | `scripts/` | Fetch + analysis scripts (and, to come, the build harness) | — |
 | `data/scores/`, `data/tracks/` | Cached raw rcmodelspot API JSON (re-fetchable) | — |
 | `analysis/`, `analysis/round_data/` | Computed metrics + the compact embeddable per-round dataset | Inputs to the report build |

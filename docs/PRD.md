@@ -2,9 +2,9 @@
 
 Product requirements and plan. Captures intent ahead of the build so the deliverable and its scope are agreed before construction.
 
-*Status: the four-page v2 report is **built and refined** — `report/gps-triangle-world-masters-oschatz-2026.html` (Home / Analysis / Recommendations / Innovations). Data, analysis, per-round views, and the restructured four-section Overview are all rendering. The build-review has run (six Opus reviewers; reports in `reviews/260928T0239-*.md`, consolidated proposal in `reviews/260928T0239-consolidated.md`). Remaining: user approves the fix list → fix agents → re-review → user accepts; then the Methodology page (RPT-010) + its review, then the repo README (DOC-001). Last updated 2026-09-28.*
+*Status: the four-page report is **built, reviewed and fixed** — `report/gps-triangle-world-masters-oschatz-2026.html` (Home / Analysis / Recommendations / Innovations). The build-review has run (six Opus reviewers; reports in `reviews/260928T0239-*.md`, consolidated proposal in `reviews/260928T0239-consolidated.md`); the user approved it with amendments and three parallel fix agents applied the changes red→green (tests 82 → 247), followed by a Playwright re-run and a Tier 1 re-review. The **Methodology page (RPT-010) was descoped by the user on 2026-09-28**. Remaining: the repo README (DOC-001). Last updated 2026-09-28.*
 
-> **Next step:** user approves the consolidated fix proposal; apply fixes red→green in parallel batches; re-run the Playwright driver and re-review Tier 1. Only then build the Methodology page, review it, and finally write the README.*
+> **Next step:** write the repo `README.md` (DOC-001) — the last deliverable.*
 
 ## 1. Vision
 
@@ -76,8 +76,8 @@ Established from the data pulls (subject to the weather and phase passes finalis
 - Avoid flagged lexical tics ("honest/genuinely/sit with/real", "that's not X it's Y", etc.).
 
 **Navigation / UX**
-- **Five top-level pages in one self-contained file:** **Home**, **Analysis** (Performance Analysis), **Recommendations**, **Innovations** (the art-of-the-possible / coaching-tech content), and **Methodology** (how the work was done). JavaScript toggles which page is visible; no reload. *Build order:* the first four pages are the initial product; **Methodology is added in a later phase** (§13), after the product is reviewed and accepted.
-- **Top bar:** left shows the title text **"Bill's GPS Triangle Analysis 2026"** (plain text — no emoji, no logo). Right-aligned, always-visible links: **Home · Analysis · Recommendations · Innovations · Methodology**. On mobile the links collapse to a burger menu.
+- **Four top-level pages in one self-contained file:** **Home**, **Analysis** (Performance Analysis), **Recommendations**, and **Innovations** (the art-of-the-possible / coaching-tech content). JavaScript toggles which page is visible; no reload.
+- **Top bar:** left shows the title text **"GPS Triangle World Masters, Oschatz 2026"** (plain text — no emoji, no logo; RPT-017). Right-aligned, always-visible links: **Home · Analysis · Recommendations · Innovations**. On mobile the links collapse to a burger menu.
 - **Home:** very concise — a short project summary and the three sections listed as linked headings (Performance Analysis, Recommendations, Innovations). No deep content.
 - **Analysis page:** contains the **Overview / Rounds dropdown** — **Overview** (default) then **Round 1 · <date-time>** … **Round 17 · <date-time>**; selecting an item swaps the visible view. The dropdown behaves exactly as previously specified (per-view summary, anchor links, collapsible sections, expand/collapse-all) — just scoped to this page.
 - **Per-view structure (Analysis Overview and each round; Recommendations/Innovations where dense):** opens with a short **summary** — a few sentences then ~5 bullets of key points/recommendations; each bullet is an **anchor link** to its section; each **section header links back to the top**.
@@ -89,7 +89,7 @@ Established from the data pulls (subject to the weather and phase passes finalis
 - **Analysis — Per-round views:** open (under the summary) with a **Visual overview of performance** dashboard — vertical bullet plots (entry speed / entry altitude vs leader and the regs caps; avg speed vs leader), a score ladder (winner 1000 / Bill / field), a wind card, and number-cards (laps, rank, radiation). Then the **Energy Management** dual-panel, the **ground-track & course** overlay, cumulative-laps-vs-leader (distance rounds only — the three sprints are flown in sequential slots, so there is no shared clock to plot them on and the dashboard's single-lap speed panel carries that comparison), the biggest-loss segment, and the round's **inline recommendation(s)**. Each view's summary bullets are round-specific key points, not the section titles.
 - **Recommendations page:** every recommendation gathered in one place, **organised into implementation themes** so they can be seen and planned together — drills, further analysis, resources, and rules-legal live signals (audio vario tuning, speech telemetry callouts, a navigator on the ground station). These are the **same** recommendations shown inline in Analysis (one canonical set, surfaced in both places via shared anchors); each **links back** to its supporting evidence on Analysis and out to relevant **Innovations**.
 - **Innovations page:** the forward-looking coaching-tech roadmap — post-flight AI coach, navigator AR HUD, live AI cueing, data flywheel — with the rules-legality framing (navigator telemetry/AR plausibly legal at Contest-Director discretion; nothing may feed model control per §2.7; pilot-worn HUD safest as training-only; audio vario/speech telemetry explicitly permitted). Standalone, but **linkable from Analysis and Recommendations** so each point stays in context.
-- **Methodology page (later phase):** a visual narrative of how this work was done between the user and the AI agents — for a general reader to "replay" the high-autonomy build. Opens with a short summary paragraph on the human+agent approach, and a collapsed-by-default **setup** panel (Claude Code; a CLAUDE.md/AGENTS.md carrying intent-capture heuristics; a laptop with Python). Work grouped into high-level **steps** (Specify, Research, Design, Build, Refinement, Review, Finish). Each step is **expandable**: a summary of what the user asked, expanding to the actual exchange — the user's **verbatim prompts** and a **summary of what the agent did** (research, data fetches, planning, and delegation to subagents). **Durations shown at each level**: agent working-time between instructions comes from harness metadata (exact); points where the user interjected to clarify are marked. Not a full OTEL trace — an accessible narrative. Source data captured in `docs/METHODOLOGY_LOG.md`.
+- **Methodology page:** **descoped by the user on 2026-09-28** — not built. How the work was done is covered by the repo `README.md` (DOC-001) instead, drawing on `docs/METHODOLOGY_LOG.md`.
 - **Cross-linking:** Analysis ↔ Recommendations ↔ Innovations are cross-referenced via shared anchors, so the reader moves between evidence, action, and future ideas in context.
 
 ## 9. Methodology & fairness
@@ -106,14 +106,15 @@ Established from the data pulls (subject to the weather and phase passes finalis
 - API exposes start point + direction + leg length, not explicit turnpoint coordinates; the triangle is drawn from the flown tracks or reconstructed from geometry.
 - Turn-radius/line metrics are indicative (segmentation blends some thermalling with turns); low-lap rounds are noisy and down-weighted.
 - Live/competition AR-HUD legality is organiser discretion (regs silent); framed as such.
+- **Multi-start rounds inflate the phase aggregates.** On the five pilot-rounds with aborted start attempts (R1 leader; R5/R7/R9 Bill; R9 leader) the phase-decomposition window spans every attempt, so pre-scored-start time is included in the phase totals (e.g. the 287 vs 402 s circling figures). Pinned by `test_anl002_multi_start_aloft_spans_all_attempts`; open for a user decision on whether to re-window to the scored start.
 
 ## 11. Build approach
 
 - **Workflow note (TDD exception):** this is a data-analysis + reporting deliverable, not application code, so classic red/green TDD does not fit. The agreed validation alternative is **data reconciliation** — computed laps/speeds/scores reconcile to the authoritative results, distances validate against the API's own distance fields, and weather maps to the correct flight windows. The build script is deterministic and re-runnable.
 - **Orchestration:** research and heavy data work run in subagents to keep the build context clean; the orchestrator assembles the final HTML from the compact analysis outputs.
 - **Pipeline:** fetch (scores/tracks/weather) → compute per-round metrics + phase decomposition + weather correlation → emit compact embeddable dataset → generate single-file HTML with inline SVG charts.
-- **Build order (phased):** (1) build the four-page product (foundation → parallel content → consolidation); (2) build-review workflow; (3) user reviews and accepts the product; (4) build the **Methodology** page and review it; (5) once accepted, write the repo **README.md** (DOC-001) last.
-- **Build-review includes a visual/UI pass:** alongside the output-quality and spec reviewers, a subagent drives **Playwright (CLI)** to render the file, screenshot the pages at desktop and mobile widths, and check visual correctness (layout, charts visible, nav/burger, collapsibles, no overflow) before the user needs to look. This visual-review step is itself part of the Methodology narrative.
+- **Build order (phased):** (1) build the four-page product (foundation → parallel content → consolidation); (2) build-review workflow; (3) approved fixes applied red→green, then re-review; (4) write the repo **README.md** (DOC-001) last. Steps 1–3 have run (review reports in `reviews/260928T0239-*.md`).
+- **Build-review includes a visual/UI pass:** alongside the output-quality and spec reviewers, a subagent drives **Playwright (CLI)** to render the file, screenshot the pages at desktop and mobile widths, and check visual correctness (layout, charts visible, nav/burger, collapsibles, no overflow) before the user needs to look. This visual-review step is itself part of the build narrative recorded in `docs/METHODOLOGY_LOG.md`.
 
 ## 12. Repo map
 
@@ -122,7 +123,7 @@ Established from the data pulls (subject to the weather and phase passes finalis
 | `docs/PRD.md` | This document — intent, scope, deliverable spec |
 | `docs/SPEC.json` | Feature + test backlog with `passes` state |
 | `docs/ADR.md` | Architecture decision records (standing build constraints) |
-| `docs/METHODOLOGY_LOG.md` | Source data for the Methodology page: verbatim prompts, agent actions, subagent durations/tokens (state capture) |
+| `docs/METHODOLOGY_LOG.md` | Source log of the build (verbatim prompts, agent actions, subagent durations/tokens); the Methodology page it fed was descoped — it now feeds the README |
 | `scripts/` | Fetch and analysis scripts (`fetch_data.py`, `fetch_replays.py`, `compute_metrics.py`, weather, phase decomposition) |
 | `data/scores/` | Cached raw JSON: competition results tree, competitors |
 | `data/tracks/` | Cached raw ~1 Hz GPS replay JSON per group (re-fetchable) |

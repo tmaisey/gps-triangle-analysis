@@ -1,6 +1,6 @@
-# Methodology log (source data for the Methodology page)
+# Methodology log (source log of the build)
 
-State capture of how this project was built between the user (Tom) and Claude (Claude Code, model Opus 4.8) with delegated subagents. This is the raw material for the Methodology page (SPEC RPT-010), captured as the work happened to preserve verbatim prompts and exact durations before any context summarisation.
+State capture of how this project was built between the user (Tom) and Claude (Claude Code, model Opus 4.8) with delegated subagents. Captured as the work happened to preserve verbatim prompts and exact durations before any context summarisation. It was written to feed a Methodology page (SPEC RPT-010); that page was **descoped on 2026-09-28** (user decision), so this log now feeds the repo README (DOC-001).
 
 **Duration provenance (ADR-006):** agent working-times, token and tool counts are exact, from the harness's subagent metadata. Inter-message human think-time was not instrumented and is **not** invented — the user's interjections are marked positionally in the flow, not timed.
 
@@ -85,7 +85,15 @@ The user reviewed the built product and gave targeted fixes, captured as spec it
 
 A second refinement round reworked the Analysis Overview and deepened the trajectory story: the Overview was **restructured from the single Performance-Summary umbrella into four thematic sections** (Headline Result; Scoring, Laps & Speed; Start Energy; Conditions, Trajectory & Climbing) under an "Overall Read" lead paragraph (RPT-022); two new pooled trajectory charts were added — **distance-from-course** log-density (RPT-023) and **thermalling turn-radius** density (RPT-024) — plus the Round 12 ground track as a worked example; an **airframe/equipment note** framing the gap as technique-not-kit (RPT-025); the per-plot **wind clockface** placement fix; **Title Case** section titles throughout; and **expand-by-default** collapsibles. The course geometry was pinned as a decision (ADR-008: right-isosceles from the `.rct` header). The formal **Review** (output-quality + Playwright visual/UI + batched spec reviewers) is the next phase.
 
-## Step 9 — Review, Methodology, Finish (pending)
-Formal build-review (output-quality + Playwright visual/UI + batched spec reviewers) -> consolidate -> propose fixes to the user -> product accepted. Then build the Methodology page (this narrative) and review it. Finally write the repo README.md.
+## Step 9 — Review & fix (done)
+**User (verbatim):** Go on review, stop before methodology
+**User (verbatim):** Make sure reviewers are opus not fable. Stop and restart if fable
+**User (approval, paraphrased):** approved the consolidated fix proposal with four amendments — keep orange for the dominant-loss meaning only; handle mobile charts with a scroll container below 720 px rather than re-laying them out; skip the contrast item; use `h3` only within the existing heading hierarchy.
+**User (verbatim):** …skip the methodology feature(s) and just write the readme…
 
-**Phase taxonomy for the page:** Specify -> Research -> Design -> Build -> Refinement -> Review -> Finish.
+**Agent:** launched the build-review workflow — an output-quality reviewer, a Playwright visual/UI reviewer, and four batched spec reviewers covering every `SPEC.json` item. The first six reviewers were **stopped and relaunched on Opus** at the user's instruction. Reports written to `reviews/260928T0239-{output-quality,visual-ui,spec-A-data-analysis,spec-B-report-core,spec-C-grounding-design,spec-D-v2-overview}.md`; the orchestrator consolidated them into `reviews/260928T0239-consolidated.md` and put the fix list to the user before any fixing. On approval, three parallel Opus fix agents worked in separate worktrees — (a) analysis and tests, (b) charts, design and accessibility, (c) page content — applying the changes red→green and merging to main; the suite grew from 82 to 247 tests. A Playwright re-run and a Tier 1 re-review followed. The amendments were recorded as ADR-009; QA-001 flipped to `passes: true`.
+
+**Open item deferred (not fixed):** on the five pilot-rounds with aborted start attempts (R1 leader; R5/R7/R9 Bill; R9 leader) the phase-decomposition window spans every attempt, so the phase aggregates (e.g. 287 vs 402 s circling) include pre-scored-start time. Pinned by `test_anl002_multi_start_aloft_spans_all_attempts`, awaiting a user decision.
+
+## Step 10 — Finish
+The Methodology page (RPT-010) was **descoped** by the user on 2026-09-28 and removed from the spec; the four-page product stands as the deliverable. The repo `README.md` (DOC-001) is written last and carries the build narrative drawn from this log.
