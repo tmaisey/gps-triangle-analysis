@@ -240,7 +240,9 @@ def _headline(ctx: dict) -> str:
     )
     ranks_cap = (
         "Bill's finishing position within his own group each round (1 = group "
-        "winner; darker green = higher)."
+        "winner; darker green = higher). The three one-lap speed rounds (R4, "
+        "R10, R16) are scored across the whole field, so their bars show his "
+        "rank of 38."
     )
     ranks_fig = _lead(
         "Within-Group Rank",
@@ -540,7 +542,7 @@ def _scoring(ctx: dict) -> str:
 #: than as raw CSV values. Keys are the ``airframe_family`` column.
 _AIRFRAME_MAKERS = {
     "Pike Paradigm (Samba)": "the Pike Paradigm (Samba Model)",
-    "Phantom": "the ChocoFly Phantom",
+    "Phantom": "the Phantom",   # maker unconfirmed (analysis/airframe_note.md)
     "SkyTouch": "the SolarWings SkyTouch",
     "Apollo": "the ChocoFly Apollo",
 }
@@ -832,8 +834,9 @@ def _conditions_climbing(ctx: dict) -> str:
         f"the ~1 Hz tracks on the {_link(_EVENT_URL, 'event results')}."
     )
 
-    # (7) Round 12 worked example - ground track. Round 12 is the weak-lift
-    # bombout: Bill's fastest clean lap covered 4,622 m of ground against the
+    # (7) Round 12 worked example - ground track. Round 12 is the bombout in
+    # moderate lift (548 W/m2, mid-range for the week) where the thermal never
+    # connected: Bill's fastest clean lap covered 4,622 m of ground against the
     # leader's 1,819 m (line ratio 2.54) while turn radii were comparable
     # (42.0 vs 40.9 m) - see analysis/per_round_metrics.csv, round 12.
     r12 = load_round(12)
@@ -849,8 +852,10 @@ def _conditions_climbing(ctx: dict) -> str:
     )
     r12_fig = _lead(
         "Round 12: A Worked Example",
-        "One round makes the pooled patterns concrete, and it is the weak-lift "
-        "case rather than the tidy one. Bill managed 2 laps to the leader's 8: "
+        "One round makes the pooled patterns concrete, and it is the round "
+        "where the lift did not connect rather than the tidy one. The day was "
+        "not weak - solar was mid-range for the week - but Bill managed 2 laps "
+        "to the leader's 8: "
         "his fastest clean lap covered 4,622 m of ground against the leader's "
         "1,819 m - 2.54&times; the distance for the same lap - almost all of it "
         "off-course loops hunting for lift that would not connect. The corners "
@@ -862,7 +867,7 @@ def _conditions_climbing(ctx: dict) -> str:
                  source=(_EVENT_URL, "event results (rcmodelspot)"))
     r12_rec = _explain(
         "A day like this is won by connecting sooner, not by flying tidier: the "
-        f"drill is {_xref('recommendations', 'rec-climb', 'decisive re-centring in weak lift')}, "
+        f"drill is {_xref('recommendations', 'rec-climb', 'decisive re-centring when a thermal will not connect')}, "
         "and it is the decision an on-the-ground "
         f"{_xref('innovations', 'inn-navigator', 'navigator reading live telemetry')} "
         "is best placed to support. Round 12 laps and score: "

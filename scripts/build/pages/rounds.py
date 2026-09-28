@@ -606,6 +606,11 @@ def _track_section(r: dict, n: int, ctx: dict, *, is_speed: bool) -> str:
     def _turn_clause() -> str:
         if not isinstance(btr, (int, float)) or not isinstance(ltr, (int, float)):
             return ""
+        if is_speed:
+            # One-lap sprints give a handful of turn samples; the averaged
+            # radius is a thin-sample artefact (R4 216 m, R10 463 m), so it is
+            # not quoted.
+            return ""
         if btr > ltr * 1.1:
             return (f" His turn circles ran wider too, averaging {btr:.0f} m to "
                     f"{lead}'s {ltr:.0f} m.")
@@ -662,10 +667,14 @@ def _track_section(r: dict, n: int, ctx: dict, *, is_speed: bool) -> str:
                 f"Bill's thermalling loops sit off the course line while his "
                 f"turnpoint arcs run close to {lead}'s."
             )
+        wider = (isinstance(btr, (int, float)) and isinstance(ltr, (int, float))
+                 and btr > ltr * 1.1)
+        cost = ("so wider, slower circles cost most." if wider else
+                "so where the loops go, and how soon they connect, cost most.")
         insight = (
             f"{s1}{_turn_clause()} Turnpoint technique is near a strength; the "
             f"loops, not the corners, are where the height - and the time - go, "
-            f"so wider, slower circles cost most."
+            f"{cost}"
         )
     fig = C.figure(charts.ground_track(r), caption, fig_id=f"r{n}-fig-track")
     return f"<p>{insight}</p>" + fig
