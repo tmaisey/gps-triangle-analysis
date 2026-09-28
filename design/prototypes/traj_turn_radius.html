@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thermalling turn-radius distribution</title><style>
+:root{--bill:#86BC25;--lead:#00A3E0;--ink:#101820;--grey:#53565A}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+ padding:32px 16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto}
+h1{font-size:22px;font-weight:650;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--grey);font-size:14px;margin:0 0 20px;line-height:1.45}
+.legend{display:flex;gap:20px;align-items:center;margin:6px 0 14px;font-size:13px}
+.legend .k{display:flex;align-items:center;gap:7px}
+.legend .sw{width:22px;height:0;border-top:3px solid}
+.panel{margin:18px 0 8px}
+.panel h2{font-size:14px;font-weight:600;margin:0 0 2px}
+.panel .h2sub{font-size:12px;color:var(--grey);margin:0 0 6px}
+.cap{font-size:12.5px;color:var(--grey);line-height:1.5;margin:14px 0 0;
+ border-top:1px solid #e6e7e8;padding-top:12px}
+.verdict{font-size:13px;background:#f6f7f7;border-left:3px solid var(--grey);
+ padding:10px 14px;margin:16px 0 0;line-height:1.5}
+svg text{font-family:inherit}
+</style></head><body><div class="wrap">
+<h1>Thermalling turn-radius distribution</h1><p class="sub">How tightly each pilot circles in a climb, Bill vs the round winner, pooled across the 14 distance rounds.</p>
+<div class="legend"><span class="k"><span class="sw" style="border-color:#86BC25"></span>Bill</span><span class="k"><span class="sw" style="border-color:#00A3E0"></span>Round winner</span></div>
+<div class="panel"><svg viewBox="0 0 880 320" width="100%" role="img"><line x1="64" y1="260.0" x2="860" y2="260.0" stroke="#eceded" stroke-width="1"/>
+<text x="56" y="264.0" text-anchor="end" font-size="11" fill="#53565A">0%</text>
+<line x1="64" y1="194.4" x2="860" y2="194.4" stroke="#eceded" stroke-width="1"/>
+<text x="56" y="198.4" text-anchor="end" font-size="11" fill="#53565A">5%</text>
+<line x1="64" y1="128.9" x2="860" y2="128.9" stroke="#eceded" stroke-width="1"/>
+<text x="56" y="132.9" text-anchor="end" font-size="11" fill="#53565A">10%</text>
+<line x1="64" y1="63.3" x2="860" y2="63.3" stroke="#eceded" stroke-width="1"/>
+<text x="56" y="67.3" text-anchor="end" font-size="11" fill="#53565A">15%</text>
+<line x1="64.0" y1="260" x2="64.0" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="64.0" y="280" text-anchor="middle" font-size="11" fill="#53565A">0</text>
+<line x1="223.2" y1="260" x2="223.2" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="223.2" y="280" text-anchor="middle" font-size="11" fill="#53565A">20</text>
+<line x1="382.4" y1="260" x2="382.4" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="382.4" y="280" text-anchor="middle" font-size="11" fill="#53565A">40</text>
+<line x1="541.6" y1="260" x2="541.6" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="541.6" y="280" text-anchor="middle" font-size="11" fill="#53565A">60</text>
+<line x1="700.8" y1="260" x2="700.8" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="700.8" y="280" text-anchor="middle" font-size="11" fill="#53565A">80</text>
+<line x1="860.0" y1="260" x2="860.0" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="860.0" y="280" text-anchor="middle" font-size="11" fill="#53565A">100</text>
+<line x1="64" y1="24" x2="64" y2="260" stroke="#101820" stroke-width="1.5"/>
+<line x1="64" y1="260" x2="860" y2="260" stroke="#101820" stroke-width="1.5"/>
+<text x="462" y="302" text-anchor="middle" font-size="12.5" fill="#101820">Thermalling turn radius (m)</text>
+<text x="22" y="142" text-anchor="middle" font-size="12.5" fill="#101820" transform="rotate(-90 22 142)">Share of circling time</text><polyline fill="none" stroke="#86BC25" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" points="83.9,259.7 123.7,254.7 163.5,223.6 203.3,174.1 243.1,119.3 282.9,95.3 322.7,93.7 362.5,104.9 402.3,131.7 442.1,166.6 481.9,195.9 521.7,192.4 561.5,213.9 601.3,221.7 641.1,233.2 680.9,236.3 720.7,238.5 760.5,244.7 800.3,243.5 840.1,245.1"/><polyline fill="none" stroke="#00A3E0" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" points="83.9,259.5 123.7,238.5 163.5,183.9 203.3,78.6 243.1,36.3 282.9,58.0 322.7,107.6 362.5,155.6 402.3,166.6 442.1,204.5 481.9,211.1 521.7,224.7 561.5,235.9 601.3,237.8 641.1,240.8 680.9,245.7 720.7,247.8 760.5,252.3 800.3,250.9 840.1,252.7"/><line x1="296.4" y1="24" x2="296.4" y2="260" stroke="#00A3E0" stroke-width="1.3" stroke-dasharray="4 3" opacity="0.8"/><text x="292.4" y="36" font-size="10.5" fill="#00A3E0" text-anchor="end">winner median 29.2 m</text><line x1="366.5" y1="24" x2="366.5" y2="260" stroke="#86BC25" stroke-width="1.3" stroke-dasharray="4 3" opacity="0.8"/><text x="370.5" y="52" font-size="10.5" fill="#86BC25" text-anchor="start">Bill median 38.0 m</text></svg></div>
+<div class="verdict"><b>The clearest, cleanest finding &mdash; and it ties to a lever.</b> In sustained climbs Bill circles distinctly wider: median radius 38.0 m vs the winner's 29.2 m (~30% wider), from 4,464 vs 5,810 circling samples. The whole leader curve is shifted left. A tighter core keeps the glider in the strongest part of the thermal, which lifts climb rate and buys laps &mdash; a direct, coachable lever. This confirms the earlier 39/33 m turn-radius finding.</div>
+<p class="cap">Per-point turn radius r = v / &omega; (ground speed &divide; bearing rate) during detected sustained climbs &mdash; runs of continuous circling &ge;12 s, &ge;270&deg; of turn and net height gain &mdash; pooled over the 14 distance rounds. Curves are densities over 5 m bins; dashed lines mark each pilot's median (computed over the full circling set). Display window 0&ndash;100 m.</p>
+</div></body></html>

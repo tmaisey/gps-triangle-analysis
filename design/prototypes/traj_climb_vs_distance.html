@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Altitude change vs distance from course</title><style>
+:root{--bill:#86BC25;--lead:#00A3E0;--ink:#101820;--grey:#53565A}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+ padding:32px 16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto}
+h1{font-size:22px;font-weight:650;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--grey);font-size:14px;margin:0 0 20px;line-height:1.45}
+.legend{display:flex;gap:20px;align-items:center;margin:6px 0 14px;font-size:13px}
+.legend .k{display:flex;align-items:center;gap:7px}
+.legend .sw{width:22px;height:0;border-top:3px solid}
+.panel{margin:18px 0 8px}
+.panel h2{font-size:14px;font-weight:600;margin:0 0 2px}
+.panel .h2sub{font-size:12px;color:var(--grey);margin:0 0 6px}
+.cap{font-size:12.5px;color:var(--grey);line-height:1.5;margin:14px 0 0;
+ border-top:1px solid #e6e7e8;padding-top:12px}
+.verdict{font-size:13px;background:#f6f7f7;border-left:3px solid var(--grey);
+ padding:10px 14px;margin:16px 0 0;line-height:1.5}
+svg text{font-family:inherit}
+</style></head><body><div class="wrap">
+<h1>Altitude change vs distance from course</h1><p class="sub">Do pilots gain height near the course, or out wide? Climb rate by distance band, Bill vs the round winner.</p>
+<div class="legend"><span class="k"><span class="sw" style="border-color:#86BC25"></span>Bill</span><span class="k"><span class="sw" style="border-color:#00A3E0"></span>Round winner</span></div>
+<div class="panel"><svg viewBox="0 0 880 320" width="100%" role="img"><line x1="64" y1="260.0" x2="860" y2="260.0" stroke="#eceded" stroke-width="1"/>
+<text x="56" y="264.0" text-anchor="end" font-size="11" fill="#53565A">0.00</text>
+<line x1="64" y1="217.9" x2="860" y2="217.9" stroke="#eceded" stroke-width="1"/>
+<text x="56" y="221.9" text-anchor="end" font-size="11" fill="#53565A">0.25</text>
+<line x1="64" y1="175.7" x2="860" y2="175.7" stroke="#eceded" stroke-width="1"/>
+<text x="56" y="179.7" text-anchor="end" font-size="11" fill="#53565A">0.50</text>
+<line x1="64" y1="133.6" x2="860" y2="133.6" stroke="#eceded" stroke-width="1"/>
+<text x="56" y="137.6" text-anchor="end" font-size="11" fill="#53565A">0.75</text>
+<line x1="64" y1="91.4" x2="860" y2="91.4" stroke="#eceded" stroke-width="1"/>
+<text x="56" y="95.4" text-anchor="end" font-size="11" fill="#53565A">1.00</text>
+<line x1="64" y1="49.3" x2="860" y2="49.3" stroke="#eceded" stroke-width="1"/>
+<text x="56" y="53.3" text-anchor="end" font-size="11" fill="#53565A">1.25</text>
+<line x1="64.0" y1="260" x2="64.0" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="64.0" y="280" text-anchor="middle" font-size="11" fill="#53565A">0</text>
+<line x1="158.8" y1="260" x2="158.8" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="158.8" y="280" text-anchor="middle" font-size="11" fill="#53565A">50</text>
+<line x1="253.5" y1="260" x2="253.5" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="253.5" y="280" text-anchor="middle" font-size="11" fill="#53565A">100</text>
+<line x1="348.3" y1="260" x2="348.3" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="348.3" y="280" text-anchor="middle" font-size="11" fill="#53565A">150</text>
+<line x1="443.0" y1="260" x2="443.0" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="443.0" y="280" text-anchor="middle" font-size="11" fill="#53565A">200</text>
+<line x1="537.8" y1="260" x2="537.8" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="537.8" y="280" text-anchor="middle" font-size="11" fill="#53565A">250</text>
+<line x1="632.6" y1="260" x2="632.6" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="632.6" y="280" text-anchor="middle" font-size="11" fill="#53565A">300</text>
+<line x1="727.3" y1="260" x2="727.3" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="727.3" y="280" text-anchor="middle" font-size="11" fill="#53565A">350</text>
+<line x1="822.1" y1="260" x2="822.1" y2="265" stroke="#53565A" stroke-width="1"/>
+<text x="822.1" y="280" text-anchor="middle" font-size="11" fill="#53565A">400</text>
+<line x1="64" y1="24" x2="64" y2="260" stroke="#101820" stroke-width="1.5"/>
+<line x1="64" y1="260" x2="860" y2="260" stroke="#101820" stroke-width="1.5"/>
+<text x="462" y="302" text-anchor="middle" font-size="12.5" fill="#101820">Distance from the course triangle (m)</text>
+<text x="22" y="142" text-anchor="middle" font-size="12.5" fill="#101820" transform="rotate(-90 22 142)">Climb rate while there (m/s)</text><polyline fill="none" stroke="#86BC25" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" points="87.7,148.4 135.1,148.6 182.5,123.5 229.8,91.6 300.9,115.9 395.7,90.1 537.8,58.9 822.1,92.3"/><circle cx="87.7" cy="148.4" r="3" fill="#86BC25"/><circle cx="135.1" cy="148.6" r="3" fill="#86BC25"/><circle cx="182.5" cy="123.5" r="3" fill="#86BC25"/><circle cx="229.8" cy="91.6" r="3" fill="#86BC25"/><circle cx="300.9" cy="115.9" r="3" fill="#86BC25"/><circle cx="395.7" cy="90.1" r="3" fill="#86BC25"/><circle cx="537.8" cy="58.9" r="3" fill="#86BC25"/><circle cx="822.1" cy="92.3" r="3" fill="#86BC25"/><polyline fill="none" stroke="#00A3E0" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" points="87.7,148.6 135.1,135.8 182.5,103.1 229.8,90.4 300.9,91.9 395.7,77.1 537.8,75.6 822.1,95.3"/><circle cx="87.7" cy="148.6" r="3" fill="#00A3E0"/><circle cx="135.1" cy="135.8" r="3" fill="#00A3E0"/><circle cx="182.5" cy="103.1" r="3" fill="#00A3E0"/><circle cx="229.8" cy="90.4" r="3" fill="#00A3E0"/><circle cx="300.9" cy="91.9" r="3" fill="#00A3E0"/><circle cx="395.7" cy="77.1" r="3" fill="#00A3E0"/><circle cx="537.8" cy="75.6" r="3" fill="#00A3E0"/><circle cx="822.1" cy="95.3" r="3" fill="#00A3E0"/></svg></div>
+<div class="verdict"><b>True for both pilots &mdash; a weak discriminator.</b> Lift is found <i>away</i> from the course: for both pilots the climb rate roughly doubles from ~0.66 m/s on the line to ~1.0&ndash;1.2 m/s at 150&ndash;300 m out. The curves sit almost on top of each other, so this is a general soaring truth, not a Bill-vs-winner lever. The only edge is reach: the leader banks more total height far out (leader gained 18,706 m of climb over the rounds vs Bill's 15,490 m, and keeps climbing out at 300&ndash;500 m where Bill rarely ventures) &mdash; but that is really the tail story from chart 1, seen again.</div>
+<p class="cap">Each point is a distance band; height plotted is metres gained per second spent flying in that band (positive altitude deltas only), pooled over the 14 distance rounds. Bands with under 60 s of pooled time are omitted. This measures where climbing actually happens, not merely where pilots fly.</p>
+</div></body></html>

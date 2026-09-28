@@ -747,7 +747,7 @@ def _sections(r: dict, n: int, ctx: dict) -> list[tuple]:
     """
     is_speed = r["task_type"] == "speedrun"
     return [
-        ("dash", "Visual overview of performance", _dash_section(r, n, ctx), False),
+        ("dash", "Visual Overview of Performance", _dash_section(r, n, ctx), False),
         ("energy", "Energy Management",
          _energy_section(r, n, is_speed=is_speed), False),
         ("track", "Ground Track & Course",
@@ -755,9 +755,9 @@ def _sections(r: dict, n: int, ctx: dict) -> list[tuple]:
         ("laps",
          "Single-Lap Speed Task" if is_speed else "Cumulative Laps vs Leader",
          _laps_section(r, n, is_speed=is_speed), True),
-        ("loss", "Where the time went" if is_speed else "Biggest-loss segment",
+        ("loss", "Where the Time Went" if is_speed else "Biggest-Loss Segment",
          _loss_section(r, is_speed=is_speed), True),
-        ("reco", "What to train from this round", _reco(r, n), True),
+        ("reco", "What to Train from This Round", _reco(r, n), True),
     ]
 
 

@@ -26,10 +26,10 @@ from __future__ import annotations
 from .. import components as C
 
 _SECTIONS = [
-    ("inn-postflight", "Post-flight AI coach"),
+    ("inn-postflight", "Post-Flight AI Coach"),
     ("inn-navigator", "Navigator AR HUD"),
-    ("inn-live", "Live AI cueing"),
-    ("inn-flywheel", "The data flywheel"),
+    ("inn-live", "Live AI Cueing"),
+    ("inn-flywheel", "The Data Flywheel"),
 ]
 
 _SUMMARY_BULLETS = [

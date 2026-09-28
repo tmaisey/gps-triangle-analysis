@@ -185,7 +185,7 @@
     {
       "id": "DSN-001",
       "category": "design",
-      "description": "Design system: white background, Deloitte-inspired palette with no Deloitte branding, elegant typeface, no AI-tell styling (no accent bars/stripes, gradients), no emojis anywhere, all figures captioned",
+      "description": "Design system: white background, Deloitte-inspired palette with no Deloitte branding, elegant typeface, no AI-tell styling (no accent bars/stripes, gradients), no emojis anywhere, all figures captioned All section titles on every page are in Title Case (preserving acronyms like GPS/AR/HUD/AI and units like km/h).",
       "roadmap": "v1.0",
       "steps": [
         "Define palette tokens and typography; render charts on the shared palette",

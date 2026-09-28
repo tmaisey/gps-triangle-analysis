@@ -1,0 +1,39 @@
+rank,name,club,country,aircraft,airframe_family,aircraft_variants,totalScore,userGuid,is_bill
+1,Florian Griese,IG Nord Bärenklau,de,Pike Paradigm,Pike Paradigm (Samba),Pike Paradigm(3)|Default(1),15449,2e1a6fe6-9060-4c7a-b83e-813567b030ac,False
+2,Oliver Ladach,,de,Phantom ,Phantom,,15383,2e07b061-b514-47cf-9eed-5f8aa79f6ee5,False
+3,Philip Kolb,LSC_Babenhausen,de,Pike Paradigm,Pike Paradigm (Samba),Pike Paradigm 2(3)|Pike Paradigm(6),15335,073a792b-a2d1-4a35-b405-5a83d84e2792,False
+4,Randolph Brömer,LSC-Condor,de,Paradigm V,Pike Paradigm (Samba),,15226,0eccfc24-7c0b-4729-8d90-150ec5ee2763,False
+5,DANIEL AEBERLI,ChocoFlyRacingTeam,ch,Phantom GPS,Phantom,,15215,7244b6a3-fa3d-4fc7-aea0-a8bc0f422759,False
+6,Andrej Vrecer,MD Ventus,si,SkyTouch GPS,SkyTouch,,15028,ebec7df5-1b69-4fc4-979a-1e0aa982855e,False
+7,Ralph Losemann,MFC Riesa e.V.,de,Pike Paradigm,Pike Paradigm (Samba),,14932,dcc07056-b689-48e4-9415-1387394e32c4,False
+8,Michael Kreß,ChocoFlyRacingTeam,de,Phantom,Phantom,,14338,f25e9d75-cf3a-445d-afb7-e01a088c505c,False
+9,Jo Grini,Valdres Modellflyklubb,no,Pike ParadigmV1,Pike Paradigm (Samba),,14292,4f485f00-9667-4233-b8d8-9b8be2f8c351,False
+10,Jaroslav Vostřel,Samba TEAM,cz,Pike PARADIGM,Pike Paradigm (Samba),,14268,19b0ad55-5a1a-458c-8b64-600c2b9d61bb,False
+11,Steve Maitland,SAWA,au,SkyTouch,SkyTouch,,14000,f6d7332a-8252-443f-a1a7-85f57a12a4f3,False
+12,Jens Geider,FMSC RT,de,Appollo 46,Apollo,,13989,084dc4ff-9433-4269-a360-cb7b48c89cf9,False
+13,TIMO FEIS,MSC Röttingen,de,Paradigm V,Pike Paradigm (Samba),,13845,a37fda4a-825b-47f7-8a52-e0208c69046f,False
+14,Pavel Hofer,Samba TEAM,cz,Paradigm,Pike Paradigm (Samba),,13755,ba989364-5ebc-41b9-a91c-eed224233582,False
+15,Hans-Peter Bell,,de,Phantom,Phantom,,13686,df3eb2d9-91d5-4303-a6c8-553a91eff1b4,False
+16,Thomas Schorb,MFG Pfinztal e.V.,de,Paradigm,Pike Paradigm (Samba),,13548,628de976-a586-461c-b214-2718f2a9b3dd,False
+17,Emanuel Dähn,MFG Pulheim,de,Pike Paradigm V,Pike Paradigm (Samba),,13226,86046b4b-f451-4611-b379-d41be6792a82,False
+18,Benjamin Dähn,MBG Radolfzell,de,Paradigm V,Pike Paradigm (Samba),,13180,295599e0-d83e-40df-803a-a12b96c5bb25,False
+19,Damien Ythier,Goumoens,ch,Appollo,Apollo,,13010,3569daba-9f33-41a0-b30d-bb228552216d,False
+20,Manuel Graf,NoFly Club,ch,Apollo 46,Apollo,,12954,f9a95d67-970b-406e-8bdc-f215258bb25c,False
+21,Graham Tolhurst,Ivinghoe Soaring Association,gb,Appollo 46,Apollo,,12684,4de758ec-d2c3-4944-8857-59f62ef61516,False
+22,Bill Maisey,Anglesey MAC,gb,Paradigm,Pike Paradigm (Samba),,12562,2e6eb0fb-d61f-410c-a08e-313b1dd87977,True
+23,Gerd Heimann,MFC Reinholdshain,de,Pike Paradigm,Pike Paradigm (Samba),,12283,1d1c76ab-1c8c-4482-95f7-1de4a4a32137,False
+24,Peter Kible,MfC Heudorf,de,Paradigm,Pike Paradigm (Samba),,12263,54d43493-ea6b-4d50-a0c1-e9d3b0ae0945,False
+25,Iain Medley-Rose,Wessex Soaring Association,gb,Paradigm,Pike Paradigm (Samba),,12178,33c36f93-a32c-4cf9-9bcb-facc13193961,False
+26,Pavel Svoboda,SkyTouch TEAM,cz,SkyTouch GPS,SkyTouch,,12048,5934f9f5-9809-4d4a-8eda-8b941d118c2f,False
+27,Stephan Lämmlein,MFG Markdorf,de,Paradigm,Pike Paradigm (Samba),,11410,f8e66e3e-664e-47f0-8339-474aeec2a7a9,False
+28,Hertel Mario,,de,Default,Unspecified/placeholder,,11206,1514cf7d-0581-471f-903f-c74326d7e57b,False
+29,Stéphane MAZOT,AC Cigognes,fr,Pike Paradigm,Pike Paradigm (Samba),,11124,267695a2-59b8-4a7d-bb55-e71fa87f294d,False
+30,Gustav Pruss,Berliner Verein für Modellflug,de,Paradigm neu,Pike Paradigm (Samba),,11120,a420c51b-a7a3-4c06-b20c-6b340d1c561a,False
+31,Chris Adrian,Corsair Radio Flyers,za,Apollo,Apollo,,10857,49bd6c9a-7713-4f2b-b6b3-4e925991404a,False
+32,Reto Scherrer,MFVB,ch,Eternity,Eternity,,10235,f3149dfd-6dd0-45fe-ad8b-f1c620679350,False
+33,Dirk Lange,Flying Devils Stralsund,de,Pike,Pike (other),,10180,d38ba317-cbf3-47b0-9c00-8e39fd9250ce,False
+34,Gerd Krüger,,de,New model,Unspecified/placeholder,,9726,1efbe76e-862e-4752-ba0a-08475e260f4c,False
+35,Michael Hipp,MFC Heudorf,de,Paradigm,Pike Paradigm (Samba),,6018,225037f3-4aa3-4233-99d9-235dabbccfcd,False
+36,Sandor Paszti,MG Mörsburg,ch,Appollo 46,Apollo,,3678,28d091dc-0b5f-4b30-beba-a5d206cd83e5,False
+37,Claus Tønnesen,rc-nfk.dk,dk,Phantom,Phantom,,1626,f36ee71c-b916-4dd9-913b-bf0464bb163e,False
+38,Ralf Krüger,,de,,Unspecified/placeholder,,0,01c48d5c-0763-4703-8ec9-506dd82cabec,False

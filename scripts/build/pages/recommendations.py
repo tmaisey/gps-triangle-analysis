@@ -21,11 +21,11 @@ from __future__ import annotations
 from .. import components as C
 
 _SECTIONS = [
-    ("rec-cruise", "Cruise speed between thermals"),
-    ("rec-climb", "Climb quality - height banked per thermal"),
-    ("rec-entry", "Entry speed - use the 120 km/h cap"),
-    ("rec-turns", "Turnpoint lines"),
-    ("rec-signals", "Rules-legal live signals"),
+    ("rec-cruise", "Cruise Speed Between Thermals"),
+    ("rec-climb", "Climb Quality - Height Banked Per Thermal"),
+    ("rec-entry", "Entry Speed - Use the 120 km/h Cap"),
+    ("rec-turns", "Turnpoint Lines"),
+    ("rec-signals", "Rules-Legal Live Signals"),
 ]
 
 _SUMMARY_BULLETS = [
