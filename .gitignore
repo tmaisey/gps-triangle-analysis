@@ -12,3 +12,8 @@ data/tracks/replay_*.json
 
 # Archived unrelated manual (kept locally, not published)
 AGENTS.mad-skillz.bak.md
+
+# Playwright review screenshots (~25 MB, regenerable via reviews/playwright/visual_review.py);
+# only the small evidence crops referenced by the review report are kept
+reviews/playwright/screenshots/*
+!reviews/playwright/screenshots/evidence/

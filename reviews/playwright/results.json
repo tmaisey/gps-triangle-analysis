@@ -1,0 +1,1241 @@
+{
+  "desktop": {
+    "page:home": {
+      "activePage": "page-home",
+      "shot": "reviews/playwright/screenshots/home-page-1440.png",
+      "overflow": {
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "offenders": [],
+        "offenderCount": 0
+      },
+      "svg": {
+        "count": 0,
+        "zeroBox": [],
+        "hidden": [],
+        "overflow": [],
+        "textCollisions": [],
+        "textCollisionCount": 0
+      },
+      "sections": {
+        "total": 0,
+        "collapsed": 0,
+        "labels": [],
+        "hasExpandAll": false,
+        "hasCollapseAll": false,
+        "summaryPresent": false,
+        "anchorBullets": 0
+      }
+    },
+    "page:analysis": {
+      "activePage": "page-analysis",
+      "shot": "reviews/playwright/screenshots/analysis-page-1440.png",
+      "overflow": {
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "offenders": [],
+        "offenderCount": 0
+      },
+      "svg": {
+        "count": 20,
+        "zeroBox": [],
+        "hidden": [],
+        "overflow": [],
+        "textCollisions": [
+          {
+            "label": "Across the week: normalised score vs raw laps",
+            "a": "20",
+            "b": "Laps",
+            "overlapPct": 53
+          }
+        ],
+        "textCollisionCount": 1
+      },
+      "sections": {
+        "total": 4,
+        "collapsed": 0,
+        "labels": [
+          "Collapse"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 8
+      }
+    },
+    "page:recommendations": {
+      "activePage": "page-recommendations",
+      "shot": "reviews/playwright/screenshots/recommendations-page-1440.png",
+      "overflow": {
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "offenders": [],
+        "offenderCount": 0
+      },
+      "svg": {
+        "count": 0,
+        "zeroBox": [],
+        "hidden": [],
+        "overflow": [],
+        "textCollisions": [],
+        "textCollisionCount": 0
+      },
+      "sections": {
+        "total": 5,
+        "collapsed": 0,
+        "labels": [
+          "Collapse"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 10
+      }
+    },
+    "page:innovations": {
+      "activePage": "page-innovations",
+      "shot": "reviews/playwright/screenshots/innovations-page-1440.png",
+      "overflow": {
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "offenders": [],
+        "offenderCount": 0
+      },
+      "svg": {
+        "count": 0,
+        "zeroBox": [],
+        "hidden": [],
+        "overflow": [],
+        "textCollisions": [],
+        "textCollisionCount": 0
+      },
+      "sections": {
+        "total": 4,
+        "collapsed": 0,
+        "labels": [
+          "Collapse"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 8
+      }
+    },
+    "methodology": {
+      "navLink": false,
+      "pageEl": false,
+      "mentionedInText": false
+    },
+    "views": {
+      "overview": {
+        "activeView": "view-overview",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-overview-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 20,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [
+            {
+              "label": "Across the week: normalised score vs raw laps",
+              "a": "20",
+              "b": "Laps",
+              "overlapPct": 53
+            }
+          ],
+          "textCollisionCount": 1
+        },
+        "sections": {
+          "total": 4,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 8
+        }
+      },
+      "round-1": {
+        "activeView": "view-round-1",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-1-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-2": {
+        "activeView": "view-round-2",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-2-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-3": {
+        "activeView": "view-round-3",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-3-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-4": {
+        "activeView": "view-round-4",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-4-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-5": {
+        "activeView": "view-round-5",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-5-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-6": {
+        "activeView": "view-round-6",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-6-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-7": {
+        "activeView": "view-round-7",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-7-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-8": {
+        "activeView": "view-round-8",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-8-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-9": {
+        "activeView": "view-round-9",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-9-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-10": {
+        "activeView": "view-round-10",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-10-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-11": {
+        "activeView": "view-round-11",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-11-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-12": {
+        "activeView": "view-round-12",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-12-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-13": {
+        "activeView": "view-round-13",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-13-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-14": {
+        "activeView": "view-round-14",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-14-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-15": {
+        "activeView": "view-round-15",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-15-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-16": {
+        "activeView": "view-round-16",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-16-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-17": {
+        "activeView": "view-round-17",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-17-1440.png",
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      }
+    },
+    "anchor_test": {
+      "bulletLinks": 4,
+      "probe": [
+        {
+          "text": "22nd of 38 (12,562 pts); the gap is almo",
+          "id": "ov-headline",
+          "targetExists": true
+        },
+        {
+          "text": "Cruise speed between thermals is the dom",
+          "id": "ov-scoring",
+          "targetExists": true
+        },
+        {
+          "text": "Start is already competitive; the winner",
+          "id": "ov-start-energy",
+          "targetExists": true
+        },
+        {
+          "text": "Stronger in strong lift; wider circles a",
+          "id": "ov-conditions",
+          "targetExists": true
+        }
+      ],
+      "backToTopCount": 4
+    },
+    "anchor_click": {
+      "ok": true,
+      "id": "ov-headline",
+      "top": 76,
+      "inViewport": true,
+      "scrollY": 605
+    },
+    "anchor_click_shot": "reviews/playwright/screenshots/analysis-anchor-jump-1440.png",
+    "back_to_top": {
+      "found": true,
+      "text": "back to top",
+      "href": "#ov-top",
+      "targetExists": true
+    },
+    "collapse_all_shot": "reviews/playwright/screenshots/analysis-collapsed-1440.png",
+    "collapsibles": {
+      "defaultState": {
+        "total": 4,
+        "collapsed": 0,
+        "labels": [
+          "Collapse"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 8
+      },
+      "afterCollapseAll": {
+        "total": 4,
+        "collapsed": 4,
+        "labels": [
+          "Expand"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 8
+      },
+      "afterExpandAll": {
+        "total": 4,
+        "collapsed": 0,
+        "labels": [
+          "Collapse"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 8
+      },
+      "individualToggle": {
+        "ok": true,
+        "start": {
+          "collapsed": false,
+          "label": "Collapse"
+        },
+        "mid": {
+          "collapsed": true,
+          "label": "Expand"
+        },
+        "end": {
+          "collapsed": false,
+          "label": "Collapse"
+        }
+      }
+    },
+    "xrefs_total": 50,
+    "xrefs_missing_target": [],
+    "xref_landing_shot": "reviews/playwright/screenshots/xref-analysis-to-recs-1440.png",
+    "xref_clicks": [
+      {
+        "activePage": "page-recommendations",
+        "targetExists": true,
+        "visible": true,
+        "top": 76,
+        "inViewport": true,
+        "from": "page-analysis",
+        "toPage": "recommendations",
+        "anchor": "rec-cruise",
+        "linkText": "cruise pace between thermals",
+        "pageOk": true
+      },
+      {
+        "activePage": "page-innovations",
+        "targetExists": true,
+        "visible": true,
+        "top": 76,
+        "inViewport": true,
+        "from": "page-recommendations",
+        "toPage": "innovations",
+        "anchor": "inn-navigator",
+        "linkText": "navigator AR HUD",
+        "pageOk": true
+      },
+      {
+        "activePage": "page-analysis",
+        "targetExists": true,
+        "visible": true,
+        "top": 76,
+        "inViewport": true,
+        "from": "page-home",
+        "toPage": "analysis",
+        "anchor": "ov-top",
+        "linkText": "Performance Analysis",
+        "pageOk": true
+      }
+    ],
+    "design": {
+      "bodyBg": "rgb(255, 255, 255)",
+      "bodyColor": "rgb(16, 24, 32)",
+      "fonts": {
+        "body": "\"Source Sans 3\", system-ui, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif"
+      },
+      "headingFont": "Spectral, Georgia, \"Times New Roman\", serif",
+      "fontFaces": [
+        "Spectral 400 loaded",
+        "Spectral 500 unloaded",
+        "Spectral 600 loaded",
+        "Spectral 400 unloaded",
+        "Source Sans 3 400 loaded",
+        "Source Sans 3 500 loaded",
+        "Source Sans 3 600 loaded",
+        "Source Sans 3 700 loaded"
+      ],
+      "fontsReady": "loaded"
+    }
+  },
+  "mobile": {
+    "burger": {
+      "burgerVisible": true,
+      "linksVisibleClosed": false
+    },
+    "burger_open_shot": "reviews/playwright/screenshots/nav-burger-open-390.png",
+    "burger_open_state": {
+      "open": true,
+      "h": 220,
+      "linkCount": 4
+    },
+    "page:home": {
+      "activePage": "page-home",
+      "shot": "reviews/playwright/screenshots/home-page-390.png",
+      "overflow": {
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "offenders": [],
+        "offenderCount": 0
+      },
+      "svg": {
+        "count": 0,
+        "zeroBox": [],
+        "hidden": [],
+        "overflow": [],
+        "textCollisions": [],
+        "textCollisionCount": 0
+      },
+      "sections": {
+        "total": 0,
+        "collapsed": 0,
+        "labels": [],
+        "hasExpandAll": false,
+        "hasCollapseAll": false,
+        "summaryPresent": false,
+        "anchorBullets": 0
+      }
+    },
+    "page:analysis": {
+      "activePage": "page-analysis",
+      "shot": "reviews/playwright/screenshots/analysis-page-390.png",
+      "overflow": {
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "offenders": [],
+        "offenderCount": 0
+      },
+      "svg": {
+        "count": 20,
+        "zeroBox": [],
+        "hidden": [],
+        "overflow": [],
+        "textCollisions": [
+          {
+            "label": "Across the week: normalised score vs raw laps",
+            "a": "20",
+            "b": "Laps",
+            "overlapPct": 50
+          }
+        ],
+        "textCollisionCount": 1
+      },
+      "sections": {
+        "total": 4,
+        "collapsed": 0,
+        "labels": [
+          "Collapse"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 8
+      }
+    },
+    "page:recommendations": {
+      "activePage": "page-recommendations",
+      "shot": "reviews/playwright/screenshots/recommendations-page-390.png",
+      "overflow": {
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "offenders": [],
+        "offenderCount": 0
+      },
+      "svg": {
+        "count": 0,
+        "zeroBox": [],
+        "hidden": [],
+        "overflow": [],
+        "textCollisions": [],
+        "textCollisionCount": 0
+      },
+      "sections": {
+        "total": 5,
+        "collapsed": 0,
+        "labels": [
+          "Collapse"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 10
+      }
+    },
+    "page:innovations": {
+      "activePage": "page-innovations",
+      "shot": "reviews/playwright/screenshots/innovations-page-390.png",
+      "overflow": {
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "offenders": [],
+        "offenderCount": 0
+      },
+      "svg": {
+        "count": 0,
+        "zeroBox": [],
+        "hidden": [],
+        "overflow": [],
+        "textCollisions": [],
+        "textCollisionCount": 0
+      },
+      "sections": {
+        "total": 4,
+        "collapsed": 0,
+        "labels": [
+          "Collapse"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 8
+      }
+    },
+    "methodology": {
+      "navLink": false,
+      "pageEl": false,
+      "mentionedInText": false
+    },
+    "views": {
+      "overview": {
+        "activeView": "view-overview",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-overview-390.png",
+        "overflow": {
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 20,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [
+            {
+              "label": "Across the week: normalised score vs raw laps",
+              "a": "20",
+              "b": "Laps",
+              "overlapPct": 50
+            }
+          ],
+          "textCollisionCount": 1
+        },
+        "sections": {
+          "total": 4,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 8
+        }
+      },
+      "round-1": {
+        "activeView": "view-round-1",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-1-390.png",
+        "overflow": {
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-4": {
+        "activeView": "view-round-4",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-4-390.png",
+        "overflow": {
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-9": {
+        "activeView": "view-round-9",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-9-390.png",
+        "overflow": {
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      },
+      "round-12": {
+        "activeView": "view-round-12",
+        "swapOk": true,
+        "shot": "reviews/playwright/screenshots/analysis-round-12-390.png",
+        "overflow": {
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "offenders": [],
+          "offenderCount": 0
+        },
+        "svg": {
+          "count": 10,
+          "zeroBox": [],
+          "hidden": [],
+          "overflow": [],
+          "textCollisions": [],
+          "textCollisionCount": 0
+        },
+        "sections": {
+          "total": 6,
+          "collapsed": 0,
+          "labels": [
+            "Collapse"
+          ],
+          "hasExpandAll": true,
+          "hasCollapseAll": true,
+          "summaryPresent": true,
+          "anchorBullets": 12
+        }
+      }
+    },
+    "collapse_all_shot": "reviews/playwright/screenshots/analysis-collapsed-390.png",
+    "collapsibles": {
+      "defaultState": {
+        "total": 4,
+        "collapsed": 0,
+        "labels": [
+          "Collapse"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 8
+      },
+      "afterCollapseAll": {
+        "total": 4,
+        "collapsed": 4,
+        "labels": [
+          "Expand"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 8
+      },
+      "afterExpandAll": {
+        "total": 4,
+        "collapsed": 0,
+        "labels": [
+          "Collapse"
+        ],
+        "hasExpandAll": true,
+        "hasCollapseAll": true,
+        "summaryPresent": true,
+        "anchorBullets": 8
+      },
+      "individualToggle": {
+        "ok": true,
+        "start": {
+          "collapsed": false,
+          "label": "Collapse"
+        },
+        "mid": {
+          "collapsed": true,
+          "label": "Expand"
+        },
+        "end": {
+          "collapsed": false,
+          "label": "Collapse"
+        }
+      }
+    },
+    "xrefs_total": 50,
+    "xrefs_missing_target": [],
+    "xref_landing_shot": "reviews/playwright/screenshots/xref-analysis-to-recs-390.png",
+    "xref_clicks": [
+      {
+        "activePage": "page-recommendations",
+        "targetExists": true,
+        "visible": true,
+        "top": 76,
+        "inViewport": true,
+        "from": "page-analysis",
+        "toPage": "recommendations",
+        "anchor": "rec-cruise",
+        "linkText": "cruise pace between thermals",
+        "pageOk": true
+      },
+      {
+        "activePage": "page-innovations",
+        "targetExists": true,
+        "visible": true,
+        "top": 76,
+        "inViewport": true,
+        "from": "page-recommendations",
+        "toPage": "innovations",
+        "anchor": "inn-navigator",
+        "linkText": "navigator AR HUD",
+        "pageOk": true
+      },
+      {
+        "activePage": "page-analysis",
+        "targetExists": true,
+        "visible": true,
+        "top": 76,
+        "inViewport": true,
+        "from": "page-home",
+        "toPage": "analysis",
+        "anchor": "ov-top",
+        "linkText": "Performance Analysis",
+        "pageOk": true
+      }
+    ],
+    "design": {
+      "bodyBg": "rgb(255, 255, 255)",
+      "bodyColor": "rgb(16, 24, 32)",
+      "fonts": {
+        "body": "\"Source Sans 3\", system-ui, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif"
+      },
+      "headingFont": "Spectral, Georgia, \"Times New Roman\", serif",
+      "fontFaces": [
+        "Spectral 400 loaded",
+        "Spectral 500 unloaded",
+        "Spectral 600 loaded",
+        "Spectral 400 unloaded",
+        "Source Sans 3 400 loaded",
+        "Source Sans 3 500 loaded",
+        "Source Sans 3 600 loaded",
+        "Source Sans 3 700 loaded"
+      ],
+      "fontsReady": "loaded"
+    }
+  },
+  "console_errors": [],
+  "page_errors": [],
+  "external_requests": []
+}

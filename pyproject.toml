@@ -12,6 +12,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "beautifulsoup4>=4.15.0",
+    "playwright>=1.63.0",
     "pytest>=9.1.1",
 ]
 
