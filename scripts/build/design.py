@@ -464,6 +464,6 @@ figcaption {{
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
   }}
-  .fig-scroll > svg {{ min-width: 600px; }}
+  .fig-scroll > svg {{ min-width: 720px; }}
 }}
 """

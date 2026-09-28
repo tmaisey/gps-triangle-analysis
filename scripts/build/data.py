@@ -207,7 +207,7 @@ def load_weather_per_flight() -> list[dict]:
     """Return per-flight weather rows from ``weather_per_flight.csv``.
 
     Keys include round ('R01'..), start_datetime_local, wind_speed_kmh,
-    wind_gust_kmh, temp_c, cloud_pct, shortwave_radiation, cape, laps,
+    wind_gust_kmh, temp_c, cloud_pct, shortwave_radiation, laps,
     speed_kmh, normalised_score, within_group_rank.
     """
     return [

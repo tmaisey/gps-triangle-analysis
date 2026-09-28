@@ -120,9 +120,9 @@ def test_figures_have_a_mobile_only_scroll_container(soup, css_text):
     head, _, mobile = css_text.partition(
         f"@media (max-width: {design.MOBILE_BREAKPOINT_PX}px)")
     assert "overflow-x: auto" not in head, "scroll container active on desktop"
-    assert "min-width: 600px" not in head, "min chart width active on desktop"
+    assert "min-width: 720px" not in head, "min chart width active on desktop"
     assert "overflow-x: auto" in mobile
-    assert "min-width: 600px" in mobile
+    assert "min-width: 720px" in mobile
 
 
 def test_section_controls_stack_under_the_heading_on_mobile(css_text):

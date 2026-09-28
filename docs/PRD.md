@@ -19,7 +19,7 @@ Turn the public timing/telemetry data from an RC GPS Triangle competition into a
 
 ## 3. Sport model (grounds the analysis)
 
-Sport class: a ~30-minute task. The motor is used **only** to climb to a capped start altitude (max entry altitude 400 m, max entry speed 120 km/h); after crossing the start line the motor is off and the flight is a pure glide. Pilots convert an altitude/energy budget into as many 350 m-leg triangle laps as possible, using thermals to stay aloft. **Laps completed drive the score; average speed is the tie-break; a clean landing scores landing points.** Three of the 17 rounds (heats 4, 10, 16) are a separate **one-lap speed sprint**, scored differently, and are analysed separately.
+Sport class: a ~30-minute task. The motor is used **only** to climb to a capped start altitude (max entry altitude 400 m, max entry speed 120 km/h); after crossing the start line the motor is off and the flight is a pure glide. Pilots convert an altitude/energy budget into as many laps as possible of a right-isosceles triangle set on a 350 m radius (legs ≈495 m, base 700 m, ≈1,690 m per lap), using thermals to stay aloft. **Laps completed drive the score; average speed is the tie-break; a clean landing scores landing points.** Three of the 17 rounds (heats 4, 10, 16) are a separate **one-lap speed sprint**, scored differently, and are analysed separately.
 
 **Fairness principle:** scores are normalised to 1000 *within each heat-group* (~9–10 pilots flying the same time slot / same air). The like-for-like comparison is therefore **Bill vs the top scorer in his own group each round**, not vs the overall winner across different air. The report uses the same-air leader as the benchmark and states this.
 
