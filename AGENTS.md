@@ -45,6 +45,9 @@ Once the build reaches green, and **before it is considered done**, subagents re
 | `data/scores/`, `data/tracks/` | Cached raw rcmodelspot API JSON (re-fetchable) | — |
 | `analysis/`, `analysis/round_data/` | Computed metrics + the compact embeddable per-round dataset | Inputs to the report build |
 | `report/` | The single-file HTML deliverable | Build output |
+| `README.md` | Public taster of the project (DOC-001): premise, insights, pages, design, how it was made | Update when headline numbers, pages, or the workflow change; `tests/test_readme.py` guards it |
+| `docs/images/` | README screenshots captured from the built report | Regenerate with `reviews/playwright/readme_shots.py` after a rebuild that changes visuals |
+| `reviews/playwright/` | Playwright drivers: full visual review, figure crop, README shots | Re-run the visual review after chart/layout changes |
 | `AGENTS.mad-skillz.bak.md` | Archived unrelated manual — does not apply | Ignore |
 
 *Note: `CLAUDE.md` still imports the archived manual via `@AGENTS.md`; since `AGENTS.md` is now this project's manual, it loads the right content. Say the word to simplify `CLAUDE.md` if desired.*

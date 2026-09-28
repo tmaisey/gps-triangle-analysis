@@ -369,9 +369,9 @@
       "steps": [
         "Read the bloaty-mcbloatface README to match its voice/structure",
         "Write README covering objective, visual story, what was built, key insights, design, recommendations",
-        "Test: README present with those sections, embeds/links representative visuals, and reads as a taster not an exhaustive dump"
+        "Test: tests/test_readme.py - README present with those sections, embeds >=6 visuals that exist in docs/images/, links the deliverable and the viewer, bounded length, no emojis/lexical tics, no Methodology page promise"
       ],
-      "passes": false
+      "passes": true
     }
   ]
 }

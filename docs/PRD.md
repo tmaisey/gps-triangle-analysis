@@ -132,6 +132,7 @@ Established from the data pulls (subject to the weather and phase passes finalis
 | `analysis/charts/` | PoC chart PNGs |
 | `reviews/` | Build-review reports (`yymmddThhmm-<domain>.md`), written at end of build phase |
 | `report/gps-triangle-world-masters-oschatz-2026.html` | The single-file deliverable (RPT-017) |
+| `README.md`, `docs/images/` | Repo taster (DOC-001) and its screenshots, captured by `reviews/playwright/readme_shots.py` |
 
 ## 13. Open questions / future
 
